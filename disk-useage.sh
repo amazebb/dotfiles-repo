@@ -96,14 +96,13 @@ green="\033[32m"
 orange="\033[38;5;208m" # True orange from 256-color palette
 reset="\033[0m"
 
-# Run gdu with multiple paths, capture errors, pipe through grep, sed, grep, gawk, sort, and gawk
-# Run gdu with multiple paths, capture errors, pipe through grep, sed, grep, gawk, sort, and gawk
+# Run gdu with multiple paths, capture errors, pipe through grep, sed, grep, awk, sort
 temp_err=$(mktemp)
 gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" |
 	grep -vE "^[0-9]+[[:space:]]+\.[[:space:]]*$" |
 	sed 's|\./||' |
 	grep -E "^[^/]*(/[^/]*){0,$((display_depth - 1))}$" |
-	gawk -v dd="$display_depth" -v recurse="$recurse" '{
+	awk -v dd="$display_depth" -v recurse="$recurse" '{
         key = substr($0, index($0, $2));
         sums[key] += $1;
         if (recurse) {
@@ -122,7 +121,7 @@ gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" |
         }
     }' |
 	sort -n -k 1 |
-	gawk -v w="$white" -v r="$red" -v g="$green" -v o="$orange" -v rs="$reset" '{
+	awk -v w="$white" -v r="$red" -v g="$green" -v o="$orange" -v rs="$reset" '{
         size = $1;
         path = substr($0, index($0, $2));
         if (size < 1024) printf "%s%6.2fK%s %s\n", w, size, rs, path;
