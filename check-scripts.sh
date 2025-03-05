@@ -79,16 +79,19 @@ for script in "${files[@]}"; do
 	output=$(shellcheck "$script" 2>/dev/null)
 	if [ -n "$output" ]; then
 		files_with_issues=$((files_with_issues + 1))
-		printf "%s\n%-${pad}s" "$dashed_line" "$(basename "$script")"
+		if [ "$VERBOSE" = "true" ]; then
+			printf "%s\n" "$dashed_line"
+		fi
+		printf "%-${pad}s" "$(basename "$script")"
 		if [ "$VERBOSE" = "true" ]; then
 			printf "\n%s\n%s\n" "$dashed_line" "$output" 
 		else
-			printf "\033[31m Issues Found\033[0m\n"
+			printf "\033[31m X\033[0m\n"
 		fi
 	else
 		files_without_issues=$((files_without_issues + 1))
 		if [ "$VERBOSE" = "false" ]; then
-			printf "%-${pad}s No issue found\n" "$(basename "$script")"
+			printf "%-${pad}s OK\n" "$(basename "$script")"
 		fi
 	fi
 done
