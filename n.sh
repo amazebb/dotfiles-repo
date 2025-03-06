@@ -13,7 +13,7 @@ fi
 export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
 # This will create a fifo where all nnn selections will be written to
-NNN_FIFO="$(mktemp -t nnn -u)"
+NNN_FIFO="$(mktemp -t nnn.XXXXXX -u)"
 export NNN_FIFO
 (
     umask 077
