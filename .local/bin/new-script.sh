@@ -15,7 +15,7 @@ validate_single_char() {
 }
 
 # Prompt for the script name
-read -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
+read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
 if [[ -z "$script_name" ]]; then
   echo "Error: Script name cannot be empty."
   exit 1
@@ -33,7 +33,7 @@ if [[ -f "$script_name" ]]; then
 fi
 
 # Prompt for script description
-read -p "Enter a one-line explanation of what the script does: " script_desc
+read -r -p "Enter a one-line explanation of what the script does: " script_desc
 if [[ -z "$script_desc" ]]; then
   echo "Error: Script description cannot be empty."
   exit 1
@@ -44,12 +44,12 @@ echo "Enter required arguments (single letters, one at a time). Press Enter with
 required_args=()
 required_desc=()
 while true; do
-  read -p "Required argument letter (or Enter to finish): " arg
+  read -r -p "Required argument letter (or Enter to finish): " arg
   if [[ -z "$arg" ]]; then
     break
   fi
   validate_single_char "$arg"
-  read -p "Description for -$arg: " desc
+  read -r -p "Description for -$arg: " desc
   if [[ -z "$desc" ]]; then
     echo "Error: Description cannot be empty."
     exit 1
@@ -64,17 +64,17 @@ optional_args=()
 optional_desc=()
 optional_defaults=()
 while true; do
-  read -p "Optional argument letter (or Enter to finish): " arg
+  read -r -p "Optional argument letter (or Enter to finish): " arg
   if [[ -z "$arg" ]]; then
     break
   fi
   validate_single_char "$arg"
-  read -p "Description for -$arg: " desc
+  read -r -p "Description for -$arg: " desc
   if [[ -z "$desc" ]]; then
     echo "Error: Description cannot be empty."
     exit 1
   fi
-  read -p "Default value for -$arg (or Enter for none): " default
+  read -r -p "Default value for -$arg (or Enter for none): " default
   optional_args+=("$arg")
   optional_desc+=("$desc")
   optional_defaults+=("$default")
