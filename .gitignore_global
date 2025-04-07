@@ -1,0 +1,55 @@
+# https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+# Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# This section separate from above github template
+# Binaries and build outputs
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+
+# Temporary files
+*.tmp
+*~
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Other common ignores
+*.log
+*.egg-info/
+.venv/
+.env
+*.swp
