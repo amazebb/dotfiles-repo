@@ -49,6 +49,7 @@ export PATH="$PATH:/Users/x626f/.lmstudio/bin"
 # Aliases
 alias ls="ls -GFh"
 alias brewup="brew update && brew upgrade"
+alias dotfiles="/opt/homebrew/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"
