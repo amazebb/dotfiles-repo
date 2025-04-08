@@ -1,0 +1,47 @@
+#!/bin/bash
+
+SPARSE_BUNDLE="$HOME/Library/Mobile Documents/com~apple~CloudDocs/SPARSE"
+MOUNT_POINT="/Volumes/SPARSE"  # Matches the sparse bundle name
+GITEA_DATA="$HOME/.gitea-data"
+BACKUP_NAME="gitea-backup-$(date +%Y%m%d_%H%M%S).7z"
+TEMP_FILE="/tmp/$BACKUP_NAME"
+DEST_FILE="$MOUNT_POINT/$BACKUP_NAME"
+
+# Prompt for password securely
+read -r -s -p "Enter sparse bundle password: " PASSWORD
+echo  # Newline after silent input
+
+# Check if sparse bundle is mounted, mount if not
+if [ ! -d "$MOUNT_POINT" ]; then
+    if ! echo "$PASSWORD" | hdiutil attach "$SPARSE_BUNDLE" -mountpoint "$MOUNT_POINT" -stdinpass -verbose 2> mount_error.log; then
+        echo "Failed to mount sparse bundle (wrong password or other error)"
+        cat mount_error.log
+        rm mount_error.log
+        exit 1
+    fi
+fi
+
+if ! gitea-cli stop; then
+    echo "Failed to stop Gitea"
+    hdiutil detach "$MOUNT_POINT"
+    exit 1
+fi
+
+if ! 7z a "$TEMP_FILE" "$GITEA_DATA"; then
+    echo "Failed to compress Gitea data"
+    hdiutil detach "$MOUNT_POINT"
+    exit 1
+fi
+
+if ! rsync --archive --xattrs --acls --hard-links --progress "$TEMP_FILE" "$DEST_FILE"; then
+    echo "rsync failed"
+    rm "$TEMP_FILE"
+    hdiutil detach "$MOUNT_POINT"
+    exit 1
+fi
+
+rm "$TEMP_FILE"
+
+if ! hdiutil detach "$MOUNT_POINT"; then
+    echo "Warning: Failed to unmount sparse bundle"
+fi

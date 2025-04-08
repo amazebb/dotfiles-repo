@@ -43,9 +43,9 @@ vim.keymap.set("n", "[t", function()
 	vim.cmd("match CurrentTag /\\%#|.\\{-}|/")
 end, { desc = "Prev tag" })
 
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
-vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
-
+-- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+-- vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
+--
 -- Switch between colorschemes
 local schemes = vim.fn.getcompletion("", "color")
 local current = 1
