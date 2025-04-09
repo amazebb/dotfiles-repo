@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs shellcheck on all .sh scripts in a specified directory (default ~/.local/bin) to identify issues
+# Runs shellcheck on .sh scripts in a given folder to identify issues
 
 # Help function
 usage() {
