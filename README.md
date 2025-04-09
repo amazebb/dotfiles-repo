@@ -5,7 +5,7 @@ Contains dotfiles found under home folder
 ### ~/.local/bin
 A collection of personal shell scripts
 
-```sh
+```
 check-scripts.sh     bash     Runs shellcheck on all .sh scripts in a specified directory (default ~/.local/bin) to identify issues
 compare-folders.sh   bash     No description available
 disk-useage.sh       dash     Disk usage analyzer with configurable options
