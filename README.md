@@ -56,6 +56,8 @@ Also see [here](https://askubuntu.com/a/1316230)
 <summary><h4>Custom shell scripts</h4></summary>
 
 A collection of personal shell scripts in ~/.local/bin
+
+This list was created by running ```list-scripts```
 ```
 check-scripts.sh     bash     Runs shellcheck on .sh scripts in a given folder to identify issues
 compare-folders.sh   bash     No description available
