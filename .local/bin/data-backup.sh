@@ -86,7 +86,7 @@ fi
 
 if [ -d "$MOUNT_POINT" ]; then
   if ! diskutil info "$MOUNT_POINT" | grep -q "$SPARSE_BUNDLE"; then
-    echo "Error: $MOUNT_POINT exists but isn’t our sparse bundle"
+    echo "Error: $MOUNT_POINT exists but isn't our sparse bundle"
     exit 1
   fi
 else
