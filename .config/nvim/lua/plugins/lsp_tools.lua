@@ -20,7 +20,6 @@ return {
 					"lua_ls",
 					"matlab_ls",
 					"basedpyright",
-					"pylsp",
 					"ruff",
 					"ts_ls",
 					"yamlls",
