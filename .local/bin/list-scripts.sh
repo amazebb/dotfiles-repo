@@ -5,7 +5,7 @@
 DIR=${1:-~/.local/bin}
 
 # Find all .sh files and process them
-find "$DIR" -type f -name "*.sh" | sort -k1 | while read -r script; do
+find "$DIR" -type f -depth 1 -name "*.sh" | sort -k1 | while read -r script; do
 # Get the script name (basename removes the path)
 name=$(basename "$script")
 
