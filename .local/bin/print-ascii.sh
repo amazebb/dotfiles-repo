@@ -1,4 +1,6 @@
 #!/bin/bash
+# Print the ASCII codes given a range of numbers
+
 a=0
 b=255
 code=WINDOWS-1252

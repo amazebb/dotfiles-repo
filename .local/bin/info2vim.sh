@@ -1,5 +1,4 @@
 #!/bin/dash
-
 # Launch GNU info for a coreutils command and pipe to Neovim
 # Usage: info2vim <command> (e.g., info2vim uniq)
 

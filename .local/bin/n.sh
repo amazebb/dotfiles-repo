@@ -1,5 +1,6 @@
 #!/bin/dash
 # Launch nnn and with auto preview if from tmux
+
 # Block nesting of nnn in subshells
 if [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]; then
 	echo "nnn is already running"

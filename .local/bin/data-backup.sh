@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Backs up folders to SPARSE image bundle in iCloud
 
 # Version
