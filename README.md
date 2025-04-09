@@ -3,7 +3,7 @@
 Contains dotfiles found under home folder
 
 <details>
-<summary><h2>Setting up a dotfiles Git repo</h2></summary>
+<summary><h4>Setting up a dotfiles Git repo</h4></summary>
 
 1. **Set up the bare repo in $HOME** (if you haven’t yet):
    ```bash
@@ -52,9 +52,10 @@ Works like a charm with Gitea, GitLab, or any git server. Just make sure your Gi
 Also see [here](https://askubuntu.com/a/1316230) 
 </details>
 
-### ~/.local/bin
-A collection of personal shell scripts
+<details>
+<summary><h4>Custom shell scripts</h4></summary>
 
+A collection of personal shell scripts in ~/.local/bin
 ```
 check-scripts.sh     bash     Runs shellcheck on .sh scripts in a given folder to identify issues
 compare-folders.sh   bash     No description available
@@ -71,3 +72,4 @@ preview_cmd.sh       dash     Preview files and directories function executed by
 print-ascii.sh       bash     No description available
 print-colors.sh      bash     Display all 256 ANSI colors in the terminal
 ```
+</details>
