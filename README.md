@@ -60,10 +60,10 @@ A collection of personal shell scripts in ~/.local/bin
 This list was created by running ```list-scripts```
 ```
 check-scripts.sh     bash     Runs shellcheck on .sh scripts in a given folder to identify issues
-compare-folders.sh   bash     No description available
+compare-folders.sh   bash     Compare files in different folders
+data-backup.sh       bash     Backs up folders to SPARSE image bundle in iCloud
 disk-useage.sh       dash     Disk usage analyzer with configurable options
-dotfiles.sh          bash     Used for adding dotfiles in home directory to git bare repo .dotfiles
-gitea-backup.sh      bash     gitea-backup.sh: Backs up ~/.gitea-data to SPARSE image bundle in iCloud
+dotfiles.sh          bash     Used for adding dotfiles in home directory to git bare repo
 gitea-cli.sh         dash     Manage Gitea with start, stop, and log options
 info2vim.sh          dash     Launch GNU info for a coreutils command and pipe to Neovim
 list-scripts.sh      dash     List all scripts in ~/.local/bin with a description
@@ -71,7 +71,7 @@ llamaup.sh           dash     Update all Ollama models
 n.sh                 dash     Launch nnn and with auto preview if from tmux
 new-script.sh        bash     A script to generate a new shell script template with specified options
 preview_cmd.sh       dash     Preview files and directories function executed by nnn
-print-ascii.sh       bash     No description available
+print-ascii.sh       bash     Print the ASCII codes given a range of numbers
 print-colors.sh      bash     Display all 256 ANSI colors in the terminal
 ```
 </details>
