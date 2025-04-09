@@ -19,14 +19,14 @@ VERBOSE=false
 # Parse options with getopts
 while getopts "hv" opt; do
 	case "$opt" in
-		h) usage ;;
-		v) VERBOSE=true ;;
-		?) usage ;;
+	h) usage ;;
+	v) VERBOSE=true ;;
+	?) usage ;;
 	esac
 done
 
 # Shift past the options
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 # If a directory is provided as an argument, use it
 if [ $# -gt 0 ]; then
@@ -51,7 +51,7 @@ files_with_issues=0
 files_without_issues=0
 
 # Collect files into an array
-# An explanation: 
+# An explanation:
 # find ... -print0 outputs filenames separated by null bytes, which handles spaces, newlines, etc., safely.
 # while IFS= read -r -d '' file reads null-delimited input into the files array.
 # < <(...) (process substitution) avoids a subshell, so the array is populated in the main shell.
@@ -84,7 +84,7 @@ for script in "${files[@]}"; do
 		fi
 		printf "%-${pad}s" "$(basename "$script")"
 		if [ "$VERBOSE" = "true" ]; then
-			printf "\n%s\n%s\n" "$dashed_line" "$output" 
+			printf "\n%s\n%s\n" "$dashed_line" "$output"
 		else
 			printf "\033[31m X\033[0m\n"
 		fi

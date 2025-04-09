@@ -1,6 +1,5 @@
-
 #!/bin/bash
 
-# Update npm 
+# Update npm
 npm install npm@latest -g
-npm update -g      
+npm update -g
