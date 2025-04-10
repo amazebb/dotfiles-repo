@@ -1837,16 +1837,32 @@ typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
 'builtin' 'unset' 'p10k_config_opts'
 
-# function prompt_vcs() { p10k segment -b 1 -i "VCS" -t "test" }
 function prompt_vcs() {
+  local git_cmd
   if [[ "$PWD" == "$HOME" ]]; then
-    local branch="$(/Users/x626f/.local/bin/dotfiles.sh rev-parse --abbrev-ref HEAD)"
-    local porcelain="$(/Users/x626f/.local/bin/dotfiles.sh status --porcelain)"
+    git_cmd="/Users/x626f/.local/bin/dotfiles.sh"
+  else
+    git_cmd="/opt/homebrew/bin/git"
+  fi
+  local branch="$($git_cmd rev-parse --abbrev-ref HEAD 2>/dev/null)"
+  if [[ -n "$branch" ]]; then
+    local porcelain="$($git_cmd status --porcelain 2>/dev/null)"
     local unstaged=$(echo "$porcelain" | grep -c "^.[MD]")
     local staged=$(echo "$porcelain" | grep -c "^[MAD]")
+    local untracked=$(echo "$porcelain" | grep -c "^??")
     local dirty=$((unstaged + staged))
-    if [[ $dirty -gt 0 ]]; then
-      p10k segment -b 3 -f 0 -i "VCS" -t "$branch ${staged:+$staged+} ${unstaged:+$unstaged*}"
+    if [[ $dirty -gt 0 || $untracked -gt 0 ]]; then
+      local seg="$branch "
+      if [[ $staged -gt 0 ]]; then
+        seg="${seg}+$staged "
+      fi
+      if [[ $unstaged -gt 0 ]]; then
+        seg="${seg}*$unstaged "
+      fi
+      if [[ $untracked -gt 0 ]]; then
+        seg="${seg}!$untracked "
+      fi
+      p10k segment -b 3 -f 0 -i "VCS" -t "$seg"
     else
       p10k segment -b 2 -f 0 -i "VCS" -t "$branch"
     fi
