@@ -1839,10 +1839,12 @@ typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 
 function prompt_vcs() {
   local git_cmd
-  if [[ "$PWD" == "$HOME" ]]; then
+  if [[ "$PWD" == "$HOME" && -d "$HOME/.git" ]]; then
     git_cmd="/Users/x626f/.local/bin/dotfiles.sh"
-  else
+  elif [[ -d ".git" ]]; then
     git_cmd="/opt/homebrew/bin/git"
+  else
+    return
   fi
   local branch="$($git_cmd rev-parse --abbrev-ref HEAD 2>/dev/null)"
   if [[ -n "$branch" ]]; then
