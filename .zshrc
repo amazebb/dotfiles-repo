@@ -61,7 +61,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 create_aliases() {
-    for script in ~/.local/bin/*.sh; do
+    for script in ~/.local/scripts/*.sh; do
         base_name=$(basename "$script" .sh)
         alias "$base_name"="\"$script\""
     done

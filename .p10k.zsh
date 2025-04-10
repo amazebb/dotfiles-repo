@@ -1840,7 +1840,7 @@ typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 function prompt_vcs() {
   local git_cmd
   if [[ "$PWD" == "$HOME" && -d "$HOME/.git" ]]; then
-    git_cmd="/Users/x626f/.local/bin/dotfiles.sh"
+    git_cmd="/Users/x626f/.local/scripts/dotfiles.sh"
   elif [[ -d ".git" ]]; then
     git_cmd="/opt/homebrew/bin/git"
   else

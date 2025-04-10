@@ -2,7 +2,7 @@
 # List all scripts in ~/.local/bin with a description
 
 # Directory to search for scripts (default is ~/.local/bin)
-DIR=${1:-~/.local/bin}
+DIR=${1:-~/.local/scripts}
 
 # Find all .sh files and process them
 find "$DIR" -type f -depth 1 -name "*.sh" | sort -k1 | while read -r script; do
