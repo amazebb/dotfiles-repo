@@ -1849,8 +1849,9 @@ function prompt_vcs() {
   local branch="$($git_cmd rev-parse --abbrev-ref HEAD 2>/dev/null)"
   if [[ -n "$branch" ]]; then
     local porcelain="$($git_cmd status --porcelain 2>/dev/null)"
-    local unstaged=$(echo "$porcelain" | grep -c "^.[MD]")
-    local staged=$(echo "$porcelain" | grep -c "^[MAD]")
+    local unstaged=$(echo "$porcelain" | grep -c "^.[MTDRC]")
+    local staged=$(echo "$porcelain" | grep -c "^[MTADRC]")
+    # local renamed=$(echo "$porcelain" | grep -c "^R")
     local untracked=$(echo "$porcelain" | grep -c "^??")
     local dirty=$((unstaged + staged))
     if [[ $dirty -gt 0 || $untracked -gt 0 ]]; then
@@ -1861,6 +1862,7 @@ function prompt_vcs() {
       if [[ $unstaged -gt 0 ]]; then
         seg="${seg}*$unstaged "
       fi
+      # [[ $renamed -gt 0 ]] && seg="${seg}>$renamed "
       if [[ $untracked -gt 0 ]]; then
         seg="${seg}!$untracked "
       fi
