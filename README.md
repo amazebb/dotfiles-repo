@@ -3,7 +3,7 @@
 Contains dotfiles found under home folder
 
 <details>
-<summary><h4>Setting up a dotfiles Git repo</h4></summary>
+<summary><h4>Setting up dotfiles repository</h4></summary>
 
 1. **Set up the bare repo in $HOME** (if you haven’t yet):
    ```bash
@@ -14,6 +14,7 @@ Contains dotfiles found under home folder
    Add that alias to your `.zshrc` or `.bashrc` so it sticks.
    
    The above alias is added to ~/.local/bin/dotfiles.sh to help facilitate calling from xargs for instance where aliases dont work
+   It also works with p10k status line as well as adds better support for dotfiles status and clean
 
 2. **Add and commit your dotfiles**:
    ```bash
@@ -55,7 +56,7 @@ Also see [here](https://askubuntu.com/a/1316230)
 <details>
 <summary><h4>Custom shell scripts</h4></summary>
 
-A collection of personal shell scripts in ~/.local/bin
+A collection of personal shell scripts in ~/.local/scripts
 
 This list was created by running ```list-scripts```
 ```
