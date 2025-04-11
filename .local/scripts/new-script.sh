@@ -3,40 +3,40 @@
 
 # Function to validate single-character argument names
 validate_single_char() {
-	local arg_name="$1"
-	if [[ ! "$arg_name" =~ ^[a-zA-Z]$ ]]; then
-		echo "Error: Argument name '$arg_name' must be a single letter."
-		exit 1
-	fi
-	if [[ "$arg_name" == "h" || "$arg_name" == "v" ]]; then
-		echo "Error: Argument name '$arg_name' is reserved for help (-h) or version (-v)."
-		exit 1
-	fi
+  local arg_name="$1"
+  if [[ ! "$arg_name" =~ ^[a-zA-Z]$ ]]; then
+    echo "Error: Argument name '$arg_name' must be a single letter."
+    exit 1
+  fi
+  if [[ "$arg_name" == "h" || "$arg_name" == "v" ]]; then
+    echo "Error: Argument name '$arg_name' is reserved for help (-h) or version (-v)."
+    exit 1
+  fi
 }
 
 # Prompt for the script name
 read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
 if [[ -z "$script_name" ]]; then
-	echo "Error: Script name cannot be empty."
-	exit 1
+  echo "Error: Script name cannot be empty."
+  exit 1
 fi
 
 # Ensure the script name ends with .sh
 if [[ ! "$script_name" =~ \.sh$ ]]; then
-	script_name="$script_name.sh"
+  script_name="$script_name.sh"
 fi
 
 # Check if file already exists
 if [[ -f "$script_name" ]]; then
-	echo "Error: File '$script_name' already exists."
-	exit 1
+  echo "Error: File '$script_name' already exists."
+  exit 1
 fi
 
 # Prompt for script description
 read -r -p "Enter a one-line explanation of what the script does: " script_desc
 if [[ -z "$script_desc" ]]; then
-	echo "Error: Script description cannot be empty."
-	exit 1
+  echo "Error: Script description cannot be empty."
+  exit 1
 fi
 
 # Prompt for required arguments
@@ -44,18 +44,18 @@ echo "Enter required arguments (single letters, one at a time). Press Enter with
 required_args=()
 required_desc=()
 while true; do
-	read -r -p "Required argument letter (or Enter to finish): " arg
-	if [[ -z "$arg" ]]; then
-		break
-	fi
-	validate_single_char "$arg"
-	read -r -p "Description for -$arg: " desc
-	if [[ -z "$desc" ]]; then
-		echo "Error: Description cannot be empty."
-		exit 1
-	fi
-	required_args+=("$arg")
-	required_desc+=("$desc")
+  read -r -p "Required argument letter (or Enter to finish): " arg
+  if [[ -z "$arg" ]]; then
+    break
+  fi
+  validate_single_char "$arg"
+  read -r -p "Description for -$arg: " desc
+  if [[ -z "$desc" ]]; then
+    echo "Error: Description cannot be empty."
+    exit 1
+  fi
+  required_args+=("$arg")
+  required_desc+=("$desc")
 done
 
 # Prompt for optional arguments
@@ -64,20 +64,20 @@ optional_args=()
 optional_desc=()
 optional_defaults=()
 while true; do
-	read -r -p "Optional argument letter (or Enter to finish): " arg
-	if [[ -z "$arg" ]]; then
-		break
-	fi
-	validate_single_char "$arg"
-	read -r -p "Description for -$arg: " desc
-	if [[ -z "$desc" ]]; then
-		echo "Error: Description cannot be empty."
-		exit 1
-	fi
-	read -r -p "Default value for -$arg (or Enter for none): " default
-	optional_args+=("$arg")
-	optional_desc+=("$desc")
-	optional_defaults+=("$default")
+  read -r -p "Optional argument letter (or Enter to finish): " arg
+  if [[ -z "$arg" ]]; then
+    break
+  fi
+  validate_single_char "$arg"
+  read -r -p "Description for -$arg: " desc
+  if [[ -z "$desc" ]]; then
+    echo "Error: Description cannot be empty."
+    exit 1
+  fi
+  read -r -p "Default value for -$arg (or Enter for none): " default
+  optional_args+=("$arg")
+  optional_desc+=("$desc")
+  optional_defaults+=("$default")
 done
 
 # Extract basename for help message
@@ -102,21 +102,21 @@ EOF
 
 # Add required arguments to usage
 for i in "${!required_args[@]}"; do
-	arg="${required_args[$i]}"
-	desc="${required_desc[$i]}"
-	echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
+  arg="${required_args[$i]}"
+  desc="${required_desc[$i]}"
+  echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
 done
 
 # Add optional arguments to usage
 for i in "${!optional_args[@]}"; do
-	arg="${optional_args[$i]}"
-	desc="${optional_desc[$i]}"
-	default="${optional_defaults[$i]}"
-	if [[ -n "$default" ]]; then
-		echo "    echo \"  -${arg}    ${desc} (default: ${default})\"" >>"$script_name"
-	else
-		echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
-	fi
+  arg="${optional_args[$i]}"
+  desc="${optional_desc[$i]}"
+  default="${optional_defaults[$i]}"
+  if [[ -n "$default" ]]; then
+    echo "    echo \"  -${arg}    ${desc} (default: ${default})\"" >>"$script_name"
+  else
+    echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
+  fi
 done
 
 # Finish usage function and add version
@@ -139,22 +139,22 @@ EOF
 
 # Initialize optional arguments with defaults
 for i in "${!optional_args[@]}"; do
-	arg="${optional_args[$i]}"
-	default="${optional_defaults[$i]}"
-	if [[ -n "$default" ]]; then
-		echo "${arg}=\"${default}\"" >>"$script_name"
-	else
-		echo "${arg}=" >>"$script_name"
-	fi
+  arg="${optional_args[$i]}"
+  default="${optional_defaults[$i]}"
+  if [[ -n "$default" ]]; then
+    echo "${arg}=\"${default}\"" >>"$script_name"
+  else
+    echo "${arg}=" >>"$script_name"
+  fi
 done
 
 # Construct the getopts string
 getopts_string="hv"
 for arg in "${required_args[@]}"; do
-	getopts_string="${getopts_string}${arg}:"
+  getopts_string="${getopts_string}${arg}:"
 done
 for arg in "${optional_args[@]}"; do
-	getopts_string="${getopts_string}${arg}:"
+  getopts_string="${getopts_string}${arg}:"
 done
 
 # Add the getopts parsing loop
@@ -169,14 +169,14 @@ EOF
 
 # Add cases for required arguments
 for arg in "${required_args[@]}"; do
-	cat >>"$script_name" <<EOF
+  cat >>"$script_name" <<EOF
         ${arg}) ${arg}="\$OPTARG" ;;
 EOF
 done
 
 # Add cases for optional arguments
 for arg in "${optional_args[@]}"; do
-	cat >>"$script_name" <<EOF
+  cat >>"$script_name" <<EOF
         ${arg}) ${arg}="\$OPTARG" ;;
 EOF
 done
@@ -194,7 +194,7 @@ EOF
 
 # Add checks for required arguments
 for arg in "${required_args[@]}"; do
-	cat >>"$script_name" <<EOF
+  cat >>"$script_name" <<EOF
 if [[ -z "\$${arg}" ]]; then
     echo "Error: Required argument -${arg} missing"
     usage
@@ -211,12 +211,12 @@ EOF
 
 # Echo required arguments
 for arg in "${required_args[@]}"; do
-	echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
+  echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
 done
 
 # Echo optional arguments
 for arg in "${optional_args[@]}"; do
-	echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
+  echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
 done
 
 # Finalize the script

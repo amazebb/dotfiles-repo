@@ -21,11 +21,11 @@ rows_per_col=$(((total_colors + num_cols - 1) / num_cols))
 
 # Print colors in columns
 for ((row = 0; row < rows_per_col; row++)); do
-	for ((col = 0; col < num_cols; col++)); do
-		idx=$((row + col * rows_per_col))
-		if [ "$idx" -lt "$total_colors" ]; then
-			printf "\e[38;5;%smColor %-3d\e[0m " "$idx" "$idx"
-		fi
-	done
-	echo
+  for ((col = 0; col < num_cols; col++)); do
+    idx=$((row + col * rows_per_col))
+    if [ "$idx" -lt "$total_colors" ]; then
+      printf "\e[38;5;%smColor %-3d\e[0m " "$idx" "$idx"
+    fi
+  done
+  echo
 done

@@ -13,80 +13,80 @@ recurse=0                      # Default: no recursive adjustment
 
 # Help function
 show_help() {
-	script_name=$(basename "$0" .sh)
-	echo "Usage: $script_name [path1 path2 ...] [-e exclude1 exclude2 ...] [-d display_depth] [-D depth] [-a] [-v] [-h]"
-	echo "Summarizes disk usage for directories with configurable options"
-	echo "Options:"
-	echo "  path1 path2 ...  Directories to analyze (default: .)"
-	echo "  -e exclude...    Space-separated list of patterns to exclude (default: ./.Trash*)"
-	echo "  -d display_depth Depth to display paths (default: 1)"
-	echo "  -D depth         Depth to traverse (default: all, use number for specific depth)"
-	echo "  -a               Use apparent size instead of device usage"
-	echo "  -v               Show permission denied errors (default: off)"
-	echo "  -r               Adjust parent folders to show direct usage (subtract children), deepest level recursive"
-	echo "  -h               Show this help message"
-	echo "Examples:"
-	echo "  $script_name Desktop Downloads -D 1 -a      # Analyze Desktop and Downloads, depth 1, apparent size"
-	echo "  $script_name . -d 2 -e ./Lib* ./Trash* -v   # Current dir, display depth 2, exclude Lib and Trash, verbose"
-	exit 0
+  script_name=$(basename "$0" .sh)
+  echo "Usage: $script_name [path1 path2 ...] [-e exclude1 exclude2 ...] [-d display_depth] [-D depth] [-a] [-v] [-h]"
+  echo "Summarizes disk usage for directories with configurable options"
+  echo "Options:"
+  echo "  path1 path2 ...  Directories to analyze (default: .)"
+  echo "  -e exclude...    Space-separated list of patterns to exclude (default: ./.Trash*)"
+  echo "  -d display_depth Depth to display paths (default: 1)"
+  echo "  -D depth         Depth to traverse (default: all, use number for specific depth)"
+  echo "  -a               Use apparent size instead of device usage"
+  echo "  -v               Show permission denied errors (default: off)"
+  echo "  -r               Adjust parent folders to show direct usage (subtract children), deepest level recursive"
+  echo "  -h               Show this help message"
+  echo "Examples:"
+  echo "  $script_name Desktop Downloads -D 1 -a      # Analyze Desktop and Downloads, depth 1, apparent size"
+  echo "  $script_name . -d 2 -e ./Lib* ./Trash* -v   # Current dir, display depth 2, exclude Lib and Trash, verbose"
+  exit 0
 }
 
 # Collect paths until an option is encountered
 while [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; do
-	if [ "$paths" = "." ]; then
-		paths="$1"
-	else
-		paths="$paths $1"
-	fi
-	shift
+  if [ "$paths" = "." ]; then
+    paths="$1"
+  else
+    paths="$paths $1"
+  fi
+  shift
 done
 
 # Parse options
 while [ $# -gt 0 ]; do
-	case "$1" in
-	-e)
-		shift
-		excludes=""
-		while [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; do
-			excludes="$excludes --exclude=$1"
-			shift
-		done
-		;;
-	-d)
-		display_depth="$2"
-		shift 2
-		;;
-	-D)
-		depth="$2"
-		shift 2
-		;;
-	-a)
-		apparent_size="--apparent-size"
-		shift
-		;;
-	-v)
-		verbose=1
-		shift
-		;;
-	-r)
-		recurse=1
-		shift
-		;;
-	-h | -help | --help)
-		show_help
-		;;
-	*)
-		echo "Unknown option: $1"
-		exit 1
-		;;
-	esac
+  case "$1" in
+    -e)
+      shift
+      excludes=""
+      while [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; do
+        excludes="$excludes --exclude=$1"
+        shift
+      done
+      ;;
+    -d)
+      display_depth="$2"
+      shift 2
+      ;;
+    -D)
+      depth="$2"
+      shift 2
+      ;;
+    -a)
+      apparent_size="--apparent-size"
+      shift
+      ;;
+    -v)
+      verbose=1
+      shift
+      ;;
+    -r)
+      recurse=1
+      shift
+      ;;
+    -h | -help | --help)
+      show_help
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
 done
 
 # Handle depth argument
 if [ "$depth" = "all" ]; then
-	depth_arg=""
+  depth_arg=""
 else
-	depth_arg="-d $depth"
+  depth_arg="-d $depth"
 fi
 
 # Define colors
@@ -98,11 +98,11 @@ reset="\033[0m"
 
 # Run gdu with multiple paths, capture errors, pipe through grep, sed, grep, awk, sort
 temp_err=$(mktemp)
-gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" |
-	grep -vE "^[0-9]+[[:space:]]+\.[[:space:]]*$" |
-	sed 's|\./||' |
-	grep -E "^[^/]*(/[^/]*){0,$((display_depth - 1))}$" |
-	awk -v dd="$display_depth" -v recurse="$recurse" '{
+gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" \
+  | grep -vE "^[0-9]+[[:space:]]+\.[[:space:]]*$" \
+  | sed 's|\./||' \
+  | grep -E "^[^/]*(/[^/]*){0,$((display_depth - 1))}$" \
+  | awk -v dd="$display_depth" -v recurse="$recurse" '{
         key = substr($0, index($0, $2));
         sums[key] += $1;
         if (recurse) {
@@ -119,9 +119,9 @@ gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" |
             }
             print sums[k], k;
         }
-    }' |
-	sort -n -k 1 |
-	awk -v w="$white" -v r="$red" -v g="$green" -v o="$orange" -v rs="$reset" '{
+    }' \
+  | sort -n -k 1 \
+  | awk -v w="$white" -v r="$red" -v g="$green" -v o="$orange" -v rs="$reset" '{
         size = $1;
         path = substr($0, index($0, $2));
         if (size < 1024) printf "%s%6.2fK%s %s\n", w, size, rs, path;
@@ -133,11 +133,11 @@ gdu "$depth_arg" "$apparent_size" "$paths" "$excludes" 2>"$temp_err" |
 # Error handling
 error_count=$(wc -l <"$temp_err")
 if [ "$error_count" -gt 0 ]; then
-	if [ "$verbose" -eq 1 ]; then
-		cat "$temp_err"
-	else
-		echo "Note: $error_count folders could not be read due to permissions"
-	fi
+  if [ "$verbose" -eq 1 ]; then
+    cat "$temp_err"
+  else
+    echo "Note: $error_count folders could not be read due to permissions"
+  fi
 fi
 
 rm -f "$temp_err"

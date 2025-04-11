@@ -3,13 +3,13 @@
 
 # Help function
 usage() {
-	echo "Usage: $(basename "$0") [-h] [-v] [directory]"
-	echo "Options:"
-	echo "  -h    Display this help message"
-	echo "  -v    Verbose mode, show full shellcheck output"
-	echo "Arguments:"
-	echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
-	exit 0
+  echo "Usage: $(basename "$0") [-h] [-v] [directory]"
+  echo "Options:"
+  echo "  -h    Display this help message"
+  echo "  -v    Verbose mode, show full shellcheck output"
+  echo "Arguments:"
+  echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
+  exit 0
 }
 
 # Default values
@@ -18,11 +18,11 @@ VERBOSE=false
 
 # Parse options with getopts
 while getopts "hv" opt; do
-	case "$opt" in
-	h) usage ;;
-	v) VERBOSE=true ;;
-	?) usage ;;
-	esac
+  case "$opt" in
+    h) usage ;;
+    v) VERBOSE=true ;;
+    ?) usage ;;
+  esac
 done
 
 # Shift past the options
@@ -30,19 +30,19 @@ shift $((OPTIND - 1))
 
 # If a directory is provided as an argument, use it
 if [ $# -gt 0 ]; then
-	DIR="$1"
+  DIR="$1"
 fi
 
 # Check if the directory exists
 if [ ! -d "$DIR" ]; then
-	echo "Error: Directory '$DIR' does not exist."
-	exit 1
+  echo "Error: Directory '$DIR' does not exist."
+  exit 1
 fi
 
 # Check if shellcheck is installed
 if ! command -v shellcheck >/dev/null 2>&1; then
-	echo "Error: shellcheck is not installed. Please install it first."
-	exit 1
+  echo "Error: shellcheck is not installed. Please install it first."
+  exit 1
 fi
 
 # Initialize counters
@@ -58,12 +58,12 @@ files_without_issues=0
 files=()
 max_basename_length=0
 while IFS= read -r -d '' file; do
-	files+=("$file")
-	basename=$(basename "$file")
-	basename_length=${#basename}
-	if [ "$basename_length" -gt "$max_basename_length" ]; then
-		max_basename_length=$basename_length
-	fi
+  files+=("$file")
+  basename=$(basename "$file")
+  basename_length=${#basename}
+  if [ "$basename_length" -gt "$max_basename_length" ]; then
+    max_basename_length=$basename_length
+  fi
 done < <(find "$DIR" -type f -name "*.sh" -print0)
 
 # Add some padding for safety (e.g., +2 for extra space)
@@ -75,25 +75,25 @@ printf "Running ShellCheck on scripts in %s\n\n" "$DIR"
 
 # Iterate over the array
 for script in "${files[@]}"; do
-	total_files=$((total_files + 1))
-	output=$(shellcheck "$script" 2>/dev/null)
-	if [ -n "$output" ]; then
-		files_with_issues=$((files_with_issues + 1))
-		if [ "$VERBOSE" = "true" ]; then
-			printf "%s\n" "$dashed_line"
-		fi
-		printf "%-${pad}s" "$(basename "$script")"
-		if [ "$VERBOSE" = "true" ]; then
-			printf "\n%s\n%s\n" "$dashed_line" "$output"
-		else
-			printf "\033[31m X\033[0m\n"
-		fi
-	else
-		files_without_issues=$((files_without_issues + 1))
-		if [ "$VERBOSE" = "false" ]; then
-			printf "%-${pad}s OK\n" "$(basename "$script")"
-		fi
-	fi
+  total_files=$((total_files + 1))
+  output=$(shellcheck "$script" 2>/dev/null)
+  if [ -n "$output" ]; then
+    files_with_issues=$((files_with_issues + 1))
+    if [ "$VERBOSE" = "true" ]; then
+      printf "%s\n" "$dashed_line"
+    fi
+    printf "%-${pad}s" "$(basename "$script")"
+    if [ "$VERBOSE" = "true" ]; then
+      printf "\n%s\n%s\n" "$dashed_line" "$output"
+    else
+      printf "\033[31m X\033[0m\n"
+    fi
+  else
+    files_without_issues=$((files_without_issues + 1))
+    if [ "$VERBOSE" = "false" ]; then
+      printf "%-${pad}s OK\n" "$(basename "$script")"
+    fi
+  fi
 done
 
 # Display summary

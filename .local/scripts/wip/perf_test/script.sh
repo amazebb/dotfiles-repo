@@ -6,6 +6,6 @@ set -x
 PS4='+$(./tick)	'
 i=0
 while [ "$i" -lt 1000 ]; do
-	i=$((i + 1))
-	echo "result_$i" >/dev/null
+  i=$((i + 1))
+  echo "result_$i" >/dev/null
 done

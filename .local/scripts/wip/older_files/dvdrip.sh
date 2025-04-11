@@ -23,25 +23,25 @@
 
 rip() {
 
-	local file=$1
-	local ch=$2
+  local file=$1
+  local ch=$2
 
-	local replace=(ffmpeg -i "$file" -hide_banner
-		"$t" -map $dts -map $vid -c:a $ca -c:v $cv "lossy\/video\/ch$ch\_\1.mp4"
-		"$t" -map $dts -c:a $ca -ac 2 "lossy\/audio\/down2ch\/ch$ch\_\1.mp4"
-		"$t" -map $pcm -c:a $ca -ac 2 "lossy\/audio\/pcm\/ch$ch\_\1.mp4")
+  local replace=(ffmpeg -i "$file" -hide_banner
+    "$t" -map $dts -map $vid -c:a $ca -c:v $cv "lossy\/video\/ch$ch\_\1.mp4"
+    "$t" -map $dts -c:a $ca -ac 2 "lossy\/audio\/down2ch\/ch$ch\_\1.mp4"
+    "$t" -map $pcm -c:a $ca -ac 2 "lossy\/audio\/pcm\/ch$ch\_\1.mp4")
 
-	local rep="${replace[@]}"
+  local rep="${replace[@]}"
 
-	run=$(ffprobe -i "$file" -v quiet -show_chapters -print_format compact |
-		grep -n 'start_time=.*|t' |
-		sed "s/\([0-9]*\).*start_time=\([0-9]*.[0-9]*\).*end_time=\([0-9]*.[0-9]*\).*/$rep/g ")
+  run=$(ffprobe -i "$file" -v quiet -show_chapters -print_format compact \
+    | grep -n 'start_time=.*|t' \
+    | sed "s/\([0-9]*\).*start_time=\([0-9]*.[0-9]*\).*end_time=\([0-9]*.[0-9]*\).*/$rep/g ")
 
-	if [ -n "$run" ]; then
-		eval "$run"
-	else
-		# simple extract
-	fi
+  if [ -n "$run" ]; then
+    eval "$run"
+  else
+    # simple extract
+  fi
 
 }
 
@@ -61,6 +61,6 @@ copy="-c:a copy -c:v copy"
 j=1
 
 for f in $1; do
-	rip "$f" "$j"
-	((j = j + 1))
+  rip "$f" "$j"
+  ((j = j + 1))
 done
