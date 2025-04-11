@@ -12,6 +12,9 @@ usage() {
   echo "  -v    Display version information"
   echo "  -s    Sparse bundle folder (default: $HOME/Library/Mobile Documents/com~apple~CloudDocs/SPARSE.sparsebundle)"
   echo "  -m    Mount point (default: /Volumes/SPARSE)"
+  echo " "
+  echo " Example: To create a 10g SPARSEBUNDLE:"
+  echo " hdiutil create -size 10g -type SPARSEBUNDLE -fs APFS -encryption -stdinpass -volname SPARSE '$HOME/Library/Mobile Documents/com~apple~CloudDocs/SPARSE.sparsebundle'"
   exit 0
 }
 
@@ -60,21 +63,14 @@ fi
 printf "Folders to backup: %s\n" "${FOLDERS[*]}"
 echo "Sparse bundle: $SPARSE_BUNDLE"
 echo "Mount point: $MOUNT_POINT"
-# 7z a -t7z -m0=lzma2 -mx=9 -mmt=on "$TEMP_FILE" "$GITEA_DATA"
-#
-PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-SPARSE_BUNDLE="$HOME/Library/Mobile Documents/com~apple~CloudDocs/SPARSE.sparsebundle"
-MOUNT_POINT="/Volumes/SPARSE"
-BACKUP_NAME="gitea-backup-$(date +%Y%m%d_%H%M%S).7z"
-TEMP_FILE="/tmp/$BACKUP_NAME"
-DEST_FILE="$MOUNT_POINT/$BACKUP_NAME"
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 read -r -s -p "Enter sparse bundle password: " PASSWORD
 echo
 
 echo "Debug: Checking sparse bundle at $SPARSE_BUNDLE"
-if [ ! -f "$SPARSE_BUNDLE" ]; then
+if [ ! -d "$SPARSE_BUNDLE" ]; then
   echo "Error: Sparse bundle file not found"
   exit 1
 fi
@@ -84,12 +80,15 @@ if [ ! -r "$SPARSE_BUNDLE" ]; then
 fi
 
 if [ -d "$MOUNT_POINT" ]; then
-  if ! diskutil info "$MOUNT_POINT" | grep -q "$SPARSE_BUNDLE"; then
-    echo "Error: $MOUNT_POINT exists but isn't our sparse bundle"
+  echo "Debug: $MOUNT_POINT exists, checking if it’s our sparse bundle"
+  if hdiutil info | grep -q "$SPARSE_BUNDLE" && hdiutil info | grep -q "$MOUNT_POINT"; then
+    echo "Debug: $MOUNT_POINT is already mounted correctly"
+  else
+    echo "Error: $MOUNT_POINT exists but isn’t our sparse bundle"
     exit 1
   fi
 else
-  if ! echo "$PASSWORD" | hdiutil attach "$SPARSE_BUNDLE" -mountpoint "$MOUNT_POINT" -stdinpass -verbose 2>mount_error.log; then
+  if ! echo -n "$PASSWORD" | hdiutil attach "$SPARSE_BUNDLE" -mountpoint "$MOUNT_POINT" -stdinpass -verbose 2>mount_error.log; then
     echo "Error: Failed to mount sparse bundle"
     cat mount_error.log
     rm mount_error.log
@@ -97,7 +96,7 @@ else
   fi
 fi
 
-if ! gitea-cli stop; then
+if ! ~/.local/scripts/gitea-cli.sh stop; then
   echo "Error: Failed to stop Gitea"
   hdiutil detach "$MOUNT_POINT"
   exit 1
@@ -105,27 +104,43 @@ fi
 
 for FOLDER in "${FOLDERS[@]}"; do
   FULL_PATH=$(realpath "$FOLDER")
-  BASE_NAME=$(echo "$FULL_PATH" | tr '/' '_')
+  BASE_NAME=$(echo "$FULL_PATH" | sed "s|^$HOME\/|HOME|" | tr '/' '_')
   TEMP_FILE="/tmp/$BASE_NAME-$(date +%Y%m%d_%H%M%S).7z"
-  DEST_FILE="$MOUNT_POINT/$BASE_NAME-$(date +%Y%m%d_%H%M%S).7z"
-  META_FILE="$MOUNT_POINT/$BASE_NAME-$(date +%Y%m%d_%H%M%S).txt"
+  DEST_FOLDER="$MOUNT_POINT/$BASE_NAME"
+  # META_FILE="$MOUNT_POINT/$BASE_NAME-$(date +%Y%m%d_%H%M%S).txt"
 
   if ! /opt/homebrew/bin/7z a -t7z -m0=lzma2 -mx=9 -mmt=on "$TEMP_FILE" "$FOLDER"; then
     echo "Error: Failed to compress $FOLDER, skipping"
     continue
   fi
 
-  echo "$FULL_PATH" >"$TEMP_FILE.meta"
-
-  if ! rsync --archive --xattrs --acls --hard-links --progress "$TEMP_FILE" "$DEST_FILE" "$TEMP_FILE.meta" "$META_FILE"; then
-    echo "Error: rsync failed for $TEMP_FILE, skipping"
-    rm "$TEMP_FILE" "$TEMP_FILE.meta"
+  if [ ! -f "$TEMP_FILE" ]; then
+    echo "Error: Temp file $TEMP_FILE not created, skipping"
     continue
   fi
 
-  rm "$TEMP_FILE" "$TEMP_FILE.meta"
+  echo "$FULL_PATH" >"$TEMP_FILE.txt"
+
+  if [ ! -d "$MOUNT_POINT" ]; then
+    echo "Error: Mount point $MOUNT_POINT not found, skipping"
+    continue
+  fi
+
+  if ! rsync --archive --xattrs --acls --hard-links --progress "$TEMP_FILE" "$TEMP_FILE.txt" "$DEST_FOLDER"; then
+    echo "Error: rsync failed for $TEMP_FILE, skipping"
+    rm "$TEMP_FILE" "$TEMP_FILE.txt"
+    continue
+  fi
+
+  rm "$TEMP_FILE" "$TEMP_FILE.txt"
 done
 
 if ! hdiutil detach "$MOUNT_POINT"; then
   echo "Warning: Failed to unmount sparse bundle"
+  exit 1
+fi
+
+if ! ~/.local/scripts/gitea-cli.sh start; then
+  echo "Error: Backup succesfull but failed to start Gitea"
+  exit 1
 fi
