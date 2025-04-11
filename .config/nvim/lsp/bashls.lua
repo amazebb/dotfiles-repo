@@ -1,7 +1,7 @@
 return {
 	cmd = { "bash-language-server", "start" },
 	root_markers = { ".sh" },
-	filetypes = { "sh" },
+	filetypes = { "sh", "zsh" },
 	settings = {
 		bashIde = {
 			-- Glob pattern for finding and parsing shell script files in the workspace.
