@@ -8,12 +8,12 @@ usage() {
 	echo "  -h    Display this help message"
 	echo "  -v    Verbose mode, show full shellcheck output"
 	echo "Arguments:"
-	echo "  directory  Directory to search for .sh scripts (default: ~/.local/bin)"
+	echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
 	exit 0
 }
 
 # Default values
-DIR=~/.local/bin
+DIR=~/.local/scripts
 VERBOSE=false
 
 # Parse options with getopts
