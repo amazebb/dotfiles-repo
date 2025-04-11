@@ -39,6 +39,12 @@ export MATLAB_JAVA=/Users/x626f/.sdkman/candidates/java/21.0.6-tem
 # If you ever reinstall Gitea and want it to default to ~/.gitea-data without extra flags
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 
+# # Export the folders being tracked by dotfiles
+# # Place holder for when we work out how to define these here instead of dotfiles.sh
+# typeset -a DOTFILES_TRACKED_FOLDERS
+# DOTFILES_TRACKED_FOLDERS=("$HOME/.local/bin" "$HOME/.config/nvim")
+# export DOTFILES_TRACKED_FOLDERS
+
 # PATH
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
