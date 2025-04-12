@@ -1,13 +1,7 @@
-# # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# # Initialization code that may require console input (password prompts, [y/n]
-# # confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-# 	source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-#
-## Setup the hsitory
+# Setup the hsitory
 HISTFILE=~/.zsh_history
 HISTSIZE=1000
+# shellcheck disable=SC2034
 SAVEHIST=1000
 setopt appendhistory
 setopt HIST_IGNORE_ALL_DUPS
@@ -54,7 +48,7 @@ export PATH="$PATH:/Users/x626f/.lmstudio/bin"
 
 # Aliases
 alias ls="ls -GFh"
-alias brewup="brew update && brew upgrade"
+alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"
@@ -69,16 +63,19 @@ export SDKMAN_DIR="$HOME/.sdkman"
 create_aliases() {
     for script in ~/.local/scripts/*.sh; do
         base_name=$(basename "$script" .sh)
-        alias "$base_name"="\"$script\""
+        # shellcheck disable=SC2139
+        alias "$base_name"="$script"
     done
 }
 
 # Call the function to create aliases when zsh starts
 create_aliases
 
+# shellcheck source=/dev/null
 source ~/Code/GitHub/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# shellcheck source=/dev/null
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export POWERLEVEL9K_DISABLE_GITSTATUS=true
