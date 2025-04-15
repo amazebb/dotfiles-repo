@@ -81,27 +81,27 @@ setup_prompt() {
 
     # Get branch name
     local branch=$($git_cmd rev-parse --abbrev-ref HEAD 2>/dev/null)
-      # Check git status for changes
-      local porcelain=$($git_cmd status --porcelain 2>/dev/null)
+    # Check git status for changes
+    local porcelain=$($git_cmd status --porcelain 2>/dev/null)
 
-      local staged=0
-      local untracked=0
-     local unstaged=0
-      if [[ -n "$porcelain" ]]; then
-         staged=$(echo "$porcelain" | grep -c "^[MTADRC]")
-        unstaged=$(echo "$porcelain" | grep -c "^.[MTDRC]")
-        untracked=$(echo "$porcelain" | grep -c "^??")
-      fi
-      local dirty=$((unstaged + staged))
+    local staged=0
+    local untracked=0
+    local unstaged=0
+    if [[ -n "$porcelain" ]]; then
+      staged=$(echo "$porcelain" | grep -c "^[MTADRC]")
+      unstaged=$(echo "$porcelain" | grep -c "^.[MTDRC]")
+      untracked=$(echo "$porcelain" | grep -c "^??")
+    fi
+    local dirty=$((unstaged + staged))
 
-      # Build VCS string similar to p10k
-      local seg="$branch"
-       if [[ $dirty -gt 0 || $untracked -gt 0 ]]; then
-        [[ $staged -gt 0 ]] && seg="${seg} +$staged"
-        [[ $unstaged -gt 0 ]] && seg="${seg} *$unstaged"
-        [[ $untracked -gt 0 ]] && seg="${seg} ?$untracked"
-       fi
-      content[VCS]="$seg"
+    # Build VCS string similar to p10k
+    local seg="$branch"
+    if [[ $dirty -gt 0 || $untracked -gt 0 ]]; then
+      [[ $staged -gt 0 ]] && seg="${seg} +$staged"
+      [[ $unstaged -gt 0 ]] && seg="${seg} *$unstaged"
+      [[ $untracked -gt 0 ]] && seg="${seg} ?$untracked"
+    fi
+    content[VCS]="$seg"
   }
 
   # Build left prompt dynamically to include git status
