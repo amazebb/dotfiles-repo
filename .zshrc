@@ -1,8 +1,9 @@
 # Setup the hsitory
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
-# shellcheck disable=SC2034
-SAVEHIST=1000
+HISTSIZE=10000
+# To disbale shelcheck SAVEHIST warning: 
+# shellcheck disable=SC2034 
+SAVEHIST=10000
 setopt appendhistory
 setopt HIST_IGNORE_ALL_DUPS
 
@@ -14,30 +15,20 @@ bindkey "^[[B" history-beginning-search-forward
 # Prevent 'less' from saving command history
 export LESSHISTFILE=-
 
-## Terminal 
-export PS1="%m:%n:%~ $ "
-export CLICOLOR=1
-export LSCOLORS=ExFxBxDxCxegedabagacad
+# shellcheck source-path=SCRIPTDIR
+source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
+setup_prompt
 export TERM="xterm-256color"
 
 ## Set preview for nnn 
 export NNN_FIFO=/tmp/nnn.fifo
 
-## Environment Variables
-# MATLAB
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-# MATLAB >= 23b If we switch to JRE 8 we need to append the /jre folder
 export MATLAB_JAVA=/Users/x626f/.sdkman/candidates/java/21.0.6-tem
 
 # If you ever reinstall Gitea and want it to default to ~/.gitea-data without extra flags
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-
-# # Export the folders being tracked by dotfiles
-# # Place holder for when we work out how to define these here instead of dotfiles.sh
-# typeset -a DOTFILES_TRACKED_FOLDERS
-# DOTFILES_TRACKED_FOLDERS=("$HOME/.local/bin" "$HOME/.config/nvim")
-# export DOTFILES_TRACKED_FOLDERS
 
 # PATH
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
@@ -47,7 +38,10 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:/Users/x626f/.lmstudio/bin"
 
 # Aliases
-alias ls="ls -GFh"
+alias ls="eza -1 -l -s=name --group-directories-first --git --git-repos --header --icons=always --color=always"
+# Show only dot files and folders, add -D for folders only and -f for files only
+alias ls-dot="eza -1 -al -s=name --group-directories-first --git --git-repos --header --icons=always --color=always --ignore-glob=\"[!.]*\""
+
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 
 # Setup for zoxide smarter 'cd'
@@ -70,12 +64,3 @@ create_aliases() {
 
 # Call the function to create aliases when zsh starts
 create_aliases
-
-# shellcheck source=/dev/null
-source ~/Code/GitHub/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# shellcheck source=/dev/null
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-export POWERLEVEL9K_DISABLE_GITSTATUS=true
