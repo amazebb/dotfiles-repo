@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/opt/homebrew/bin/bash
 # Used for adding dotfiles in home directory to git bare repo
 # File: /Users/x626f/.local/scripts/dotfiles.sh
 
@@ -22,7 +22,6 @@ else
 fi
 
 if [[ "$1" == "git-cmd" ]]; then
-  # is_git_repo=$(git rev-parse --is-inside-work-tree 2>/dev/null && echo "true" || echo "false")
   if [[ $is_tracked -eq 1 ]]; then
     echo "/Users/x626f/.local/scripts/dotfiles.sh"
   elif [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
