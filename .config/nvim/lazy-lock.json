@@ -1,5 +1,5 @@
 {
-  "codecompanion.nvim": { "branch": "main", "commit": "d71d8b96c0b1ec8c047fb938552035864d530bb1" },
+  "codecompanion.nvim": { "branch": "main", "commit": "071f738ac152690b5518612dfbd17e1249ad819a" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
   "lualine.nvim": { "branch": "master", "commit": "86fe39534b7da729a1ac56c0466e76f2c663dc42" },
   "luarocks.nvim": { "branch": "main", "commit": "1db9093915eb16ba2473cfb8d343ace5ee04130a" },
