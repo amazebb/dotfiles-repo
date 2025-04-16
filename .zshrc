@@ -1,8 +1,8 @@
 # Setup the hsitory
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
-# To disbale shelcheck SAVEHIST warning: 
-# shellcheck disable=SC2034 
+# To disbale shelcheck SAVEHIST warning:
+# shellcheck disable=SC2034
 SAVEHIST=10000
 setopt appendhistory
 setopt HIST_IGNORE_ALL_DUPS
@@ -20,7 +20,7 @@ source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
 setup_prompt
 export TERM="xterm-256color"
 
-## Set preview for nnn 
+## Set preview for nnn
 export NNN_FIFO=/tmp/nnn.fifo
 
 # Tell MATLAB to use the MacOS Accelerate framework
@@ -55,11 +55,11 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 create_aliases() {
-    for script in ~/.local/scripts/*.sh; do
-        base_name=$(basename "$script" .sh)
-        # shellcheck disable=SC2139
-        alias "$base_name"="$script"
-    done
+  for script in ~/.local/scripts/*.sh; do
+    base_name=$(basename "$script" .sh)
+    # shellcheck disable=SC2139
+    alias "$base_name"="$script"
+  done
 }
 
 # Call the function to create aliases when zsh starts
