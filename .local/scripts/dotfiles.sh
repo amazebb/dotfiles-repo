@@ -25,7 +25,7 @@ if [[ "$1" == "git-cmd" ]]; then
   # is_git_repo=$(git rev-parse --is-inside-work-tree 2>/dev/null && echo "true" || echo "false")
   if [[ $is_tracked -eq 1 ]]; then
     echo "/Users/x626f/.local/scripts/dotfiles.sh"
-  elif git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  elif [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
     echo "/opt/homebrew/bin/git"
   else
     echo ""
