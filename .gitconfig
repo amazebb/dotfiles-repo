@@ -1,0 +1,19 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[init]
+	defaultBranch = master
+	defaultObjectFormat = sha256
+[credential]
+	helper = osxkeychain
+[core]
+	excludesfile = /Users/x626f/.gitignore_global
+[user]
+	name = 00000
+	email = ---------@icloud.com
+[diff]
+	tool = opendiff
+[dotfiles]
+	tracked-folders = /Users/x626f/.local/scripts,/Users/x626f/.config/nvim
