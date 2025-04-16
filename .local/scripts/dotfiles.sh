@@ -6,7 +6,7 @@
 # Feeds a string directly to a command's stdin
 # Equivalent to: echo "$(git config ...)" | IFS=',' read -r -a tracked_files
 # More efficient, avoids pipe/subshell
-IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<< "$(git config --global --get dotfiles.tracked-folders)"
+IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$(git config --global --get dotfiles.tracked-folders)"
 
 # Check if PWD is HOME or within DOTFILES_TRACKED_FOLDERS
 if [[ "$PWD" == "$HOME" ]]; then
