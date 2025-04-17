@@ -7,27 +7,16 @@ setup_prompt() {
   typeset -gA theme
   theme=(
     SEGMENT_SEPARATOR $'\uE0B0' # Right-pointing triangle
-    USER_BC '%K{blue}'          # User background color
-    USER_FC '%F{white}'         # User foreground color
-    PWD_BC '%K{blue}'           # PWD background color
-    PWD_FC '%F{white}'          # PWD foreground color
     TIME_BC '%k'                # Time background color (none)
     TIME_FC '%F{white}'         # Time foreground color
     STATUS_OK '%F{green}'       # Status OK color
     STATUS_ERR '%F{red}'        # Status error color
-    VCS_CLEAN_BC '%K{green}'    # Git clean background
-    VCS_CLEAN_FC '%F{black}'    # Git clean foreground
-    VCS_DIRTY_BC '%K{yellow}'   # Git dirty background
-    VCS_DIRTY_FC '%F{black}'    # Git dirty foreground
     RESET '%k%f'                # Reset colors
-    ENABLE_USER_HOST 0          # 0 to hide user@hostname by default, 1 to show
   )
 
   # Define content as global associative array
   typeset -gA content
   content=(
-    USER "%n@%m"      # Username@hostname
-    PWD "%~"          # Current directory
     TIME '%D{%H:%M}'  # Time in 24h format
     STATUS '%(?.✔.✘)' # Status indicator
     VCS ""            # Git status (populated in precmd)
@@ -35,25 +24,34 @@ setup_prompt() {
 
   # Prompt segments for left side
   prompt_segment() {
-    echo -n "${theme[PWD_BC]}${theme[PWD_FC]} ${content[PWD]} ${theme[RESET]}${theme[PWD_FC]}${theme[SEGMENT_SEPARATOR]}"
+    k='%K{blue}'
+    echo -n "$k%50<..<%~"
+  }
+
+  prompt_segment_tail() {
+    s='%F{blue}\uE0B0'
+    # Prevent Mac terminal brightening font color with no background
+    # https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
+    n='\e[48;5;256m' # set background to an out of range value, %K{256} does not work
+    if [[ -n "${content[VCS]}" ]]; then
+      local branch="${content[VCS]%% *}"        # Get branch name before modifiers
+      local modifiers="${content[VCS]#$branch}" # Get modifiers (+/*/)
+      if [[ "${modifiers}" =~ "[+~?]" ]]; then
+        b='%K{yellow}'
+        f='%F{yellow}'
+      else
+        b='%K{green}'
+        f='%F{green}'
+      fi
+      echo -n "$b$s %f${content[VCS]}$f $n\uE0B0%f%k"
+    else
+      echo -n "$n$s%f%k"
+    fi
   }
 
   # Prompt segment for user@host without triangle
   user_host_segment() {
-    echo -n "${theme[USER_BC]}${theme[USER_FC]} ${content[USER]} ${theme[RESET]}"
-  }
-
-  # Git status segment
-  vcs_segment() {
-    if [[ -n "${content[VCS]}" ]]; then
-      local branch="${content[VCS]%% *}"        # Get branch name before modifiers
-      local modifiers="${content[VCS]#$branch}" # Get modifiers (+/*/)
-      if [[ "${modifiers}" =~ "[+*?!]" ]]; then
-        echo -n "${theme[VCS_DIRTY_BC]}${theme[VCS_DIRTY_FC]} ${content[VCS]} ${theme[RESET]}${theme[VCS_DIRTY_FC]}${theme[SEGMENT_SEPARATOR]}"
-      else
-        echo -n "${theme[VCS_CLEAN_BC]}${theme[VCS_CLEAN_FC]} ${content[VCS]} ${theme[RESET]}${theme[VCS_CLEAN_FC]}${theme[SEGMENT_SEPARATOR]}"
-      fi
-    fi
+    echo -n "%n@%m"
   }
 
   # Right prompt segment for status and time
@@ -98,7 +96,7 @@ setup_prompt() {
     local seg="$branch"
     if [[ $dirty -gt 0 || $untracked -gt 0 ]]; then
       [[ $staged -gt 0 ]] && seg="${seg} +$staged"
-      [[ $unstaged -gt 0 ]] && seg="${seg} *$unstaged"
+      [[ $unstaged -gt 0 ]] && seg="${seg} ~$unstaged"
       [[ $untracked -gt 0 ]] && seg="${seg} ?$untracked"
     fi
     content[VCS]="$seg"
@@ -106,12 +104,13 @@ setup_prompt() {
 
   # Build left prompt dynamically to include git status
   precmd_prompt() {
+    ENABLE_USER_HOST=0
     local left_prompt=""
-    if [[ ${theme[ENABLE_USER_HOST]} -eq 1 ]]; then
+    if [[ ${ENABLE_USER_HOST} -eq 1 ]]; then
       left_prompt+=$(user_host_segment)
     fi
     left_prompt+=$(prompt_segment)
-    left_prompt+=$(vcs_segment)
+    left_prompt+=$(prompt_segment_tail)
     left_prompt+="%f "
     PS1="${left_prompt}"
   }
