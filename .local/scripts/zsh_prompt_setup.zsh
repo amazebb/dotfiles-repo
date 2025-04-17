@@ -3,26 +3,8 @@ setup_prompt() {
   # Enable command substitution in prompt
   setopt PROMPT_SUBST
 
-  # Define theme as global associative array to ensure access
-  typeset -gA theme
-  theme=(
-    SEGMENT_SEPARATOR $'\uE0B0' # Right-pointing triangle
-    TIME_BC '%k'                # Time background color (none)
-    TIME_FC '%F{white}'         # Time foreground color
-    STATUS_OK '%F{green}'       # Status OK color
-    STATUS_ERR '%F{red}'        # Status error color
-    RESET '%k%f'                # Reset colors
-  )
+  betz_content_vcs=""
 
-  # Define content as global associative array
-  typeset -gA content
-  content=(
-    TIME '%D{%H:%M}'  # Time in 24h format
-    STATUS '%(?.✔.✘)' # Status indicator
-    VCS ""            # Git status (populated in precmd)
-  )
-
-  # Prompt segments for left side
   prompt_segment() {
     k='%K{blue}'
     echo -n "$k%50<..<%~"
@@ -33,9 +15,9 @@ setup_prompt() {
     # Prevent Mac terminal brightening font color with no background
     # https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
     n='\e[48;5;256m' # set background to an out of range value, %K{256} does not work
-    if [[ -n "${content[VCS]}" ]]; then
-      local branch="${content[VCS]%% *}"        # Get branch name before modifiers
-      local modifiers="${content[VCS]#$branch}" # Get modifiers (+/*/)
+    if [[ -n "${betz_content_vcs}" ]]; then
+      local branch="${betz_content_vcs%% *}"        # Get branch name before modifiers
+      local modifiers="${betz_content_vcs#$branch}" # Get modifiers (+/*/)
       if [[ "${modifiers}" =~ "[+~?]" ]]; then
         b='%K{yellow}'
         f='%F{yellow}'
@@ -43,7 +25,7 @@ setup_prompt() {
         b='%K{green}'
         f='%F{green}'
       fi
-      echo -n "$b$s %f${content[VCS]}$f $n\uE0B0%f%k"
+      echo -n "$b$s %f${betz_content_vcs}$f $n\uE0B0%f%k"
     else
       echo -n "$n$s%f%k"
     fi
@@ -54,21 +36,10 @@ setup_prompt() {
     echo -n "%n@%m"
   }
 
-  # Right prompt segment for status and time
-  rprompt_segment() {
-    local status_color
-    if [[ $? -eq 0 ]]; then
-      status_color="${theme[STATUS_OK]}"
-    else
-      status_color="${theme[STATUS_ERR]}"
-    fi
-    echo -n "${status_color}${content[STATUS]}${theme[RESET]} ${theme[TIME_BC]}${theme[TIME_FC]}${content[TIME]}${theme[RESET]}"
-  }
-
   # Update Git status before each prompt
   precmd() {
     # Reset VCS content
-    content[VCS]=""
+    betz_content_vcs=""
 
     # Get git command using dotfiles.sh
     local git_cmd
@@ -99,7 +70,7 @@ setup_prompt() {
       [[ $unstaged -gt 0 ]] && seg="${seg} ~$unstaged"
       [[ $untracked -gt 0 ]] && seg="${seg} ?$untracked"
     fi
-    content[VCS]="$seg"
+    betz_content_vcs="$seg"
   }
 
   # Build left prompt dynamically to include git status
@@ -117,13 +88,8 @@ setup_prompt() {
 
   # Update right prompt dynamically
   rprompt_segment_dynamic() {
-    local status_color
-    if [[ $? -eq 0 ]]; then
-      status_color="${theme[STATUS_OK]}"
-    else
-      status_color="${theme[STATUS_ERR]}"
-    fi
-    RPS1="${status_color}${content[STATUS]}${theme[RESET]} ${theme[TIME_BC]}${theme[TIME_FC]}${content[TIME]}${theme[RESET]}"
+    TIME='%D{%H:%M}' # Time in 24h format
+    RPS1="%(?.%F{green}✔.%F{red}✘)%f%k %k$TIME%f%k"
   }
 
   # Set initial PS1 and RPS1
