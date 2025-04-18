@@ -1,13 +1,9 @@
-#!/bin/bash
-# A script to generate a new shell script template with specified options
+#!/opt/homebrew/bin/bash
+# A script to generate a new shell script template with specified positional inputs and optional arguments
 
-# Function to validate single-character argument names
-validate_single_char() {
+# Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
+validate_arg_name() {
   local arg_name="$1"
-  if [[ ! "$arg_name" =~ ^[a-zA-Z]$ ]]; then
-    echo "Error: Argument name '$arg_name' must be a single letter."
-    exit 1
-  fi
   if [[ "$arg_name" == "h" || "$arg_name" == "v" ]]; then
     echo "Error: Argument name '$arg_name' is reserved for help (-h) or version (-v)."
     exit 1
@@ -39,17 +35,17 @@ if [[ -z "$script_desc" ]]; then
   exit 1
 fi
 
-# Prompt for required arguments
-echo "Enter required arguments (single letters, one at a time). Press Enter without input to finish."
+# Prompt for required positional inputs
+echo "Enter required positional inputs (one at a time)"
 required_args=()
 required_desc=()
 while true; do
-  read -r -p "Required argument letter (or Enter to finish): " arg
+  read -r -p "Required input name (or Enter to finish): " arg
   if [[ -z "$arg" ]]; then
     break
   fi
-  validate_single_char "$arg"
-  read -r -p "Description for -$arg: " desc
+  validate_arg_name "$arg"
+  read -r -p "Description for $arg: " desc
   if [[ -z "$desc" ]]; then
     echo "Error: Description cannot be empty."
     exit 1
@@ -61,6 +57,7 @@ done
 # Prompt for optional arguments
 echo "Enter optional arguments (single letters, one at a time). Press Enter without input to finish."
 optional_args=()
+optional_internal=()
 optional_desc=()
 optional_defaults=()
 while true; do
@@ -68,7 +65,11 @@ while true; do
   if [[ -z "$arg" ]]; then
     break
   fi
-  validate_single_char "$arg"
+  validate_arg_name "$arg"
+  read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
+  if [[ -z "$internal" ]]; then
+    internal="$arg"
+  fi
   read -r -p "Description for -$arg: " desc
   if [[ -z "$desc" ]]; then
     echo "Error: Description cannot be empty."
@@ -76,6 +77,7 @@ while true; do
   fi
   read -r -p "Default value for -$arg (or Enter for none): " default
   optional_args+=("$arg")
+  optional_internal+=("${internal^^}")
   optional_desc+=("$desc")
   optional_defaults+=("$default")
 done
@@ -94,30 +96,33 @@ VERSION="1.0.0"
 
 # Help function
 usage() {
-    echo "Usage: $script_basename [options]"
-    echo "Options:"
-    echo "  -h    Display this help message"
-    echo "  -v    Display version information"
+    echo "Usage: $script_basename"
 EOF
 
-# Add required arguments to usage
-for i in "${!required_args[@]}"; do
-  arg="${required_args[$i]}"
-  desc="${required_desc[$i]}"
-  echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
-done
+# Add required positional inputs to usage
+if [[ ${#required_args[@]} -gt 0 ]]; then
+  echo "    echo \"Required inputs:\"" >>"$script_name"
+  for i in "${!required_args[@]}"; do
+    arg="${required_args[$i]}"
+    desc="${required_desc[$i]}"
+    echo "    echo \"  ${arg}    ${desc}\"" >>"$script_name"
+  done
+fi
 
 # Add optional arguments to usage
-for i in "${!optional_args[@]}"; do
-  arg="${optional_args[$i]}"
-  desc="${optional_desc[$i]}"
-  default="${optional_defaults[$i]}"
-  if [[ -n "$default" ]]; then
-    echo "    echo \"  -${arg}    ${desc} (default: ${default})\"" >>"$script_name"
-  else
-    echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
-  fi
-done
+if [[ ${#optional_args[@]} -gt 0 ]]; then
+  echo "    echo \"[OPTIONAL]\"" >>"$script_name"
+  for i in "${!optional_args[@]}"; do
+    arg="${optional_args[$i]}"
+    desc="${optional_desc[$i]}"
+    default="${optional_defaults[$i]}"
+    if [[ -n "$default" ]]; then
+      echo "    echo \"  -${arg}    ${desc} (default: ${default})\"" >>"$script_name"
+    else
+      echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
+    fi
+  done
+fi
 
 # Finish usage function and add version
 cat >>"$script_name" <<'EOF'
@@ -130,54 +135,48 @@ version() {
     exit 0
 }
 
-# Check if no arguments are provided
-if [[ $# -eq 0 ]]; then
+# Check if help or version is requested
+if [[ "$1" == "-h" ]]; then
     usage
+fi
+if [[ "$1" == "-v" ]]; then
+    version
 fi
 
 EOF
 
 # Initialize optional arguments with defaults
 for i in "${!optional_args[@]}"; do
-  arg="${optional_args[$i]}"
+  internal="${optional_internal[$i]}"
   default="${optional_defaults[$i]}"
   if [[ -n "$default" ]]; then
-    echo "${arg}=\"${default}\"" >>"$script_name"
+    echo "${internal}=\"${default}\"" >>"$script_name"
   else
-    echo "${arg}=" >>"$script_name"
+    echo "${internal}=" >>"$script_name"
   fi
 done
 
-# Construct the getopts string
+# Construct the getopts string for optional arguments
 getopts_string="hv"
-for arg in "${required_args[@]}"; do
-  getopts_string="${getopts_string}${arg}:"
-done
 for arg in "${optional_args[@]}"; do
   getopts_string="${getopts_string}${arg}:"
 done
 
-# Add the getopts parsing loop
+# Add the getopts parsing loop for optional arguments
 cat >>"$script_name" <<EOF
-
-# Parse options with getopts
+# Parse optional arguments with getopts
 while getopts "$getopts_string" opt; do
     case "\$opt" in
         h) usage ;;
         v) version ;;
 EOF
 
-# Add cases for required arguments
-for arg in "${required_args[@]}"; do
-  cat >>"$script_name" <<EOF
-        ${arg}) ${arg}="\$OPTARG" ;;
-EOF
-done
-
 # Add cases for optional arguments
-for arg in "${optional_args[@]}"; do
+for i in "${!optional_args[@]}"; do
+  arg="${optional_args[$i]}"
+  internal="${optional_internal[$i]}"
   cat >>"$script_name" <<EOF
-        ${arg}) ${arg}="\$OPTARG" ;;
+        ${arg}) ${internal}="\$OPTARG" ;;
 EOF
 done
 
@@ -192,31 +191,41 @@ shift $((OPTIND-1))
 
 EOF
 
-# Add checks for required arguments
-for arg in "${required_args[@]}"; do
+# Add checks for required positional inputs
+if [[ ${#required_args[@]} -gt 0 ]]; then
   cat >>"$script_name" <<EOF
-if [[ -z "\$${arg}" ]]; then
-    echo "Error: Required argument -${arg} missing"
+# Check required positional inputs
+if [[ \$# -lt ${#required_args[@]} ]]; then
+    echo "Error: Missing required positional inputs"
     usage
 fi
+
 EOF
-done
+  for i in "${!required_args[@]}"; do
+    arg="${required_args[$i]}"
+    cat >>"$script_name" <<EOF
+${arg^^}=\$$((i + 1))
+EOF
+  done
+fi
 
 # Add a placeholder for the main script logic
 cat >>"$script_name" <<'EOF'
 
 # Main script logic here
-echo "Script running with the following arguments:"
+echo "Script running with the following inputs:"
 EOF
 
-# Echo required arguments
+# Echo required positional inputs
 for arg in "${required_args[@]}"; do
-  echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
+  echo "echo \"${arg}: \$${arg^^}\"" >>"$script_name"
 done
 
 # Echo optional arguments
-for arg in "${optional_args[@]}"; do
-  echo "echo \"-${arg}: \$${arg}\"" >>"$script_name"
+for i in "${!optional_args[@]}"; do
+  arg="${optional_args[$i]}"
+  internal="${optional_internal[$i]}"
+  echo "echo \"-${arg}: \$${internal}\"" >>"$script_name"
 done
 
 # Finalize the script
