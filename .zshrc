@@ -38,9 +38,9 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:/Users/x626f/.lmstudio/bin"
 
 # Aliases
-alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always --color-scale=age"
+alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only and -f for files only
-alias ls-dot="eza -1 -al -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always --color-scale=age --ignore-glob=\"[!.]*\""
+alias ls-dot="eza -1 -al -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always --ignore-glob=\"[!.]*\""
 
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 
@@ -64,3 +64,4 @@ create_aliases() {
 
 # Call the function to create aliases when zsh starts
 create_aliases
+export EZA_COLORS="da=90"
