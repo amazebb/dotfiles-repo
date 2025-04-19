@@ -4,7 +4,7 @@
 # Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
 validate_arg_name() {
   local arg_name="$1"
-  if [[ "$arg_name" == "h" || "$arg_name" == "v" ]]; then
+  if [[ $arg_name == "h" || $arg_name == "v" ]]; then
     echo "Error: Argument name '$arg_name' is reserved for help (-h) or version (-v)."
     exit 1
   fi
@@ -12,25 +12,25 @@ validate_arg_name() {
 
 # Prompt for the script name
 read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
-if [[ -z "$script_name" ]]; then
+if [[ -z $script_name ]]; then
   echo "Error: Script name cannot be empty."
   exit 1
 fi
 
 # Ensure the script name ends with .sh
-if [[ ! "$script_name" =~ \.sh$ ]]; then
+if [[ ! $script_name =~ \.sh$ ]]; then
   script_name="$script_name.sh"
 fi
 
 # Check if file already exists
-if [[ -f "$script_name" ]]; then
+if [[ -f $script_name ]]; then
   echo "Error: File '$script_name' already exists."
   exit 1
 fi
 
 # Prompt for script description
 read -r -p "Enter a one-line explanation of what the script does: " script_desc
-if [[ -z "$script_desc" ]]; then
+if [[ -z $script_desc ]]; then
   echo "Error: Script description cannot be empty."
   exit 1
 fi
@@ -41,12 +41,12 @@ required_args=()
 required_desc=()
 while true; do
   read -r -p "Required input name (or Enter to finish): " arg
-  if [[ -z "$arg" ]]; then
+  if [[ -z $arg ]]; then
     break
   fi
   validate_arg_name "$arg"
   read -r -p "Description for $arg: " desc
-  if [[ -z "$desc" ]]; then
+  if [[ -z $desc ]]; then
     echo "Error: Description cannot be empty."
     exit 1
   fi
@@ -62,16 +62,16 @@ optional_desc=()
 optional_defaults=()
 while true; do
   read -r -p "Optional argument letter (or Enter to finish): " arg
-  if [[ -z "$arg" ]]; then
+  if [[ -z $arg ]]; then
     break
   fi
   validate_arg_name "$arg"
   read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
-  if [[ -z "$internal" ]]; then
+  if [[ -z $internal ]]; then
     internal="$arg"
   fi
   read -r -p "Description for -$arg: " desc
-  if [[ -z "$desc" ]]; then
+  if [[ -z $desc ]]; then
     echo "Error: Description cannot be empty."
     exit 1
   fi
@@ -101,7 +101,7 @@ EOF
 
 # Add required positional inputs to usage
 if [[ ${#required_args[@]} -gt 0 ]]; then
-  echo "    echo \"Required inputs:\"" >>"$script_name"
+  echo '    echo "Required inputs:"' >>"$script_name"
   for i in "${!required_args[@]}"; do
     arg="${required_args[$i]}"
     desc="${required_desc[$i]}"
@@ -111,12 +111,12 @@ fi
 
 # Add optional arguments to usage
 if [[ ${#optional_args[@]} -gt 0 ]]; then
-  echo "    echo \"[OPTIONAL]\"" >>"$script_name"
+  echo '    echo "[OPTIONAL]"' >>"$script_name"
   for i in "${!optional_args[@]}"; do
     arg="${optional_args[$i]}"
     desc="${optional_desc[$i]}"
     default="${optional_defaults[$i]}"
-    if [[ -n "$default" ]]; then
+    if [[ -n $default ]]; then
       echo "    echo \"  -${arg}    ${desc} (default: ${default})\"" >>"$script_name"
     else
       echo "    echo \"  -${arg}    ${desc}\"" >>"$script_name"
@@ -149,7 +149,7 @@ EOF
 for i in "${!optional_args[@]}"; do
   internal="${optional_internal[$i]}"
   default="${optional_defaults[$i]}"
-  if [[ -n "$default" ]]; then
+  if [[ -n $default ]]; then
     echo "${internal}=\"${default}\"" >>"$script_name"
   else
     echo "${internal}=" >>"$script_name"

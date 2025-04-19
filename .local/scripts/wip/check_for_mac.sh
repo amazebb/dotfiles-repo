@@ -29,7 +29,7 @@ process_ip() {
     mac_address=$(get_mac_address "$ip")
 
     # Check if the MAC address matches the target MAC
-    if [[ "$mac_address" == "$target_mac" ]]; then
+    if [[ $mac_address == "$target_mac" ]]; then
       echo "Match found: IP $ip has MAC address $mac_address"
       exit 0
     fi

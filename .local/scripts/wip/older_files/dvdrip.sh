@@ -53,7 +53,7 @@ mkdir lossy lossy/audio lossy/video lossy/audio/pcm lossy/audio/down2ch
 pcm="0:1"
 dts="0:2"
 vid="0:0"
-t="-ss \\2 -to \\3"
+t='-ss \2 -to \3'
 ca="libfdk_aac -vbr 5"
 cv="libx264 -crf 28 -preset fast"
 copy="-c:a copy -c:v copy"

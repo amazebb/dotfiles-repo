@@ -24,10 +24,10 @@ version() {
 }
 
 # Check if help or version is requested
-if [[ "$1" == "-h" ]]; then
+if [[ $1 == "-h" ]]; then
   usage
 fi
-if [[ "$1" == "-v" ]]; then
+if [[ $1 == "-v" ]]; then
   version
 fi
 

@@ -16,12 +16,12 @@ display_help() {
 }
 
 # Check for -h option for help
-if [[ "$1" == "-h" ]]; then
+if [[ $1 == "-h" ]]; then
   display_help
 fi
 
 # Check for sufficient number of arguments
-if [[ "$#" -ne 2 ]]; then
+if [[ $# -ne 2 ]]; then
   echo "Error: Missing source and/or destination path."
   display_help
 fi

@@ -21,10 +21,10 @@ setup_prompt() {
     # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
     # We set background to an out of range value works, %k and %K{256} do not work
     n='%{\e[48;5;256m%}'
-    if [[ -n "${betz_content_vcs}" ]]; then
+    if [[ -n ${betz_content_vcs} ]]; then
       local branch="${betz_content_vcs%% *}"
       local modifiers="${betz_content_vcs#$branch}"
-      if [[ "${modifiers}" =~ "[+~?]" ]]; then
+      if [[ ${modifiers} =~ "[+~?]" ]]; then
         b='%{%K{yellow}%}'
         f='%{%F{yellow}%}'
       else
@@ -50,7 +50,7 @@ setup_prompt() {
     # Get git command using dotfiles.sh
     local git_cmd
     git_cmd=$(/Users/x626f/.local/scripts/dotfiles.sh git-cmd)
-    if [[ -z "$git_cmd" ]]; then
+    if [[ -z $git_cmd ]]; then
       return
     fi
 
@@ -62,7 +62,7 @@ setup_prompt() {
     local staged=0
     local untracked=0
     local unstaged=0
-    if [[ -n "$porcelain" ]]; then
+    if [[ -n $porcelain ]]; then
       staged=$(echo "$porcelain" | grep -c "^[MTADRC]")
       unstaged=$(echo "$porcelain" | grep -c "^.[MTDRC]")
       untracked=$(echo "$porcelain" | grep -c "^??")

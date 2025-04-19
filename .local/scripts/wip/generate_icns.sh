@@ -63,7 +63,7 @@ else
 fi
 
 # Check if the input file exists
-if [[ ! -f "$input_file" ]]; then
+if [[ ! -f $input_file ]]; then
   echo "Error: File '$input_file' not found."
   exit 1
 fi
@@ -74,9 +74,9 @@ mkdir -p "$iconset_dir"
 # Determine the file type
 file_type=$(file --mime-type -b "$input_file")
 
-if [[ "$file_type" == "image/png" ]]; then
+if [[ $file_type == "image/png" ]]; then
   generate_from_png "$input_file" "$iconset_dir"
-elif [[ "$file_type" == "image/svg+xml" ]]; then
+elif [[ $file_type == "image/svg+xml" ]]; then
   generate_from_svg "$input_file" "$iconset_dir"
 else
   echo "Error: Unsupported file type. Please provide a .png or .svg file."

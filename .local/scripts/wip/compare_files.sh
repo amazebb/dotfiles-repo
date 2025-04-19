@@ -2,7 +2,7 @@
 
 # Automator saves workflows such as Quick Actions in ~/Library/Services/
 
-if [[ "$#" -ne 2 ]]; then
+if [[ $# -ne 2 ]]; then
   osascript -e 'display dialog "Select exactly two files to compare." buttons {"OK"} default button "OK"'
   exit 1
 fi
@@ -51,7 +51,7 @@ compare_text_files() {
 hash1=$(shasum -a 256 "$1" | awk '{print $1}')
 hash2=$(shasum -a 256 "$2" | awk '{print $1}')
 
-if [[ "$hash1" == "$hash2" ]]; then
+if [[ $hash1 == "$hash2" ]]; then
   osascript -e 'display dialog "Files are identical (content-wise)!" buttons {"OK"} default button "OK"'
 else
   # Detect file types
@@ -59,9 +59,9 @@ else
   file2_type=$(file --mime-type -b "$2")
 
   # Determine if files are binary or text
-  if [[ "$file1_type" == "text/plain" && "$file2_type" == "text/plain" ]]; then
+  if [[ $file1_type == "text/plain" && $file2_type == "text/plain" ]]; then
     compare_text_files "$1" "$2"
-  elif [[ "$file1_type" == "application/pdf" && "$file2_type" == "application/pdf" ]]; then
+  elif [[ $file1_type == "application/pdf" && $file2_type == "application/pdf" ]]; then
     compare_pdfs "$1" "$2"
   else
     compare_binary_files "$1" "$2"

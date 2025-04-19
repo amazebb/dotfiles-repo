@@ -47,7 +47,7 @@ mkdir lossy2 lossy2/video
 
 dts="0:1"
 vid="0:0"
-t="-ss \\2 -to \\3"
+t='-ss \2 -to \3'
 ca="copy"
 cv="libx264 -crf 27 -preset fast"
 
