@@ -3,12 +3,13 @@
 
 # Help function
 usage() {
-  echo "Usage: $(basename "$0") [-h] [-v] [directory]"
+  echo "Usage: $(basename "$0") [directory] [options]"
+  echo "Arguments:"
+  echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
   echo "Options:"
   echo "  -h    Display this help message"
   echo "  -v    Verbose mode, show full shellcheck output"
-  echo "Arguments:"
-  echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
+  echo "  -d    Max Depth (default: recurses)"
   exit 0
 }
 
@@ -17,10 +18,11 @@ DIR=~/.local/scripts
 VERBOSE=false
 
 # Parse options with getopts
-while getopts "hv" opt; do
+while getopts "hvd:" opt; do
   case "$opt" in
-    h) usage ;;
+    d) MAXDEPTH="$OPTARG" ;;
     v) VERBOSE=true ;;
+    h) usage ;;
     ?) usage ;;
   esac
 done
@@ -54,7 +56,7 @@ files_without_issues=0
 # An explanation:
 # find ... -print0 outputs filenames separated by null bytes, which handles spaces, newlines, etc., safely.
 # while IFS= read -r -d '' file reads null-delimited input into the files array.
-# < <(...) (process substitution) avoids a subshell, so the array is populated in the main shell.
+# < <(...) (process substitution) avoids a subshell, the array is populated in the main shell
 files=()
 max_basename_length=0
 while IFS= read -r -d '' file; do
@@ -64,7 +66,7 @@ while IFS= read -r -d '' file; do
   if [ "$basename_length" -gt "$max_basename_length" ]; then
     max_basename_length=$basename_length
   fi
-done < <(find "$DIR" -type f -name "*.sh" -print0)
+done < <(find "$DIR" -type f -name "*.sh" ${MAXDEPTH:+-maxdepth "$MAXDEPTH"} -print0)
 
 # Add some padding for safety (e.g., +2 for extra space)
 pad=$((max_basename_length + 2))
