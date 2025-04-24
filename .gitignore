@@ -1,0 +1,8 @@
+/*
+!/.local
+/.local/*
+!/.local/scripts
+
+!/.config
+/.config/*
+!/.config/nvim
