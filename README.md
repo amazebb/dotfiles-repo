@@ -60,7 +60,8 @@ Also see [here](https://askubuntu.com/a/1316230)
 
 A collection of personal shell scripts in ~/.local/scripts
 
-This list was created by running ```list-scripts```
+This list was created by running **list-scripts**
+
 ```
 check-scripts.sh     bash     Runs shellcheck on .sh scripts in a given folder to identify issues
 compare-folders.sh   bash     Compare files in different folders
@@ -85,7 +86,7 @@ There is a quirk with setting colors on MacOS (15.4.1) and zsh (5.9 arm64-apple-
 
 This is irregardless of the ANSI colors setup in Terminal for Normal and Bright.
 
-For instance if we try to set ```%F{blue}``` and ```%K{blue}``` they will look different, even though there RGB values 
+For instance if we try to set **%F{blue}** and **%K{blue}** they will look different, even though there RGB values 
 in the Terminal.app settings palette may have been set to identical colors. 
 
 No amount of using the expansions with named, 'blue', or numeric values, 004, 
@@ -94,7 +95,7 @@ or trying to reset the colors using %k or %f seems to fix it.
 The fix is as thus, instead of using %k to reset the background, we need to use a number that is out of range of Terminals 0-255 colors,
 and to use it with an escape sequence.
 
-The trick is to use the [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) ```\e[48;5;256m```
+The trick is to use the [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) **\e[48;5;256m**
 
 So instead of matching the right trianlge foreground color to the background of previous space character
 ```zsh
@@ -108,6 +109,5 @@ print -P "%K{blue} \e[48;5;256m%F{blue}\uE0B0"
 ```
 
 Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3725) just absolutely struggling with this on 4/17/25
-
 </details>
 
