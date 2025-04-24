@@ -6,3 +6,9 @@
 !/.config
 /.config/*
 !/.config/nvim
+
+!.gitignore
+!.gitignore_global
+!.zshrc
+!.editor_config
+!README.md
