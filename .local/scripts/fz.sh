@@ -64,4 +64,4 @@ echo "-r: $RG_OPTIONS"
 echo "-z: $FZF_OPTIONS"
 
 # Add your script logic below
-rg --no-messages --files-with-matches "${PATTERN}" "${FOLDERS}" | fzf --multi --style full --preview "rg --pretty --context 5 dotfiles {}"
+rg --no-messages --files-with-matches "${PATTERN}" "${FOLDERS}" | fzf --multi --style full --preview "rg --pretty --context 0 $PATTERN {}"
