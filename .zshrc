@@ -30,6 +30,9 @@ export MATLAB_JAVA=/Users/x626f/.sdkman/candidates/java/21.0.6-tem
 # If you ever reinstall Gitea and want it to default to ~/.gitea-data without extra flags
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 
+# Remove blinking text in the date column
+export EZA_COLORS="da=90"
+
 # PATH
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
@@ -41,8 +44,8 @@ export PATH="$PATH:/Users/x626f/.lmstudio/bin"
 alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only and -f for files only
 alias ls-dot="eza -1 -al -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always --ignore-glob=\"[!.]*\""
-
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
+alias gitd="dotfiles"
 
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"
@@ -64,4 +67,3 @@ create_aliases() {
 
 # Call the function to create aliases when zsh starts
 create_aliases
-export EZA_COLORS="da=90"
