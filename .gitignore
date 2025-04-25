@@ -9,6 +9,7 @@
 
 !.gitignore
 !.gitignore_global
+!.gitconfig
 !.zshrc
 !.editor_config
 !README.md

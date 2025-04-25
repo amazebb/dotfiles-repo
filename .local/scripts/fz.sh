@@ -60,13 +60,14 @@ fzf --disabled --ansi --multi \
   --bind "start:$RELOAD" --bind "change:$RELOAD" \
   --bind "enter:become:$OPENER" \
   --bind "ctrl-o:execute:$OPENER" \
-  --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-/:toggle-preview' \
+  --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-p:toggle-preview' \
   --bind 'ctrl-t:transform:[[ ! $FZF_PROMPT =~ ripgrep ]] &&
       echo "rebind(change)+change-prompt(1. ripgrep> )+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r" ||
       echo "unbind(change)+change-prompt(2. fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f"' \
   --prompt '1. ripgrep> ' \
   --delimiter : \
-  --header 'CTRL-T: Switch between ripgrep/fzf' \
+  --header 'CTRL-T: Switch between ripgrep/fzf 
+ALT-A: Select-all, ALT-D: Deselect-all, CTRL-P: Toggle-preview' \
   --style full \
   --layout=reverse-list \
   --preview 'bat --theme=auto:system --style=full --wrap=character --color=always --highlight-line {2} {1}' \
