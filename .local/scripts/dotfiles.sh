@@ -1,6 +1,6 @@
 #!/opt/homebrew/bin/bash
 # Used for adding dotfiles in home directory to git bare repo
-# File: /Users/x626f/.local/scripts/dotfiles.sh
+# File: $HOME/.local/scripts/dotfiles.sh
 
 # <<< is a here-string in Bash
 # Feeds a string directly to a command's stdin
@@ -23,7 +23,7 @@ fi
 
 if [[ $1 == "git-cmd" ]]; then
   if [[ $is_tracked -eq 1 ]]; then
-    echo "/Users/x626f/.local/scripts/dotfiles.sh"
+    echo "$HOME/.local/scripts/dotfiles.sh"
   elif [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
     echo "/opt/homebrew/bin/git"
   else

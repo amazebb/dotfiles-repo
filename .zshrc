@@ -25,7 +25,7 @@ export NNN_FIFO=/tmp/nnn.fifo
 
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-export MATLAB_JAVA=/Users/x626f/.sdkman/candidates/java/21.0.6-tem
+export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.6-tem
 
 # If you ever reinstall Gitea and want it to default to ~/.gitea-data without extra flags
 export GITEA_WORK_DIR="$HOME/.gitea-data"
@@ -38,7 +38,7 @@ export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:/Users/x626f/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # Aliases
 alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
@@ -67,3 +67,8 @@ create_aliases() {
 
 # Call the function to create aliases when zsh starts
 create_aliases
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/x626f/.lmstudio/bin"
+# End of LM Studio CLI section
+

@@ -49,7 +49,7 @@ setup_prompt() {
 
     # Get git command using dotfiles.sh
     local git_cmd
-    git_cmd=$(/Users/x626f/.local/scripts/dotfiles.sh git-cmd)
+    git_cmd=$($HOME/.local/scripts/dotfiles.sh git-cmd)
     if [[ -z $git_cmd ]]; then
       return
     fi

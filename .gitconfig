@@ -9,11 +9,11 @@
 [credential]
 	helper = osxkeychain
 [core]
-	excludesfile = /Users/x626f/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [user]
 	name = 00000
 	email = ---------@icloud.com
 [diff]
 	tool = opendiff
 [dotfiles]
-	tracked-folders = /Users/x626f/.local/scripts,/Users/x626f/.config/nvim
+	tracked-folders = ~/.local/scripts,~/.config/nvim
