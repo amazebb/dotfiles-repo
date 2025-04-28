@@ -22,7 +22,7 @@ export NNN_FIFO
 )
 
 # Preview command
-preview_cmd="$HOME/.local/bin/preview_cmd.sh"
+preview_cmd="$HOME/.local/scripts/preview_cmd.sh"
 
 # Use `tmux` split as preview
 if [ -e "${TMUX%%,*}" ]; then
