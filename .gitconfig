@@ -17,3 +17,9 @@
 	tool = opendiff
 [dotfiles]
 	tracked-folders = ~/.local/scripts,~/.config/nvim
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	d = diff
+	pom = push origin master
