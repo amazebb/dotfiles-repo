@@ -1,6 +1,5 @@
 #!/opt/homebrew/bin/bash
-# Used for adding dotfiles in home directory to git bare repo
-# File: $HOME/.local/scripts/dotfiles.sh
+# Git wrapper to manage dotfiles in home folder using a bare repo
 
 # <<< is a here-string in Bash
 # Feeds a string directly to a command's stdin

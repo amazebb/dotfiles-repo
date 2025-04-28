@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs shellcheck on .sh scripts in a given folder to identify issues
+# Runs shellcheck on scripts and identify issues
 
 # Help function
 usage() {

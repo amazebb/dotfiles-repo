@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compare files in different folders
+# Compare files in folders using diff
 
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <folder1> <folder2> [-f filter] [-w] [-s|-u] [-c]"

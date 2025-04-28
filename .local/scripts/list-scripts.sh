@@ -26,5 +26,5 @@ find "$DIR" -type f -depth 1 -name "*.sh" | sort -k1 | while read -r script; do
   desc=${desc:-"No description available"}
 
   # Print formatted output: name, type, and description
-  printf "%-20s %-8s %s\n" "$name" "$type" "$desc"
+  printf "%-20s %-25s %s\n" "$name" "$shebang" "$desc"
 done

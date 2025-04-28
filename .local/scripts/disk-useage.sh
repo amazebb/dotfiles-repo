@@ -1,5 +1,5 @@
 #!/bin/dash
-# Disk usage analyzer with configurable options
+# Disk usage analyzer that groups folders by size
 # Usage: disk-usage [path1 path2 ...] [-e exclude1 exclude2 ...] [-d display_depth] [-D depth] [-a] [-v] [-r] [-h]
 
 # Defaults

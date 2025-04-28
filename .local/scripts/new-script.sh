@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/bash
-# A script to generate a new shell script template with specified positional inputs and optional arguments
+# Generate a new shell script template with specified positional inputs and optional arguments
 
 # Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
 validate_arg_name() {
