@@ -23,7 +23,6 @@ version() {
   exit 0
 }
 
-# shellcheck disable=SC2089
 PRE_RG="--pre ~/.local/scripts/pre-rg.sh --pre-glob '*.{pdf}'"
 
 # Parse optional arguments with getopts
@@ -56,7 +55,7 @@ OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
             nvim +cw -q {+f}  # Build quickfix list for the selected items.
           fi'
 
-# shellcheck disable=2034
+# shellcheck disable=SC2034
 BAT_OPTS="--theme=TwoDark --style=full --wrap=character --color=always --highlight-line {2}"
 # shellcheck disable=SC2016
 PREVIEW='case {1} in *.pdf) ~/.local/scripts/pre-rg.sh {1} | nl -ba -w1 -s" " | bat $BAT_OPTS ;; *) bat $BAT_OPTS {1} ;; esac'

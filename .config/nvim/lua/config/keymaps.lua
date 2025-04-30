@@ -111,3 +111,20 @@ vim.keymap.set("n", "<leader>q", function()
   vim.fn.setloclist(0, items, "r") -- Replace loclist
   vim.cmd("lopen")                 -- Open it
 end, { desc = "Diagnostics list" })
+
+-- Function to insert ShellCheck disable directive for warning under cursor
+local function insert_shellcheck_disable()
+  local line = vim.fn.line('.') - 1
+  local diagnostics = vim.diagnostic.get(0, { lnum = line })
+  for _, diag in ipairs(diagnostics) do
+    if diag.source == "shellcheck" and diag.code then
+      local code = string.match(diag.code, "SC%d+") or diag.code
+      vim.api.nvim_buf_set_lines(0, line, line, false, { "# shellcheck disable=" .. code })
+      return
+    end
+  end
+  vim.notify("No ShellCheck warning found under cursor", vim.log.levels.WARN)
+end
+
+-- Map <C-i> in normal mode to insert ShellCheck disable directive
+vim.keymap.set('n', '<C-i>', insert_shellcheck_disable, { noremap = true, silent = true })
