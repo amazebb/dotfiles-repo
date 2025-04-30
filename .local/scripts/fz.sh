@@ -1,13 +1,19 @@
 #!/opt/homebrew/bin/bash
-
 # Search for text in files interactively using ripgrep and fzf
 VERSION="1.0.0"
 
 # Help function
 usage() {
-  echo "Usage: fz"
-  echo "Required inputs:"
-  echo "  pattern    Search pattern"
+  echo "Usage: fz [OPTIONAL] pattern"
+  echo "Arguments:"
+  echo "  pattern   Search pattern"
+  echo "Optional:"
+  echo "  -r        ripgrep option (e.g., \"-g '*.{pdf,zsd}'\")"
+  echo "  -h        Help"
+  echo "  -v        Version"
+  echo "Examples:"
+  echo "  fz \"-g '*.pdf'\" pattern   Search for 'pattern' in PDF files"
+  echo "  fz -- -g                    Search for literal '-g'"
   exit 0
 }
 
@@ -17,36 +23,31 @@ version() {
   exit 0
 }
 
-# Check if help or version is requested
-if [[ $1 == "-h" ]]; then
-  usage
-fi
-if [[ $1 == "-v" ]]; then
-  version
-fi
+# shellcheck disable=SC2089
+PRE_RG="--pre ~/.local/scripts/pre-rg.sh --pre-glob '*.{pdf}'"
 
 # Parse optional arguments with getopts
-while getopts "hv" opt; do
+while getopts "hvr:" opt; do
   case "$opt" in
     h) usage ;;
     v) version ;;
+    r) PRE_RG="$PRE_RG $OPTARG" ;;
     ?) usage ;;
   esac
 done
-
 # Shift past the options
 shift $((OPTIND - 1))
 
 # Check required positional inputs
-if [[ $# -lt 1 ]]; then
-  echo "Error: Missing required positional inputs"
+[[ $# -lt 1 ]] && {
+  echo "Error: Missing pattern" >&2
   usage
-fi
+}
 
 PATTERN=$1
 
 # This is taken from https://junegunn.github.io/fzf/tips/ripgrep-integration/
-RELOAD="reload:rg --column --line-number --no-heading --color=always --smart-case {q} || :"
+RELOAD="reload:rg $PRE_RG --column --line-number --no-heading --color=always --smart-case {q} || :"
 
 # shellcheck disable=SC2016
 OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
@@ -54,6 +55,11 @@ OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
           else
             nvim +cw -q {+f}  # Build quickfix list for the selected items.
           fi'
+
+# shellcheck disable=2034
+BAT_OPTS="--theme=TwoDark --style=full --wrap=character --color=always --highlight-line {2}"
+# shellcheck disable=SC2016
+PREVIEW='case {1} in *.pdf) ~/.local/scripts/pre-rg.sh {1} | nl -ba -w1 -s" " | bat $BAT_OPTS ;; *) bat $BAT_OPTS {1} ;; esac'
 
 # shellcheck disable=SC2016
 fzf --disabled --ansi --multi \
@@ -70,6 +76,6 @@ fzf --disabled --ansi --multi \
 ALT-A: Select-all, ALT-D: Deselect-all, CTRL-P: Toggle-preview' \
   --style full \
   --layout=reverse-list \
-  --preview 'bat --theme=auto:system --style=full --wrap=character --color=always --highlight-line {2} {1}' \
+  --preview "$PREVIEW" \
   --preview-window '~4,+{2}+4/3,<80(up)' \
   --query "$PATTERN"
