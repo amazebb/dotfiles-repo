@@ -111,3 +111,10 @@ print -P "%K{blue} \e[48;5;256m%F{blue}\uE0B0"
 Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3725) just absolutely struggling with this on 4/17/25
 </details>
 
+## Neovim Tips:
+Format all files under current folder recursively:
+
+```vim
+:args **/*.lua
+:argdo lua vim.lsp.buf.format()
+```
