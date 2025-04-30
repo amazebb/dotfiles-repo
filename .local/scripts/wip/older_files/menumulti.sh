@@ -11,9 +11,9 @@ menu() {
 
 prompt="Check an option (again to uncheck, ENTER when done): "
 while menu && read -rp "$prompt" num && [[ "$num" ]]; do
-  [[ $num != *[![:digit:]]* ]] \
-    && ((num > 0 && num <= ${#options[@]})) \
-    || {
+  [[ $num != *[![:digit:]]* ]] &&
+    ((num > 0 && num <= ${#options[@]})) ||
+    {
       msg="Invalid option: $num"
       continue
     }

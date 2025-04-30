@@ -31,9 +31,9 @@ rip() {
 
   local rep="${replace[@]}"
 
-  run=$(ffprobe -i "$file" -v quiet -show_chapters -print_format compact \
-    | grep -n 'start_time=.*|t' \
-    | sed "s/\([0-9]*\).*start_time=\([0-9]*.[0-9]*\).*end_time=\([0-9]*.[0-9]*\).*/$rep/g ")
+  run=$(ffprobe -i "$file" -v quiet -show_chapters -print_format compact |
+    grep -n 'start_time=.*|t' |
+    sed "s/\([0-9]*\).*start_time=\([0-9]*.[0-9]*\).*end_time=\([0-9]*.[0-9]*\).*/$rep/g ")
 
   if [ -n "$run" ]; then
     eval "$run"
