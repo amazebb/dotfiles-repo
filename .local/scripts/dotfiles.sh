@@ -13,6 +13,7 @@ if [[ $PWD == "$HOME" ]]; then
 else
   is_tracked=0
   for folder in "${DOTFILES_TRACKED_FOLDERS[@]}"; do
+    folder=${folder/#\~/$HOME}
     if [[ $PWD == "$folder" || $PWD == "$folder"/* ]]; then
       is_tracked=1
       break
