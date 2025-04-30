@@ -11,8 +11,8 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.opt.signcolumn = "yes"
 vim.diagnostic.config({
-	signs = true,
-	virtual_text = true, -- Optional: toggle as you like
+  signs = true,
+  virtual_text = true, -- Optional: toggle as you like
 })
 
 vim.api.nvim_set_hl(0, "CursorLineNr", { ctermfg = 11 })
