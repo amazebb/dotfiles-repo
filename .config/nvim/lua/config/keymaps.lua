@@ -4,23 +4,25 @@ vim.keymap.set("n", "H", function()
   local ok, _ = pcall(vim.cmd, "help " .. word)
   if not ok then
     local cword = vim.fn.expand("<cword>")
-    vim.cmd("help " .. cword)
+    vim.cmd("HelpPopup " .. cword)
   end
 end, { desc = "Help with TOC" })
 
+vim.keymap.set("n", "<leader>h", ":HelpPopup<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-n>", ":bnext<CR>", { desc = "Next Buffer" })
 vim.keymap.set("n", "<C-p>", ":bprev<CR>", { desc = "Previous Buffer" })
+vim.keymap.set("n", "<leader>b", ":FzfLua buffers<CR>", { desc = "Open buffers list using FzfLua", silent = true })
 
--- Enable Cmd-C, Cmd-V, and Cmd-A for macOS
-vim.keymap.set({ 'n', 'v' }, '<C-c>', '"+y', { noremap = true, silent = true }) -- Cmd-C to copy to system clipboard
-vim.keymap.set({ 'n', 'v' }, '<C-v>', '"+p', { noremap = true, silent = true }) -- Cmd-V to paste from system clipboard
-vim.keymap.set('n', '<C-a>', 'ggVG', { noremap = true, silent = true })         -- Cmd-A to select all text
+-- Enable C-c, C-v, and C-a for macOS
+vim.keymap.set({ 'n', 'v' }, '<C-c>', '"+y', { noremap = true, silent = true, desc = "Copy to system clipboard" })
+vim.keymap.set({ 'n', 'v' }, '<C-v>', '"+p', { noremap = true, silent = true, desc = "Paste from system clipboard" })
+vim.keymap.set('n', '<C-a>', 'ggVG', { noremap = true, silent = true, desc = "Select all text" })
 
 vim.keymap.set("n", "<leader>t", function()
   vim.cmd("belowright term")
   vim.fn.feedkeys("<C-\\><C-n>")
   vim.api.nvim_input("i")
-end, { desc = "Term below right" })
+end, { desc = "Terminal below right" })
 
 vim.keymap.set({ "n", "v" }, "<leader>/", "gc", { desc = "Toggle comment block", remap = true })
 vim.keymap.set("n", "<leader>jj", "gcc", { desc = "Toggle comment lines", remap = true })
@@ -48,7 +50,6 @@ vim.keymap.set("n", "[t", function()
   vim.cmd("match CurrentTag /\\%#|.\\{-}|/")
 end, { desc = "Prev tag" })
 
--- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
 -- vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
 
 -- Switch between colorschemes
@@ -112,7 +113,7 @@ vim.keymap.set("n", "<leader>q", function()
   vim.cmd("lopen")                 -- Open it
 end, { desc = "Diagnostics list" })
 
--- Function to insert ShellCheck disable directive for warning under cursor
+-- <C-i>: Function to insert ShellCheck disable directive for warning under cursor
 local function insert_shellcheck_disable()
   local line = vim.fn.line('.') - 1
   local diagnostics = vim.diagnostic.get(0, { lnum = line })

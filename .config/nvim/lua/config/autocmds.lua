@@ -57,3 +57,32 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- noselect prevent from automatically selecting the first completion item in the popup menu
 vim.cmd("set completeopt+=noselect")
+
+local function show_help_popup(topic)
+  vim.cmd("help " .. (topic or ""))
+  local help_buf = vim.api.nvim_get_current_buf();
+  -- Close original help window
+  vim.cmd("wincmd c");
+  -- Clear jumplist for help buffer, this way C-o works correctly when jumping back
+  vim.api.nvim_buf_call(help_buf, function()
+    vim.cmd("clearjumps")
+  end)
+  vim.api.nvim_open_win(help_buf, true,
+    {
+      relative = "editor",
+      width = math.floor(0.8 * vim.o.columns),
+      height = math.floor(0.8 * vim.o.lines),
+      row = math.floor(0.1 * vim.o.lines),
+      col = math.floor(0.1 * vim.o.columns),
+      -- style = "minimal",
+      border = "rounded",
+    })
+  vim.bo[help_buf].bufhidden = "wipe"
+  vim.api.nvim_buf_set_keymap(help_buf, "n", "q", ":q<cr>", { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(help_buf, "n", "<Esc>", ":q<cr>", { noremap = true, silent = true })
+end
+
+-- Command for manual use
+vim.api.nvim_create_user_command("HelpPopup", function(args)
+  show_help_popup(args.args)
+end, { nargs = "?" })
