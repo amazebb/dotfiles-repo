@@ -1,13 +1,13 @@
 return {
-  cmd = { "ruff", "server" },
-  filetypes = { "python" },
-  root_markers = { "requirements.txt", ".git/" },
+  cmd = { 'ruff', 'server' },
+  filetypes = { 'python' },
+  root_marers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
   settings = {
   },
   capabilities = {
     general = {
       -- get rid of pesky encode warning when running :checkhealth lsp
-      positionEncodings = { "utf-16" },
+      positionEncodings = { 'utf-16' },
     },
   },
   on_attach = function(client)
