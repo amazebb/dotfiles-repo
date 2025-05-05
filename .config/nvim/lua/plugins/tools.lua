@@ -13,7 +13,6 @@ return {
       })
     end
   },
-
   {
     "vhyrro/luarocks.nvim",
     priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
@@ -43,5 +42,33 @@ return {
     "olimorris/codecompanion.nvim",
     config = true,
     dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" },
-  }
+  },
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "awk_ls",
+          "bashls",
+          "clangd",
+          "cssls",
+          "html",
+          "jdtls",
+          "jsonls",
+          "lua_ls",
+          "matlab_ls",
+          "basedpyright",
+          "ruff",
+          "ts_ls",
+          "yamlls",
+        },
+      })
+    end,
+  },
 }
