@@ -1,10 +1,12 @@
-vim.lsp.config('lua_ls', {
+return {
+  cmd = { 'lua-language-server' },
+  filetypes = { 'lua' },
   on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
       if
           path ~= vim.fn.stdpath('config')
-          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc') or vim.uv.fs_stat(path .. '/.lua'))
       then
         return
       end
@@ -44,5 +46,5 @@ vim.lsp.config('lua_ls', {
   end,
   settings = {
     Lua = {}
-  }
-})
+  },
+}
