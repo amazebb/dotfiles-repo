@@ -1,24 +1,24 @@
 return {
 	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
+		'nvim-treesitter/nvim-treesitter',
+		build = ':TSUpdate',
 		config = function()
-			local configs = require("nvim-treesitter.configs")
+			local configs = require('nvim-treesitter.configs')
 
 			configs.setup({
 				ensure_installed = {
-					"c",
-					"html",
-					"javascript",
-					"latex",
-					"lua",
-					"markdown",
-					"markdown_inline",
-					"python",
-					"sql",
-					"vim",
-					"vimdoc",
-					"yaml",
+					'c',
+					'html',
+					'javascript',
+					'latex',
+					'lua',
+					'markdown',
+					'markdown_inline',
+					'python',
+					'sql',
+					'vim',
+					'vimdoc',
+					'yaml',
 				},
 				sync_install = false,
 				highlight = { enable = true },
@@ -27,88 +27,88 @@ return {
 		end,
 	},
 	{
-		"vhyrro/luarocks.nvim",
+		'vhyrro/luarocks.nvim',
 		priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
 		config = true,
 	},
 	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+		'MeanderingProgrammer/render-markdown.nvim',
+		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {},
 		config = function()
-			require("render-markdown").setup({
+			require('render-markdown').setup({
 				completions = { lsp = { enabled = true } },
 			})
 		end,
 	},
 	{
-		"ibhagwan/fzf-lua",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		'ibhagwan/fzf-lua',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		opts = {},
 	},
 	{
-		"mfussenegger/nvim-dap",
+		'mfussenegger/nvim-dap',
 	},
 	{
-		"olimorris/codecompanion.nvim",
+		'olimorris/codecompanion.nvim',
 		config = true,
-		dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" },
+		dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
 	},
 	{
-		"williamboman/mason.nvim",
+		'williamboman/mason.nvim',
 		config = function()
-			require("mason").setup()
+			require('mason').setup()
 		end,
 	},
 	{
-		"williamboman/mason-lspconfig.nvim",
+		'williamboman/mason-lspconfig.nvim',
 		config = function()
-			require("mason-lspconfig").setup({
+			require('mason-lspconfig').setup({
 				ensure_installed = {
-					"awk_ls",
-					"bashls",
-					"clangd",
-					"cssls",
-					"html",
-					"jdtls",
-					"jsonls",
-					"lua_ls",
-					"matlab_ls",
-					"basedpyright",
-					"ruff",
-					"ts_ls",
-					"yamlls",
+					'awk_ls',
+					'bashls',
+					'clangd',
+					'cssls',
+					'html',
+					'jdtls',
+					'jsonls',
+					'lua_ls',
+					'matlab_ls',
+					'basedpyright',
+					'ruff',
+					'ts_ls',
+					'yamlls',
 				},
 			})
 		end,
 	},
 	{
-		"luukvbaal/nnn.nvim",
+		'luukvbaal/nnn.nvim',
 		config = function()
-			require("nnn").setup()
+			require('nnn').setup()
 		end,
 	},
 	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		'nvim-lualine/lualine.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		config = function()
-			require("lualine").setup({
+			require('lualine').setup({
 				options = {
-					theme = "solarized_dark",
-					component_separators = "|",
-					section_separators = { left = "", right = "" },
+					theme = 'solarized_dark',
+					component_separators = '|',
+					section_separators = { left = '', right = '' },
 				},
 				tabline = {
 					lualine_a = {
 						{
-							"buffers",
+							'buffers',
 							show_filename_only = true,
 							show_modified_status = true,
 							icons_enabled = false,
-							separator = "|",
-							symbols = { alternate_file = "", directory = "" },
+							separator = '|',
+							symbols = { alternate_file = '', directory = '' },
 						},
 					},
 				},
