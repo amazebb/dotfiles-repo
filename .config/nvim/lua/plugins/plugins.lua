@@ -1,12 +1,12 @@
 return {
+	-- Neovim TreeSitter
 	{
 		'nvim-treesitter/nvim-treesitter',
 		build = ':TSUpdate',
 		config = function()
-			local configs = require('nvim-treesitter.configs')
-
-			configs.setup({
+			require('nvim-treesitter.configs').setup({
 				ensure_installed = {
+					'bash',
 					'c',
 					'html',
 					'javascript',
@@ -23,17 +23,24 @@ return {
 				sync_install = false,
 				highlight = { enable = true },
 				indent = { enable = true },
+				ignore_install = {},
+				modules = {},
+				auto_install = true,
 			})
 		end,
 	},
+
+	-- LuaRocks
 	{
 		'vhyrro/luarocks.nvim',
 		priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
 		config = true,
 	},
+
+	-- Markdown renderer
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
-		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {},
@@ -43,53 +50,51 @@ return {
 			})
 		end,
 	},
+
+	-- fzf Neovim
 	{
 		'ibhagwan/fzf-lua',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 		opts = {},
 	},
+
+	-- Debug Adapter Protocol client implementation for Neovim
 	{
 		'mfussenegger/nvim-dap',
 	},
+
+	-- AI-powered coding
 	{
 		'olimorris/codecompanion.nvim',
 		config = true,
 		dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
 	},
+
+	-- Manage LSPs
 	{
 		'williamboman/mason.nvim',
 		config = function()
-			require('mason').setup()
-		end,
-	},
-	{
-		'williamboman/mason-lspconfig.nvim',
-		config = function()
-			require('mason-lspconfig').setup({
-				ensure_installed = {
-					'awk_ls',
-					'bashls',
-					'clangd',
-					'cssls',
-					'html',
-					'jdtls',
-					'jsonls',
-					'lua_ls',
-					'matlab_ls',
-					'basedpyright',
-					'ruff',
-					'ts_ls',
-					'yamlls',
+			require('mason').setup({
+				ui = {
+					icons = {
+						package_installed = '✓',
+						package_pending = '➜',
+					},
+					border = 'rounded',
 				},
 			})
 		end,
 	},
+
+	-- nnn File Explorer
 	{
 		'luukvbaal/nnn.nvim',
 		config = function()
 			require('nnn').setup()
 		end,
 	},
+
+	--  Neovim statusline
 	{
 		'nvim-lualine/lualine.nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },

@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd('BufDelete', {
 				end
 			end
 			if not has_buffers then
-				client.stop(true)
+				client:stop(true)
 			end
 		end
 	end,
@@ -47,12 +47,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(ev)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
 		-- Enable auto-completion
-		if client:supports_method('textDocument/completion') then
+		if client and client:supports_method('textDocument/completion') then
 			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
 		end
 
 		-- Enable auto-formatting on save
-		if client.supports_method('textDocument/formatting') then
+		if client and client:supports_method('textDocument/formatting') then
 			vim.api.nvim_create_autocmd('BufWritePre', {
 				buffer = ev.buf,
 				callback = function()

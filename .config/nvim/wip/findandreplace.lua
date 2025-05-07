@@ -21,7 +21,7 @@ vim.keymap.set('n', '<C-f>', function()
 	})
 
 	-- Make editable only after "Find: " and "Replace: "
-	vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+	vim.api.nvim_set_option_value('modifiable', true, { buf = buf })
 	local find_col = #'Find: ' + 1
 	local replace_col = #'Replace: ' + 1
 
