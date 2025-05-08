@@ -90,7 +90,6 @@ local function show_help_popup(topic)
 		height = math.floor(0.8 * vim.o.lines),
 		row = math.floor(0.1 * vim.o.lines),
 		col = math.floor(0.1 * vim.o.columns),
-		-- style = "minimal",
 		border = 'rounded',
 	})
 	vim.bo[help_buf].bufhidden = 'wipe'
@@ -102,3 +101,31 @@ end
 vim.api.nvim_create_user_command('HelpPopup', function(args)
 	show_help_popup(args.args)
 end, { nargs = '?' })
+
+-- Toggle basedpyright warnings function
+local function toggle_unknown_types(value)
+	local client = vim.lsp.get_clients({ name = 'basedpyright' })[1]
+	if not client then
+		print('basedpyright not running')
+		return
+	end
+
+	-- Toggle settings
+	local settings = client.config.settings
+	settings.basedpyright.analysis.typeCheckingMode = value == ''
+			and (settings.basedpyright.analysis.typeCheckingMode == 'standard' and 'recommended' or 'standard')
+		or value
+
+	-- Update LSP client
+	client:notify('workspace/didChangeConfiguration', { settings = settings })
+	print('Changed typeCheckingMode to ' .. settings.basedpyright.analysis.typeCheckingMode)
+end
+
+-- Custom completion function
+local function completion_list(_, _, _)
+	return { 'off', 'basic', 'standard', 'recommended', 'strict', 'all' }
+end
+
+vim.api.nvim_create_user_command('TogglePythonWarnings', function(args)
+	toggle_unknown_types(args.args)
+end, { nargs = '?', desc = 'Toggle basedpyright Warnings', complete = completion_list })
