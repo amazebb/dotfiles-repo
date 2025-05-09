@@ -1,4 +1,5 @@
 vim.g.mapleader = ' '
+
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
@@ -10,13 +11,14 @@ vim.o.relativenumber = true
 vim.o.cursorline = true
 vim.o.cursorlineopt = 'number'
 vim.o.updatetime = 500
-vim.opt.signcolumn = 'yes'
+vim.o.signcolumn = 'auto'
+
 vim.diagnostic.config({
 	signs = true,
-	virtual_text = true, -- Optional: toggle as you like
+	virtual_text = true,
 })
 
-vim.api.nvim_set_hl(0, 'CursorLineNr', { ctermfg = 11 })
+vim.api.nvim_set_hl(0, 'CursorLineNr', { ctermfg = 'Yellow' })
 vim.api.nvim_set_hl(0, 'LineNr', { ctermbg = 'DarkGray', ctermfg = 'Black', bold = false })
 vim.api.nvim_set_hl(0, 'MatchParen', { standout = true })
 vim.api.nvim_set_hl(0, 'NormalFloat', { ctermbg = 'Black' })

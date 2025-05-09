@@ -10,6 +10,7 @@
 	helper = osxkeychain
 [core]
 	excludesfile = ~/.gitignore_global
+	editor = nvim
 [user]
 	name = 00000
 	email = ---------@icloud.com
@@ -19,7 +20,10 @@
 	tracked-folders = ~/.local/scripts,~/.config/nvim
 [alias]
 	co = checkout
-	ci = commit
-	st = status
 	d = diff
 	pom = push origin master
+	s = status
+	c = commit
+	cv = commit -v
+[difftool]
+	prompt = false

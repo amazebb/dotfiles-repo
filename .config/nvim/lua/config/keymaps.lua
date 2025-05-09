@@ -37,10 +37,10 @@ vim.keymap.set('n', '<leader>jj', 'gcc', { desc = 'Toggle comment lines', remap 
 -- Close window
 vim.keymap.set('n', '<C-q>', function()
 	if vim.bo.buftype == 'quickfix' then
-		vim.cmd('silent! cclose')
+		vim.cmd('cclose')
 		vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
 	else
-		vim.cmd('silent! bwipeout')
+		vim.cmd('bwipeout')
 	end
 end, { desc = 'Close buffer in a more OS type way using Ctrl-q', silent = true })
 
@@ -85,13 +85,13 @@ local function show_popup(name, idx, total)
 	end, 1000)
 end
 
-vim.keymap.set('n', ']c', function()
+vim.keymap.set('n', '=c', function()
 	current = (current % #schemes) + 1
 	vim.cmd('colorscheme ' .. schemes[current])
 	show_popup(schemes[current], current, #schemes)
 end, { desc = 'Next colorscheme' })
 
-vim.keymap.set('n', '[c', function()
+vim.keymap.set('n', '-c', function()
 	current = (current - 2) % #schemes + 1
 	vim.cmd('colorscheme ' .. schemes[current])
 	show_popup(schemes[current], current, #schemes)
@@ -129,3 +129,11 @@ end
 
 --  Disbale ShellCheck for current line
 vim.keymap.set('n', '<C-i>', insert_shellcheck_disable, { noremap = true, silent = true })
+
+-- Toggle basedpyright type warnings
+vim.keymap.set(
+	'n',
+	'<leader>w',
+	':TogglePythonWarnings<CR>',
+	{ desc = 'Toggle basedpyright warnings between standard and recommended', silent = true }
+)
