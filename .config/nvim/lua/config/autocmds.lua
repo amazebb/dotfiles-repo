@@ -112,13 +112,17 @@ local function toggle_unknown_types(value)
 
 	-- Toggle settings
 	local settings = client.config.settings
-	settings.basedpyright.analysis.typeCheckingMode = value == ''
-			and (settings.basedpyright.analysis.typeCheckingMode == 'standard' and 'recommended' or 'standard')
-		or value
+	if settings ~= nil then
+		settings.basedpyright.analysis.typeCheckingMode = value == ''
+				and (settings.basedpyright.analysis.typeCheckingMode == 'standard' and 'recommended' or 'standard')
+			or value
+	end
 
 	-- Update LSP client
 	client:notify('workspace/didChangeConfiguration', { settings = settings })
-	print('Changed typeCheckingMode to ' .. settings.basedpyright.analysis.typeCheckingMode)
+	if settings ~= nil then
+		print('Changed typeCheckingMode to ' .. settings.basedpyright.analysis.typeCheckingMode)
+	end
 end
 
 -- Custom completion function
@@ -129,3 +133,17 @@ end
 vim.api.nvim_create_user_command('TogglePythonWarnings', function(args)
 	toggle_unknown_types(args.args)
 end, { nargs = '?', desc = 'Toggle basedpyright Warnings', complete = completion_list })
+
+-- Ensure git commit -v shows syntax/color highlighting in the diff
+vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+	pattern = { 'COMMIT_EDITMSG' },
+	callback = function()
+		-- Apply diff syntax to diff regions
+		vim.cmd([[syntax include @Diff syntax/diff.vim]])
+		vim.cmd([[syntax region gitcommitDiff start="^diff --git" end="\%$" contains=@Diff]])
+	end,
+})
+
+vim.api.nvim_create_user_command('GitDiffFileMerge', function()
+	vim.fn.jobstart('git difftool --cached', { detach = true })
+end, {})
