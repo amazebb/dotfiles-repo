@@ -15,11 +15,13 @@ setup_prompt() {
   }
 
   prompt_segment_tail() {
-    s='%{%F{blue}%}\uE0B0'
+    ra='\uE0B0' # 
+    g='\uE0A0'  # 
+    s='%{%F{blue}%}'$ra'%f'
     # Prevent Mac terminal brightening font color with no background
     # https://apple.stackexchange.com/questions/282911/
     # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
-    # We set background to an out of range value works, %k and %K{256} do not work
+    # Setting background to an out of range value works, %k and %K{256} do not work
     n='%{\e[48;5;256m%}'
     if [[ -n ${betz_content_vcs} ]]; then
       local branch="${betz_content_vcs%% *}"
@@ -31,7 +33,7 @@ setup_prompt() {
         b='%{%K{green}%}'
         f='%{%F{green}%}'
       fi
-      echo -n "$b$s %f${betz_content_vcs}$f $n\uE0B0%f%k"
+      echo -n "$b$s $g ${betz_content_vcs}$f $n$ra%f%k"
     else
       echo -n "$n$s%f%k"
     fi
@@ -94,7 +96,26 @@ setup_prompt() {
 
   # Update right prompt dynamically
   rprompt_segment_dynamic() {
-    RPS1="%(?.%{%F{green}%}✔.%{%F{red}%}✘)%f%k %k%*%f%k"
+    g="$(print -P '\uE606 ')" # 
+    t="$(print -P '\uE0B2')"  # 
+    n="$(print -P '%{\e[48;5;256m%}')"
+    v=""
+
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+      local venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
+      if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
+        v="%{%F{blue}%}"$t"%f%{%K{blue}%}"$g
+      fi
+    fi
+    RPS1="${v}%(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
+
+    # ${v}                : Python symbol if virtual environment activated
+    # %(?.X.Y)            : Conditional: X if last command succeeded (exit code 0), Y if failed
+    # %{%F{green}%}✔      : Green checkmark (✔) for success
+    # %{%F{red}%}✘        : Red cross (✘) for failure
+    # %f                  : Reset foreground color
+    # %k                  : Reset background color
+    # %k%*%f%k            : Time in 24-hour HH:MM:SS format, reset colors
   }
 
   # Hook precmd to update prompt
