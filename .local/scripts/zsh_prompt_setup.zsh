@@ -96,18 +96,18 @@ setup_prompt() {
 
   # Update right prompt dynamically
   rprompt_segment_dynamic() {
-    g="$(print -P '\uE606 ')" # 
-    t="$(print -P '\uE0B2')"  # 
-    n="$(print -P '%{\e[48;5;256m%}')"
+    g=$'\uE606' # 
+    t=$'\uE0B2' # 
+    n=$'%{\e[48;5;256m%}'
     v=""
 
     if [[ -n "$VIRTUAL_ENV" ]]; then
-      local venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
+      venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
       if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
-        v="%{%F{blue}%}"$t"%f%{%K{blue}%}"$g
+        v="%{%F{blue}%}$t%f%{%K{blue}%}$g"
       fi
     fi
-    RPS1="${v}%(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
+    RPS1="${n}${v} %(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
 
     # ${v}                : Python symbol if virtual environment activated
     # %(?.X.Y)            : Conditional: X if last command succeeded (exit code 0), Y if failed
