@@ -109,13 +109,8 @@ setup_prompt() {
     fi
     RPS1="${n}${v} %(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
 
-    # ${v}                : Python symbol if virtual environment activated
-    # %(?.X.Y)            : Conditional: X if last command succeeded (exit code 0), Y if failed
-    # %{%F{green}%}✔      : Green checkmark (✔) for success
-    # %{%F{red}%}✘        : Red cross (✘) for failure
-    # %f                  : Reset foreground color
-    # %k                  : Reset background color
-    # %k%*%f%k            : Time in 24-hour HH:MM:SS format, reset colors
+    # %(?.X.Y)    : Conditional: X if last command succeeded (exit code 0), Y if failed
+    # %*          : Time in 24-hour HH:MM:SS format, reset colors
   }
 
   # Hook precmd to update prompt
