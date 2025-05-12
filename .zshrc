@@ -57,6 +57,31 @@ eval "$(fzf --zsh)"
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# shellcheck disable=SC2046
+fzf-man-widget() {
+  manpage="echo {} | sed 's/\([[:alnum:][:punct:]]*\) (\([[:alnum:]]*\)).*/\2 \1/'"
+  batman="${manpage} | xargs -r man | col -bx | bat --language=man --plain --color always --theme=\"Monokai Extended\""
+  man -k . | sort -r |
+    awk -v cyan=$(tput setaf 6) -v blue=$(tput setaf 4) -v res=$(tput sgr0) -v bld=$(tput bold) '{ $1=cyan bld $1; $2=res blue $2; } 1' |
+    fzf \
+      -q "$1" \
+      --ansi \
+      --style full \
+      --header 'alt-c:Cheat, alt-m:man, alt-t:TLDR' \
+      --tiebreak=begin \
+      --prompt=' Man > ' \
+      --preview-window '50%,rounded,<50(up,85%,border-bottom)' \
+      --preview "${batman}" \
+      --bind "enter:execute(${manpage} | xargs -r man)" \
+      --bind "alt-c:+change-preview(cht.sh {1})+change-prompt(Cheat > )" \
+      --bind "alt-m:+change-preview(${batman})+change-prompt( Man > )" \
+      --bind "alt-t:+change-preview(tldr -C {1} -p osx)+change-prompt(TLDR > )"
+  zle reset-prompt
+}
+# `Ctrl-H` keybinding to launch the widget
+bindkey '^h' fzf-man-widget
+zle -N fzf-man-widget
+
 create_aliases() {
   for script in ~/.local/scripts/*.sh; do
     base_name=$(basename "$script" .sh)
