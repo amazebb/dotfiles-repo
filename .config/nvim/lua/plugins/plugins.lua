@@ -30,13 +30,6 @@ return {
 		end,
 	},
 
-	-- LuaRocks
-	{
-		'vhyrro/luarocks.nvim',
-		priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
-		config = true,
-	},
-
 	-- Markdown renderer
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
@@ -44,6 +37,7 @@ return {
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {},
+		ft = { 'markdown', 'quarto' },
 		config = function()
 			require('render-markdown').setup({
 				completions = { lsp = { enabled = true } },
