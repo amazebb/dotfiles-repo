@@ -1,24 +1,24 @@
-# Setup the hsitory
+# Setup the history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
-# To disbale shelcheck SAVEHIST warning:
 # shellcheck disable=SC2034
 SAVEHIST=10000
-setopt appendhistory
-setopt HIST_IGNORE_ALL_DUPS
+setopt APPEND_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS
+unsetopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE
 
 # Setup history search using the up/down keys
 # Matches the characters from the beginning of the line
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
-# Prevent 'less' from saving command history
+# Prevent 'less' from saving command historyi
+# no trace of less interactions (e.g., when viewing man pages)
 export LESSHISTFILE=-
 
 # shellcheck source-path=SCRIPTDIR
+export TERM="xterm-256color"
 source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
 setup_prompt
-export TERM="xterm-256color"
 
 ## Set preview for nnn
 export NNN_FIFO=/tmp/nnn.fifo
@@ -27,7 +27,7 @@ export NNN_FIFO=/tmp/nnn.fifo
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
 export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.6-tem
 
-# If you ever reinstall Gitea and want it to default to ~/.gitea-data without extra flags
+# If we reinstall Gitea default to ~/.gitea-data
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 
 # Remove blinking text in the date column
@@ -39,6 +39,8 @@ export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.lmstudio/bin"
+
+export XAI_API_KEY="xai-uz9trW7OsnnTfx0syGimpsXHVjw3QetEeF4Zr226O8vhGBlRKzgsypo6CNIZFopFMjESbz1Op7iDKT29"
 
 # Aliases
 alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
@@ -53,34 +55,15 @@ eval "$(zoxide init zsh)"
 # Setup for fzf
 eval "$(fzf --zsh)"
 
-# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# Source fzf-man-widget script
+# shellcheck disable=SC1090
+source ~/.local/scripts/fzf-man-widget.zsh
 
-# shellcheck disable=SC2046
-fzf-man-widget() {
-  manpage="echo {} | sed 's/\([[:alnum:][:punct:]]*\) (\([[:alnum:]]*\)).*/\2 \1/'"
-  batman="${manpage} | xargs -r man | col -bx | bat --language=man --plain --color always --theme=\"Monokai Extended\""
-  man -k . | sort -r |
-    awk -v cyan=$(tput setaf 6) -v blue=$(tput setaf 4) -v res=$(tput sgr0) -v bld=$(tput bold) '{ $1=cyan bld $1; $2=res blue $2; } 1' |
-    fzf \
-      -q "$1" \
-      --ansi \
-      --style full \
-      --header 'alt-c:Cheat, alt-m:man, alt-t:TLDR' \
-      --tiebreak=begin \
-      --prompt=' Man > ' \
-      --preview-window '50%,rounded,<50(up,85%,border-bottom)' \
-      --preview "${batman}" \
-      --bind "enter:execute(${manpage} | xargs -r man)" \
-      --bind "alt-c:+change-preview(cht.sh {1})+change-prompt(Cheat > )" \
-      --bind "alt-m:+change-preview(${batman})+change-prompt( Man > )" \
-      --bind "alt-t:+change-preview(tldr -C {1} -p osx)+change-prompt(TLDR > )"
-  zle reset-prompt
-}
-# `Ctrl-H` keybinding to launch the widget
+# Bind Ctrl-H to launch the fzf-man-widget
 bindkey '^h' fzf-man-widget
-zle -N fzf-man-widget
+
+# Alias to run fzf-man-widget function
+alias fzf-man-widget='fzf-man-widget'
 
 create_aliases() {
   for script in ~/.local/scripts/*.sh; do
@@ -93,5 +76,6 @@ create_aliases() {
 # Call the function to create aliases when zsh starts
 create_aliases
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.lmstudio/bin"
+# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
