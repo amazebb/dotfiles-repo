@@ -11,6 +11,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = nvim
+	pager = bat
 [user]
 	name = 00000
 	email = ---------@icloud.com
@@ -19,12 +20,12 @@
 [dotfiles]
 	tracked-folders = ~/.local/scripts,~/.config/nvim
 [alias]
-	co = checkout
+	c = commit
+	cv = commit -v
+	cva = commit -va
+  co = checkout
 	d = diff
 	pom = push origin master
 	s = status
-	c = commit
-	cv = commit -v
-	cva = commit -v -a
 [difftool]
 	prompt = false
