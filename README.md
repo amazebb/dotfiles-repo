@@ -112,9 +112,19 @@ Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3
 </details>
 
 ## Neovim Tips:
-Format all files under current folder recursively:
+Format all Lua files under current folder recursively:
 
 ```vim
 :args **/*.lua
 :argdo lua vim.lsp.buf.format()
+```
+
+<details>
+<summary><h4>Storing private information</h4></summary>
+We can use MacOS ```security``` CLI to create secure keys and passwords
+
+```bash
+security add-generic-password -a "$USER" -s "xai-api-key" -w "your-api-key-here"
+# Neovim command for use with codecompanion.nvim
+api-key = "cmd: security find-generic-password -s xai-api-key -w 2>/dev/null"
 ```
