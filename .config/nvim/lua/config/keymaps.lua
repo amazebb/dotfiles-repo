@@ -63,40 +63,6 @@ end, { desc = 'Prev tag' })
 
 -- vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
 
--- Switch between colorschemes
-local schemes = vim.fn.getcompletion('', 'color')
-local current = 1
-
-local function show_popup(name, idx, total)
-	local msg = string.format('Colorscheme: %s (%d/%d)', name, idx, total)
-	local buf = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, { msg })
-	local win = vim.api.nvim_open_win(buf, false, {
-		relative = 'editor',
-		width = #msg,
-		height = 1,
-		row = math.floor(vim.o.lines / 2),
-		col = math.floor(vim.o.columns / 2 - #msg / 2),
-		style = 'minimal',
-		border = 'single',
-	})
-	vim.defer_fn(function()
-		vim.api.nvim_win_close(win, true)
-	end, 1000)
-end
-
-vim.keymap.set('n', '=c', function()
-	current = (current % #schemes) + 1
-	vim.cmd('colorscheme ' .. schemes[current])
-	show_popup(schemes[current], current, #schemes)
-end, { desc = 'Next colorscheme' })
-
-vim.keymap.set('n', '-c', function()
-	current = (current - 2) % #schemes + 1
-	vim.cmd('colorscheme ' .. schemes[current])
-	show_popup(schemes[current], current, #schemes)
-end, { desc = 'Prev colorscheme' })
-
 -- Show diagnostics under cursor in a float
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostics' })
 

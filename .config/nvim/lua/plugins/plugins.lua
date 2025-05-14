@@ -36,7 +36,7 @@ return {
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = { completions = { lsp = { enabled = true } } },
-		ft = { 'markdown', 'quarto' },
+		ft = { 'markdown', 'quarto', 'codecompanion' },
 	},
 
 	-- fzf Neovim
@@ -62,6 +62,22 @@ return {
 						env = {
 							api_key = 'cmd:security find-generic-password -s xai-api-key -w 2>/dev/null',
 						},
+						schema = {
+							---@type CodeCompanion.Schema
+							model = {
+								order = 1,
+								mapping = 'parameters',
+								type = 'enum',
+								desc = 'ID of the model to use. See the model endpoint compatibility table for details on which models work with the Chat API.',
+								default = 'grok-3-beta',
+								choices = {
+									'grok-3-beta',
+									'grok-3-mini-beta',
+									'grok-3-fast-beta',
+									'grok-3-min-fast-beta',
+								},
+							},
+						},
 					})
 				end,
 			},
@@ -75,16 +91,16 @@ return {
 					},
 				},
 			},
-		},
-		strategies = {
-			chat = {
-				adapter = 'xai',
-			},
-			inline = {
-				adapter = 'xai',
-			},
-			cmd = {
-				adapter = 'xai',
+			strategies = {
+				chat = {
+					adapter = 'xai',
+				},
+				inline = {
+					adapter = 'xai',
+				},
+				cmd = {
+					adapter = 'xai',
+				},
 			},
 		},
 	},

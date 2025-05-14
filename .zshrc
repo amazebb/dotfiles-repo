@@ -40,8 +40,6 @@ export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.lmstudio/bin"
 
-export XAI_API_KEY="xai-uz9trW7OsnnTfx0syGimpsXHVjw3QetEeF4Zr226O8vhGBlRKzgsypo6CNIZFopFMjESbz1Op7iDKT29"
-
 # Aliases
 alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only and -f for files only
