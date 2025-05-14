@@ -14,8 +14,8 @@ vim.o.updatetime = 500
 vim.o.signcolumn = 'auto'
 
 vim.diagnostic.config({
-	signs = true,
-	virtual_text = true,
+    signs = true,
+    virtual_text = true,
 })
 
 vim.api.nvim_set_hl(0, 'CursorLineNr', { ctermfg = 'Yellow' })

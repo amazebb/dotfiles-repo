@@ -1,12 +1,12 @@
 -- Help on word under cursor
 vim.keymap.set('n', 'H', function()
-	local word = vim.fn.expand('<cWORD>')
-	word = word:match('^[^%(%[{]+') or word
-	local ok, _ = pcall(vim.cmd.help, word)
-	if not ok then
-		local cword = vim.fn.expand('<cword>')
-		vim.cmd('HelpPopup ' .. cword)
-	end
+    local word = vim.fn.expand('<cWORD>')
+    word = word:match('^[^%(%[{]+') or word
+    local ok, _ = pcall(vim.cmd.help, word)
+    if not ok then
+        local cword = vim.fn.expand('<cword>')
+        vim.cmd('HelpPopup ' .. cword)
+    end
 end, { desc = 'Help with TOC' })
 
 vim.keymap.set('n', '<leader>h', ':HelpPopup<cr>', { noremap = true, silent = true })
@@ -25,9 +25,9 @@ vim.keymap.set('n', '<C-a>', 'ggVG', { noremap = true, silent = true, desc = 'Se
 
 -- Open a new terminal window in the bottom right corner
 vim.keymap.set('n', '<leader>t', function()
-	vim.cmd('belowright term')
-	vim.fn.feedkeys('<C-\\><C-n>')
-	vim.api.nvim_input('i')
+    vim.cmd('belowright term')
+    vim.fn.feedkeys('<C-\\><C-n>')
+    vim.api.nvim_input('i')
 end, { desc = 'Terminal below right' })
 
 -- Commenting
@@ -36,29 +36,29 @@ vim.keymap.set('n', '<leader>jj', 'gcc', { desc = 'Toggle comment lines', remap 
 
 -- Close window
 vim.keymap.set('n', '<C-q>', function()
-	if vim.bo.buftype == 'quickfix' then
-		vim.cmd('cclose')
-		vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
-	else
-		vim.cmd('bwipeout')
-	end
+    if vim.bo.buftype == 'quickfix' then
+        vim.cmd('cclose')
+        vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
+    else
+        vim.cmd('bwipeout')
+    end
 end, { desc = 'Close buffer in a more OS type way using Ctrl-q', silent = true })
 
 -- Toggle line numbers between relative and absolute
 vim.keymap.set('n', '<leader>l', function()
-	vim.o.relativenumber = not vim.o.relativenumber
+    vim.o.relativenumber = not vim.o.relativenumber
 end, { desc = 'Toggle relative/absolute line numbers' })
 
 -- Goto next tag in help
 vim.keymap.set('n', ']t', function()
-	vim.fn.search('|.\\{-}|', 'W')
-	vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
+    vim.fn.search('|.\\{-}|', 'W')
+    vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
 end, { desc = 'Next tag' })
 
 -- Goto previous tag in help
 vim.keymap.set('n', '[t', function()
-	vim.fn.search('|\\k\\+|', 'bW')
-	vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
+    vim.fn.search('|\\k\\+|', 'bW')
+    vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
 end, { desc = 'Prev tag' })
 
 -- vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
@@ -68,12 +68,12 @@ vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagn
 
 -- Jump to next diagnostic
 vim.keymap.set('n', ']d', function()
-	vim.diagnostic.jump({ count = 1, float = true })
+    vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = 'Next diagnostic' })
 
 -- Jump to previous diagnostic
 vim.keymap.set('n', '[d', function()
-	vim.diagnostic.jump({ count = -1, float = true })
+    vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = 'Prev diagnostic' })
 
 -- Show all diagnostics in a list (quickfix or location list)
@@ -81,16 +81,16 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostic
 
 -- Function to insert ShellCheck disable directive for warning under cursor
 local function insert_shellcheck_disable()
-	local line = vim.fn.line('.') - 1
-	local diagnostics = vim.diagnostic.get(0, { lnum = line })
-	for _, diag in ipairs(diagnostics) do
-		if diag.source == 'shellcheck' and diag.code then
-			local code = string.match(diag.code, 'SC%d+') or diag.code
-			vim.api.nvim_buf_set_lines(0, line, line, false, { '# shellcheck disable=' .. code })
-			return
-		end
-	end
-	vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
+    local line = vim.fn.line('.') - 1
+    local diagnostics = vim.diagnostic.get(0, { lnum = line })
+    for _, diag in ipairs(diagnostics) do
+        if diag.source == 'shellcheck' and diag.code then
+            local code = string.match(diag.code, 'SC%d+') or diag.code
+            vim.api.nvim_buf_set_lines(0, line, line, false, { '# shellcheck disable=' .. code })
+            return
+        end
+    end
+    vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
 end
 
 --  Disbale ShellCheck for current line
@@ -98,8 +98,8 @@ vim.keymap.set('n', '<C-i>', insert_shellcheck_disable, { noremap = true, silent
 
 -- Toggle basedpyright type warnings
 vim.keymap.set(
-	'n',
-	'<leader>w',
-	':TogglePythonWarnings<CR>',
-	{ desc = 'Toggle basedpyright warnings between standard and recommended', silent = true }
+    'n',
+    '<leader>w',
+    ':TogglePythonWarnings<CR>',
+    { desc = 'Toggle basedpyright warnings between standard and recommended', silent = true }
 )
