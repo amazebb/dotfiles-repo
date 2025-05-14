@@ -45,6 +45,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+uv.lock
 
 # Other common ignores
 *.log
