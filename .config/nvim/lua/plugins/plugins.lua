@@ -148,6 +148,14 @@ return {
 				component_separators = '|',
 				section_separators = { left = '', right = '' },
 			},
+			sections = {
+				lualine_c = {
+					{
+						'filename',
+						path = 3,
+					},
+				},
+			},
 			tabline = {
 				lualine_a = {
 					{

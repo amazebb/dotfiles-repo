@@ -50,10 +50,8 @@ alias gitd="dotfiles"
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"
 
-# # Setup for fzf
-# eval "$(fzf --zsh)"
-
 # Set up fzf key bindings and fuzzy completion
+# shellcheck disable=SC1090
 source <(fzf --zsh)
 
 # Source fzf-man-widget script
