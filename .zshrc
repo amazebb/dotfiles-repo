@@ -50,18 +50,21 @@ alias gitd="dotfiles"
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"
 
-# Setup for fzf
-eval "$(fzf --zsh)"
+# # Setup for fzf
+# eval "$(fzf --zsh)"
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 
 # Source fzf-man-widget script
 # shellcheck disable=SC1090
-source ~/.local/scripts/fzf-man-widget.zsh
+source ~/.local/scripts/fzf-man.zsh
 
-# Bind Ctrl-H to launch the fzf-man-widget
-bindkey '^h' fzf-man-widget
+# Bind Ctrl-H to launch the fzf-man widget
+bindkey '^h' fzf-man
 
 # Alias to run fzf-man-widget function
-alias fzf-man-widget='fzf-man-widget'
+alias fzf-man='fzf-man'
 
 create_aliases() {
   for script in ~/.local/scripts/*.sh; do

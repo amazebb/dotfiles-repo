@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Interactive man page/tldr searcher with fzf, bat, and key bindings
 
-fzf-man-widget() {
+fzf-man() {
   cyan=$(tput setaf 6)
   blue=$(tput setaf 4)
   res=$(tput sgr0)
@@ -32,4 +32,4 @@ fzf-man-widget() {
 }
 
 # Register the widget
-zle -N fzf-man-widget
+zle -N fzf-man
