@@ -10,6 +10,6 @@ binary-next-line = true
 
 
 [*.lua]
-indent_type = space
+indent_style = space
 quote_type = single
 
