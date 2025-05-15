@@ -135,12 +135,12 @@ vim.api.nvim_create_user_command('TogglePythonWarnings', function(args)
 end, { nargs = '?', desc = 'Toggle basedpyright Warnings', complete = completion_list })
 
 -- Ensure git commit -v shows syntax/color highlighting in the diff
-vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-    pattern = { 'COMMIT_EDITMSG' },
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+    pattern = { 'gitcommit' },
     callback = function()
         -- Apply diff syntax to diff regions
-        vim.cmd([[syntax include @Diff syntax/diff.vim]])
-        vim.cmd([[syntax region gitcommitDiff start="^diff --git" end="\%$" contains=@Diff]])
+        vim.cmd('syntax include @Diff syntax/diff.vim')
+        vim.cmd('syntax region gitcommitDiff start="^diff --git" end="%$" contains=@Diff')
     end,
 })
 
