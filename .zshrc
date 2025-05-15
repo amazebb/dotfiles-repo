@@ -39,6 +39,7 @@ export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.lmstudio/bin"
+export PATH="$PATH:$HOME/.juliaup/bin"
 
 # Aliases
 alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
@@ -62,7 +63,7 @@ source ~/.local/scripts/fzf-man.zsh
 bindkey '^h' fzf-man
 
 # Alias to run fzf-man-widget function
-alias fzf-man='fzf-man'
+alias fzfman='fzf-man'
 
 create_aliases() {
   for script in ~/.local/scripts/*.sh; do
