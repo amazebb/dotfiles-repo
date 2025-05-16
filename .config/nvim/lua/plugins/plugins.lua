@@ -92,6 +92,10 @@ return {
                         schema = {
                             model = {
                                 default = 'mlx-community/Qwen3-4B-4bit', -- define llm model to be used
+                                choices = {
+                                    'mlx-community/Qwen3-8B-4bit',
+                                    'mlx-community/Josiefied-Qwen3-1.7B-abliterated-v1-4bit',
+                                },
                             },
                         },
                     })

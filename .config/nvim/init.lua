@@ -3,4 +3,4 @@ require('config.keymaps')
 require('config.autocmds')
 require('config.lazy')
 
-vim.lsp.enable({ 'lua_ls', 'bashls', 'basedpyright', 'gopls', 'ruff', 'matlab', 'yamlls' })
+vim.lsp.enable({ 'lua_ls', 'bashls', 'basedpyright', 'gopls', 'ruff', 'yamlls' })
