@@ -3,7 +3,11 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 # shellcheck disable=SC2034
 SAVEHIST=10000
-setopt APPEND_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS
+setopt APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt INC_APPEND_HISTORY # Write to history after each command
+setopt SHARE_HISTORY      # Share history across sessions
 unsetopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE
 
 # Setup history search using the up/down keys
@@ -41,9 +45,9 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin"
 
 # Aliases
-alias ls="eza -1 -l -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always"
+alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only and -f for files only
-alias ls-dot="eza -1 -al -s=name --no-user --no-permissions --group-directories-first --git --git-repos --header --icons=always --color=always --ignore-glob=\"[!.]*\""
+alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 alias gitd="dotfiles"
 
