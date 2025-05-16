@@ -2,6 +2,7 @@
 !/.local
 /.local/*
 !/.local/scripts
+!/.local/scripts/python/
 
 !/.config
 /.config/*
