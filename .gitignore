@@ -6,6 +6,8 @@
 !/.config
 /.config/*
 !/.config/nvim
+!/.config/nvim/rplugin/python3
+#!/.config/nvim/lua/custom
 
 !.gitignore
 !.gitignore_global

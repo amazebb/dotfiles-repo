@@ -1,5 +1,5 @@
 vim.g.mapleader = ' '
-vim.g.python3_host_prog = '~/.config/nvim/py3nvim/.venv/bin/python'
+vim.g.python3_host_prog = '~/.config/nvim/rplugin/python3/.venv/bin/python3'
 
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2

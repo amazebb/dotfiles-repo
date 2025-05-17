@@ -1,7 +1,8 @@
 [project]
-name = "py3nvim"
+name = "python3"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "pynvim>=0.5.2",
+    "requests>=2.32.3",
 ]

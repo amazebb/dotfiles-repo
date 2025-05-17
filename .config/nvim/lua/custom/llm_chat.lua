@@ -1,0 +1,6 @@
+vim.api.nvim_create_user_command('LLMChat', function()
+    vim.cmd('LLMCreateChatBuffer')
+end, {})
+vim.api.nvim_create_user_command('LLMSetModel', function(opts)
+    vim.cmd('LLMSetModel ' .. opts.args)
+end, { nargs = 1 })
