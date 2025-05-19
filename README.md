@@ -121,7 +121,7 @@ Format all Lua files under current folder recursively:
 
 <details>
 <summary><h4>Storing private information</h4></summary>
-We can use MacOS ```security``` CLI to create secure keys and passwords
+We can use MacOS `security` CLI to create secure keys and passwords
 
 ```bash
 security add-generic-password -a "$USER" -s "xai-api-key" -w "your-api-key-here"
