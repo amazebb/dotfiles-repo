@@ -129,3 +129,164 @@ security add-generic-password -a "$USER" -s "xai-api-key" -w "your-api-key-here"
 # Neovim command for use with codecompanion.nvim
 api-key = "cmd: security find-generic-password -s xai-api-key -w 2>/dev/null"
 ```
+
+The OpenAI Chat API, including when used with `mlx-lm` (a framework for running LLMs locally), typically returns structured JSON responses for the `/v1/chat/completions` endpoint, even in streaming mode. There isn't a built-in option to get a plain text response without JSON fields directly from the API, as the JSON structure is part of the OpenAI API specification for consistent data handling (e.g., including `choices`, `delta`, and `content` fields in streaming). However, you can process the streamed JSON to extract only the plain text content for your use case with `pynvim` in a Neovim buffer.
+
+Here’s how you can achieve this:
+
+### Approach
+1. **Use `mlx-lm` with OpenAI-compatible API**: `mlx-lm` provides an OpenAI-compatible endpoint (e.g., `http://127.0.0.1:8080/v1`) for local LLMs, which supports the `/v1/chat/completions` endpoint with streaming.
+2. **Stream and Parse JSON**: Use Python with `pynvim` to handle the streaming response, extract the `delta.content` field (where the actual text resides), and append it to a Neovim buffer in real-time.
+3. **Minimize Overhead**: Skip unnecessary JSON fields during parsing to keep the process lightweight and fast.
+
+### Code Example
+Below is a Python script using `pynvim`, `requests` (for streaming), and `mlx-lm` to stream plain text into a Neovim buffer:
+
+```python
+import pynvim
+import requests
+import json
+
+# Connect to Neovim
+nvim = pynvim.attach('socket', path='/tmp/nvim')
+
+# API endpoint (mlx-lm local server)
+url = "http://127.0.0.1:8080/v1/chat/completions"
+headers = {"Content-Type": "application/json"}
+payload = {
+    "model": "llama-3.1-8b",  # Replace with your model
+    "messages": [{"role": "user", "content": "Tell me a short story."}],
+    "stream": True
+}
+
+# Stream the response
+with requests.post(url, json=payload, headers=headers, stream=True) as response:
+    buffer = nvim.current.buffer  # Get current Neovim buffer
+    for line in response.iter_lines():
+        if line:
+            # Decode and clean up the streamed line
+            line = line.decode('utf-8').strip()
+            if line.startswith("data: "):
+                line = line[6:]  # Remove "data: " prefix
+                if line == "[DONE]":
+                    break
+                try:
+                    # Parse JSON and extract content
+                    data = json.loads(line)
+                    content = data.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                    if content:
+                        # Append to Neovim buffer
+                        nvim.command('normal! Go')  # Move to end and insert new line
+                        buffer.append(content)
+                        nvim.command('redraw')  # Refresh buffer display
+                except json.JSONDecodeError:
+                    pass  # Skip malformed JSON
+```
+
+### Key Points
+- **Streaming JSON Parsing**: The OpenAI-compatible streaming response sends chunks prefixed with `data: `, each containing a JSON object. You extract the `delta.content` field, which holds the plain text.
+- **Neovim Integration**: `pynvim` lets you append text directly to the buffer. The `normal! Go` command ensures text is added at the end, and `redraw` updates the display in real-time.
+- **Performance**: By only processing the `delta.content` field and ignoring other JSON fields, you minimize overhead. The `requests` library with `iter_lines` is efficient for streaming.
+- **mlx-lm**: Ensure your `mlx-lm` server is running (e.g., `python -m mlx_lm.server --model llama-3.1-8b`). The endpoint mimics OpenAI’s API, so the JSON structure is similar.
+
+### Limitations
+- **No Native Plain Text Mode**: Neither OpenAI’s API nor `mlx-lm`’s OpenAI-compatible endpoint offers a plain text-only response for `/v1/chat/completions`. You must parse the JSON stream.
+- **JSON Overhead**: The JSON structure adds some overhead, but it’s minimal in practice, especially with efficient parsing as shown above.
+- **Alternative Endpoints**: The `/v1/completions` endpoint (not chat) is deprecated by OpenAI and may not be supported by `mlx-lm`. It’s also JSON-based, so it doesn’t solve the plain text issue.
+
+### Tips
+- **Error Handling**: Add robust error handling for network issues or malformed JSON, as streaming can be sensitive to interruptions.
+- **Buffer Management**: If you want to overwrite the buffer instead of appending, modify the `buffer` operations (e.g., `buffer[:] = [content]`).
+- **Model Selection**: Ensure the `model` in the payload matches the one loaded in `mlx-lm`.
+
+If you need a specific tweak (e.g., different buffer handling or model config), let me know!
+
+
+You're correct—there's no fundamental barrier to implementing plain text streaming in `mlx-lm` to minimize data transmission. The JSON structure in the OpenAI-compatible `/v1/chat/completions` endpoint is a design choice for compatibility and structured data handling, but a custom plain text streaming endpoint could be added to `mlx-lm` with minimal overhead. This would involve modifying the `mlx_lm.server` code or creating a new endpoint. A pull request (PR) to the `mlx-lm` repo is a viable option if the change aligns with the project's goals. Here's a concise breakdown of how to approach this:
+
+### Feasibility
+- **Current Setup**: `mlx-lm` uses FastAPI to serve an OpenAI-compatible API (`/v1/chat/completions`), which streams JSON chunks prefixed with `data: ` (Server-Sent Events, SSE). Each chunk includes fields like `choices` and `delta.content`.
+- **Plain Text Streaming**: You could add a new endpoint (e.g., `/v1/stream/text`) that skips JSON formatting and streams only the `content` as plain text. This reduces data overhead (no JSON keys, no `data: ` prefixes) and simplifies client-side parsing for your Neovim use case.
+- **Data Savings**: JSON overhead is small but non-zero (e.g., `{"choices":[{"delta":{"content":"text"}}]}` vs. `text`). For long streams, plain text could save 50-70% of the data, depending on content length.
+- **Challenges**: Modifying `mlx-lm` requires understanding its inference pipeline and ensuring the new endpoint integrates with the existing model serving logic. You'd also need to handle streaming state (e.g., token-by-token generation) without breaking compatibility.
+
+### Hacking `mlx-lm`
+To prototype this, you’d modify the `mlx_lm/server.py` file (or related modules) in the `mlx-lm` repo. Here’s a high-level plan:
+
+1. **Locate the Streaming Logic**:
+   - In `mlx_lm/server.py`, find the `chat_completions` endpoint (likely using FastAPI’s `@app.post("/v1/chat/completions")`).
+   - The streaming response uses a generator to yield JSON chunks, calling the model’s `generate` or `stream` method (e.g., `model.generate` from `mlx_lm.utils`).
+
+2. **Add a New Endpoint**:
+   - Create a new FastAPI route, e.g., `@app.post("/v1/stream/text")`.
+   - Reuse the existing model inference logic but skip JSON serialization.
+   - Stream raw `content` as plain text using FastAPI’s `StreamingResponse`.
+
+3. **Example Patch (Pseudo-code)**:
+```python
+from fastapi import FastAPI, Request
+from fastapi.responses import StreamingResponse
+from mlx_lm.server import app, load_model  # Existing imports
+
+@app.post("/v1/stream/text")
+async def stream_text(request: Request):
+    data = await request.json()
+    model, tokenizer = load_model(data.get("model", "llama-3.1-8b"))
+    prompt = data.get("messages", [])[-1]["content"]
+
+    async def generate():
+        for token in model.generate(prompt, tokenizer, stream=True):
+            yield token  # Stream raw token text
+        yield "[DONE]"
+
+    return StreamingResponse(generate(), media_type="text/plain")
+```
+
+4. **Update Client Code**:
+   - Modify your `pynvim` script to hit the new `/v1/stream/text` endpoint.
+   - Since it’s plain text, no JSON parsing is needed—just append the streamed text to the Neovim buffer.
+
+```python
+import pynvim
+import requests
+
+nvim = pynvim.attach('socket', path='/tmp/nvim')
+url = "http://127.0.0.1:8080/v1/stream/text"
+payload = {
+    "model": "llama-3.1-8b",
+    "messages": [{"role": "user", "content": "Tell me a short story."}]
+}
+
+with requests.post(url, json=payload, stream=True) as response:
+    buffer = nvim.current.buffer
+    for line in response.iter_lines():
+        if line:
+            content = line.decode('utf-8').strip()
+            if content == "[DONE]":
+                break
+            buffer.append(content)
+            nvim.command('redraw')
+```
+
+### Creating a Pull Request
+If you want to contribute this to `mlx-lm`, here’s how to proceed:
+1. **Fork and Clone**: Fork the `mlx-lm` repo (likely `https://github.com/ml-explore/mlx-lm`), clone it, and create a branch (`git checkout -b plain-text-streaming`).
+2. **Implement Changes**: Add the new endpoint and test locally with your `pynvim` setup.
+3. **Add Tests**: Include unit tests (e.g., using `pytest`) to verify the endpoint streams correctly and handles edge cases (e.g., empty prompts, model errors).
+4. **Document**: Update `README.md` or docs to describe the new `/v1/stream/text` endpoint, including its purpose (e.g., lightweight streaming for low-bandwidth clients).
+5. **Submit PR**: Push your branch, open a PR on GitHub, and explain the use case (e.g., “Adds plain text streaming endpoint for minimal data overhead, ideal for real-time text applications like Neovim integration”).
+6. **Community Feedback**: The `mlx-lm` maintainers may request changes, like ensuring compatibility with existing features or adding configuration options (e.g., toggle JSON vs. plain text).
+
+### Considerations
+- **Maintainer Buy-In**: The `mlx-lm` team may hesitate to add non-OpenAI-compatible endpoints unless there’s strong community demand. Pitch it as a lightweight alternative for specific use cases (e.g., terminal-based apps).
+- **Configurability**: Instead of a new endpoint, you could propose a query parameter (e.g., `?format=plain`) to the existing `/v1/chat/completions` endpoint to toggle plain text output.
+- **Performance**: Plain text streaming should be slightly faster due to reduced serialization overhead, but test to quantify the gain (e.g., measure latency and bandwidth).
+- **Local Hack vs. PR**: If the change is just for your setup, hack it locally and skip the PR. Use a custom branch or fork to avoid conflicts with upstream updates.
+
+### Next Steps
+- **Prototype Locally**: Check out the `mlx-lm` source (likely in `~/.pyenv/versions/<your-python-version>/lib/pythonX.X/site-packages/mlx_lm` or the GitHub repo). Experiment with the above pseudo-code.
+- **Test with Neovim**: Verify the new endpoint streams cleanly into your buffer without JSON cruft.
+- **Decide on PR**: If you think it’s broadly useful, prep a PR. If not, keep it as a local mod.
+
+If you want help with specific `mlx-lm` code (e.g., exact files to edit) or drafting the PR, let me know!
+
