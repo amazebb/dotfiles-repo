@@ -295,3 +295,161 @@ If you want to contribute this to `mlx-lm`, here’s how to proceed:
 
 If you want help with specific `mlx-lm` code (e.g., exact files to edit) or drafting the PR, let me know!
 </details>
+
+<details>
+<summary><h4>statusline customization</h4></summary>
+Neovim’s status line is a customizable, per-window bar at the bottom of each window that displays information about the current buffer, cursor position, or other editor state. Without plugins like `lualine`, you can configure it natively using the `statusline` option, which supports static text, dynamic expressions, and even simple animations (e.g., a progress bar). Since you’re a terminal-savvy user with a full dev setup (Neovim, Lua, M1 MacBook Pro), I’ll keep this concise, focusing on barebones status lines, how they work, and how to create a simple custom one with text and a progress bar.
+
+### How Status Lines Work in Neovim
+- **Definition**: The status line is controlled by the `statusline` option (`:set statusline=...`), a string that combines static text, format specifiers (e.g., `%f` for file name), and Vim expressions (e.g., `%{...}` for dynamic content).
+- **Scope**: Per-window, but can be global (`:set global statusline=...`) or local to a window (`:set local statusline=...`).
+- **Rendering**: Neovim evaluates `statusline` each time the screen redraws (e.g., cursor move, buffer change), allowing dynamic updates.
+- **Components**:
+  - **Static Text**: Plain strings (e.g., `"My Status"`).
+  - **Specifiers**: `%` codes like `%f` (file name), `%l` (line number), `%p` (percentage through file).
+  - **Expressions**: `%{LuaOrVimScript}` for dynamic content (e.g., `%{line('.')*100/line('$')}%` for progress).
+  - **Alignment**: `%=` separates left- and right-aligned sections.
+  - **Colors**: Highlight groups (e.g., `hi StatusLine guifg=#ffffff guibg=#000000`) for styling.
+
+### Barebones Status Line (No Plugins)
+By default, Neovim’s status line is minimal (e.g., shows file name, line/column). To customize it without plugins:
+
+1. **Set a Simple Static Status Line**:
+   Add to `~/.config/nvim/init.lua`:
+   ```lua
+   vim.opt.statusline = "My Custom Status"
+   ```
+   - Shows “My Custom Status” in every window’s status line.
+   - Test immediately: `:set statusline=My\ Custom\ Status`.
+
+2. **Add Dynamic Info**:
+   Include file name and line number:
+   ```lua
+   vim.opt.statusline = "%f [%l:%c]"
+   ```
+   - `%f`: Relative path of the file.
+   - `%l`: Current line number.
+   - `%c`: Column number.
+   - Example output: `path/to/file.txt [10:5]`.
+
+3. **Left and Right Alignment**:
+   Show file name on left, line info on right:
+   ```lua
+   vim.opt.statusline = "%f %= Line %l/%L"
+   ```
+   - `%=`: Pushes subsequent content to the right.
+   - `%L`: Total lines in buffer.
+   - Example: `path/to/file.txt             Line 10/100`.
+
+4. **Highlighting**:
+   Add color using highlight groups:
+   ```lua
+   vim.api.nvim_set_hl(0, "StatusLine", { fg = "#00FF00", bg = "#000000" })
+   vim.opt.statusline = "%#StatusLine#%f %= Line %l/%L"
+   ```
+   - `%#StatusLine#`: Applies the `StatusLine` highlight group (green text, black background).
+   - Persists across sessions if in `init.lua`.
+
+### Creating a Simple Progress Bar
+To animate a progress bar (e.g., showing scroll position), use a Lua function within `statusline` to compute the bar dynamically. Here’s how:
+
+1. **Basic Progress Bar**:
+   Show a text-based bar (e.g., `[####    ]`) based on cursor position:
+   ```lua
+   local function progress_bar()
+       local current = vim.fn.line('.')
+       local total = vim.fn.line('$')
+       local width = 10 -- Bar width
+       local filled = math.floor(current * width / total)
+       local empty = width - filled
+       return '[' .. string.rep('#', filled) .. string.rep(' ', empty) .. ']'
+   end
+
+   vim.opt.statusline = '%f %=' .. progress_bar() -- Static call (won’t update)
+   ```
+   - Issue: This sets the statusline once, so the bar doesn’t update dynamically.
+
+2. **Dynamic Progress Bar**:
+   Use `%{...}` to evaluate the function on each redraw:
+   ```lua
+   local function progress_bar()
+       local current = vim.fn.line('.')
+       local total = vim.fn.line('$')
+       local width = 10
+       local filled = math.floor(current * width / total)
+       local empty = width - filled
+       return '[' .. string.rep('#', filled) .. string.rep(' ', empty) .. ']'
+   end
+
+   vim.opt.statusline = '%f %= %{luaeval("progress_bar()")}'
+   ```
+   - `%{luaeval("progress_bar()")}`: Calls the Lua function on each redraw.
+   - Output: `path/to/file.txt [#####     ]` (updates as you scroll).
+   - `%p%%` could also show percentage (e.g., `50%`), but the bar is more visual.
+
+3. **Animated Effect (Optional)**:
+   For a pseudo-animated bar (e.g., cycling characters), add a timer-based update:
+   ```lua
+   local chars = {'-', '\\', '|', '/'}
+   local idx = 1
+
+   local function progress_bar()
+       local current = vim.fn.line('.')
+       local total = vim.fn.line('$')
+       local width = 10
+       local filled = math.floor(current * width / total)
+       local empty = width - filled
+       idx = idx % #chars + 1 -- Cycle through chars
+       return '[' .. string.rep(chars[idx], filled) .. string.rep(' ', empty) .. ']'
+   end
+
+   -- Update statusline periodically
+   vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
+       callback = function()
+           vim.opt.statusline = '%f %= %{luaeval("progress_bar()")}'
+       end,
+   })
+   ```
+   - Updates the bar on cursor movement, cycling through `-`, `\`, `|`, `/` for a spinning effect.
+   - Minimal performance impact on your M1 MacBook Pro.
+
+### Example: Complete Custom Status Line
+Combine file info, progress bar, and highlights:
+```lua
+-- Define highlight
+vim.api.nvim_set_hl(0, "StatusLine", { fg = "#00FF00", bg = "#000000" })
+
+-- Progress bar function
+local function progress_bar()
+    local current = vim.fn.line('.')
+    local total = vim.fn.line('$')
+    local width = 10
+    local filled = math.floor(current * width / total)
+    local empty = width - filled
+    return '[' .. string.rep('#', filled) .. string.rep(' ', empty) .. ']'
+end
+
+-- Set statusline
+vim.opt.statusline = '%#StatusLine#%f [%m] %= %l:%c %{luaeval("progress_bar()")}'
+```
+- `%f`: File name.
+- `[%m]`: Modified flag (e.g., `[+]` if unsaved).
+- `%l:%c`: Line and column.
+- `progress_bar()`: Dynamic bar.
+- Output: `path/to/file.txt [+]             10:5 [####      ]`.
+
+### Key Notes
+- **Performance**: Native `statusline` is lightweight, even with Lua functions. No plugins mean no overhead (unlike `lualine`).
+- **Limitations**: No built-in animations beyond redraw triggers (`CursorMoved`, timers). Complex animations need timers or autocommands.
+- **Terminal.app**: Your setup supports true color, so highlights work well. Test in Terminal.app to ensure bar characters render cleanly.
+- **Extensibility**: Add more `%{luaeval(...)}` calls for custom logic (e.g., git branch, file encoding).
+- **Debugging**: If the statusline breaks, check `:set statusline?` or simplify the expression.
+
+### Your Context
+- **Why Barebones?**: You’re already using `lualine`, but a custom `statusline` gives you full control, avoids plugin bloat, and suits your minimalist Neovim preference.
+- **Simple Text**: Start with static text (`"My Status"`) or dynamic info (`%f %l/%L`).
+- **Progress Bar**: The Lua-based bar above is simple yet visual, perfect for tracking scroll position without `lualine`’s complexity.
+- **Next Steps**: If you want more (e.g., git status, mode indicators), extend with Lua or reconsider `lualine` for prebuilt components.
+
+If you need a specific statusline feature (e.g., mode-based colors, git integration) or help debugging, let me know!
+</details>
