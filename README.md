@@ -131,7 +131,10 @@ api-key = "cmd: security find-generic-password -s xai-api-key -w 2>/dev/null"
 ```
 
 The OpenAI Chat API, including when used with `mlx-lm` (a framework for running LLMs locally), typically returns structured JSON responses for the `/v1/chat/completions` endpoint, even in streaming mode. There isn't a built-in option to get a plain text response without JSON fields directly from the API, as the JSON structure is part of the OpenAI API specification for consistent data handling (e.g., including `choices`, `delta`, and `content` fields in streaming). However, you can process the streamed JSON to extract only the plain text content for your use case with `pynvim` in a Neovim buffer.
+</details>
 
+<details>
+<summary><h4>Streaming LLM chat using Python into Neovim</h4></summary>
 Here’s how you can achieve this:
 
 ### Approach
@@ -200,8 +203,10 @@ with requests.post(url, json=payload, headers=headers, stream=True) as response:
 - **Model Selection**: Ensure the `model` in the payload matches the one loaded in `mlx-lm`.
 
 If you need a specific tweak (e.g., different buffer handling or model config), let me know!
+</details>
 
-
+<details>
+<summary><h4>Plain text streaming in mlx-lm</h4></summary>
 You're correct—there's no fundamental barrier to implementing plain text streaming in `mlx-lm` to minimize data transmission. The JSON structure in the OpenAI-compatible `/v1/chat/completions` endpoint is a design choice for compatibility and structured data handling, but a custom plain text streaming endpoint could be added to `mlx-lm` with minimal overhead. This would involve modifying the `mlx_lm.server` code or creating a new endpoint. A pull request (PR) to the `mlx-lm` repo is a viable option if the change aligns with the project's goals. Here's a concise breakdown of how to approach this:
 
 ### Feasibility
@@ -289,4 +294,4 @@ If you want to contribute this to `mlx-lm`, here’s how to proceed:
 - **Decide on PR**: If you think it’s broadly useful, prep a PR. If not, keep it as a local mod.
 
 If you want help with specific `mlx-lm` code (e.g., exact files to edit) or drafting the PR, let me know!
-
+</details>
