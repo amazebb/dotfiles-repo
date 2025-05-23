@@ -147,3 +147,118 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 vim.api.nvim_create_user_command('GitDiffFileMerge', function()
     vim.fn.jobstart('git difftool --cached', { detach = true })
 end, {})
+
+-- -- Basic Neovim configuration for MATLAB-style layout
+-- -- Ensure required plugins are installed (e.g., via a plugin manager like packer.nvim)
+-- -- Plugins: nvim-tree.lua (file explorer), vim-terminal (terminal)
+--
+-- -- Function to set up the layout
+-- function SetupMatlabLayout()
+--     -- Open NvimTree on the left
+--     vim.cmd('NnnExplorer')
+--
+--     -- Split the main window vertically for editor and variables
+--     vim.cmd('vsplit')
+--
+--     -- Move to the right window (editor)
+--     vim.cmd('wincmd l')
+--
+--     -- Split the editor window horizontally for editor and terminal
+--     vim.cmd('split')
+--
+--     -- Open terminal in the bottom window
+--     vim.cmd('wincmd j')
+--     vim.cmd('terminal')
+--     vim.cmd('resize 15') -- Adjust terminal height
+--
+--     -- Move back to the editor window
+--     vim.cmd('wincmd k')
+--
+--     -- Move to the rightmost window (for variables)
+--     vim.cmd('wincmd l')
+--     vim.cmd('vertical resize 30') -- Adjust variable window width
+--
+--     -- Create a new buffer for variable explorer
+--     vim.cmd('enew')
+--     vim.bo.buftype = 'nofile'
+--     vim.bo.bufhidden = 'hide'
+--     vim.bo.swapfile = false
+--     vim.api.nvim_buf_set_name(0, 'Variables')
+-- end
+--
+-- -- Command to trigger the layout
+-- vim.api.nvim_create_user_command('MatlabLayout', SetupMatlabLayout, {})
+--
+-- -- Keybinding to trigger the layout
+-- vim.api.nvim_set_keymap('n', '<leader>ml', ':MatlabLayout<CR>', { noremap = true, silent = true })
+--
+-- Neovim configuration for three side-by-side buffers
+
+-- Function to set up the layout
+function SetupThreeBufferLayout()
+    -- Clear all windows
+    vim.cmd('only')
+
+    -- Create left buffer
+    vim.cmd('enew')
+    vim.bo.buftype = 'nofile'
+    vim.api.nvim_buf_set_name(0, 'Left')
+
+    -- Create middle buffer
+    vim.cmd('vert sb')
+    vim.cmd('wincmd l')
+    -- Reuse existing file buffer or create new
+    local bufs = vim.api.nvim_list_bufs()
+    local file_buf = nil
+    for _, buf in ipairs(bufs) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == '' then
+            file_buf = buf
+            break
+        end
+    end
+    if file_buf then
+        vim.api.nvim_set_current_buf(file_buf)
+    else
+        vim.cmd('enew')
+    end
+
+    -- Create right buffer
+    vim.cmd('vert sb')
+    vim.cmd('wincmd l')
+    vim.cmd('enew')
+    vim.bo.buftype = 'nofile'
+    vim.api.nvim_buf_set_name(0, 'Right')
+
+    -- Set widths
+    local total_cols = vim.o.columns
+    local side_width = math.floor(total_cols / 6)
+    local middle_width = total_cols - 2 * side_width
+    vim.cmd('wincmd h') -- Left
+    vim.cmd('vertical resize ' .. side_width)
+    vim.cmd('wincmd l') -- Middle
+    vim.cmd('vertical resize ' .. middle_width)
+    vim.cmd('wincmd l') -- Right
+    vim.cmd('vertical resize ' .. side_width)
+end
+
+-- Auto-resize function
+function ResizeThreeBufferLayout()
+    local total_cols = vim.o.columns
+    local side_width = math.floor(total_cols / 6)
+    local middle_width = total_cols - 2 * side_width
+    vim.cmd('wincmd h') -- Left
+    vim.cmd('vertical resize ' .. side_width)
+    vim.cmd('wincmd l') -- Middle
+    vim.cmd('vertical resize ' .. middle_width)
+    vim.cmd('wincmd l') -- Right
+    vim.cmd('vertical resize ' .. side_width)
+end
+
+-- Autocommand for resize
+vim.api.nvim_create_autocmd('VimResized', {
+    callback = ResizeThreeBufferLayout,
+})
+
+-- Command and keybinding
+vim.api.nvim_create_user_command('ThreeBufferLayout', SetupThreeBufferLayout, {})
+vim.api.nvim_set_keymap('n', '<leader>tb', ':ThreeBufferLayout<CR>', { noremap = true, silent = true })

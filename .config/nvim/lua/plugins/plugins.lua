@@ -56,6 +56,18 @@ return {
         'olimorris/codecompanion.nvim',
         dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'ravitemer/mcphub.nvim' },
         opts = {
+            display = {
+                action_palette = {
+                    width = 95,
+                    height = 10,
+                    prompt = 'Prompt ', -- Prompt used for interactive LLM calls
+                    provider = 'fzf_lua', -- Can be "default", "telescope", "fzf_lua", "mini_pick" or "snacks".
+                    opts = {
+                        show_default_actions = true, -- Show the default actions in the action palette?
+                        show_default_prompt_library = true, -- Show the default prompt library in the action palette?
+                    },
+                },
+            },
             extensions = {
                 mcphub = {
                     callback = 'mcphub.extensions.codecompanion',
