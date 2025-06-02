@@ -29,7 +29,7 @@ export NNN_FIFO=/tmp/nnn.fifo
 
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.6-tem
+export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.7-tem
 
 # If we reinstall Gitea default to ~/.gitea-data
 export GITEA_WORK_DIR="$HOME/.gitea-data"
