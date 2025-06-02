@@ -1,7 +1,7 @@
 #!/bin/dash
-# List all scripts in ~/.local/bin with a description
+# List scripts with descriptions in ~/.local/scripts.
 
-# Directory to search for scripts (default is ~/.local/bin)
+# Directory to search for script
 DIR=${1:-~/.local/scripts}
 
 # Find all .sh files and process them
@@ -11,20 +11,20 @@ find "$DIR" -type f -depth 1 -name "*.sh" | sort -k1 | while read -r script; do
 
   # Determine script type from shebang (first line)
   shebang=$(head -n 1 "$script")
-  case "$shebang" in
-    *bash) type="bash" ;;
-    *zsh) type="zsh" ;;
-    *dash) type="dash" ;;
-    *sh) type="sh" ;;
-    *) type="unknown" ;;
-  esac
+  # case "$shebang" in
+  #   *bash) type="bash" ;;
+  #   *zsh) type="zsh" ;;
+  #   *dash) type="dash" ;;
+  #   *sh) type="sh" ;;
+  #   *) type="unknown" ;;
+  # esac
 
   # Extract the first comment line that starts with # (ignoring shebang)
   desc=$(grep "^#[^!]" "$script" | head -n 1 | sed 's/^# *//')
 
   # If no description found, use a placeholder
-  desc=${desc:-"No description available"}
+  desc=${desc:-"No description"}
 
   # Print formatted output: name, type, and description
-  printf "%-20s %-25s %s\n" "$name" "$shebang" "$desc"
+  printf "%-20s\t%-25s\t%s\n" "$name" "$shebang" "$desc"
 done

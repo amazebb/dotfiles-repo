@@ -1,5 +1,5 @@
 #!/bin/dash
-# Launch GNU info for a coreutils command and pipe to Neovim
+# Launch GNU info for coreutils in Neovim.
 
 help() {
   echo "info2vim - View coreutils info pages in Neovim"

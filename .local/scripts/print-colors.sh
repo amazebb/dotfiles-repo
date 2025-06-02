@@ -1,5 +1,5 @@
 #!/bin/bash
-# Display all 256 ANSI colors in the terminal
+# Show all 256 ANSI terminal colors.
 
 # Get terminal dimensions
 rows=$(tput lines)

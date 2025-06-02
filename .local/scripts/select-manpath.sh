@@ -1,6 +1,5 @@
 #!/bin/zsh
-
-# Get current MANPATH entries as an array
+# Get MANPATH entries as array.
 manpath_entries=($(manpath | tr ':' '\n'))
 
 # Use fzf to select entries (multi-select with --multi)

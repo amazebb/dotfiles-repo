@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/bash
-# Git wrapper to manage dotfiles in home folder using a bare repo
+# Manage dotfiles with Git bare repo.
 
 # <<< is a here-string in Bash
 # Feeds a string directly to a command's stdin

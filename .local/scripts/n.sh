@@ -1,5 +1,5 @@
 #!/bin/dash
-# Launch nnn with auto preview if from tmux
+# Launch nnn with preview in tmux.
 
 # Block nesting of nnn in subshells
 if [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]; then

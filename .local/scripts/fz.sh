@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/bash
-# Search for text in files interactively using ripgrep and fzf
+# Search text interactively with ripgrep, fzf.
 VERSION="1.0.0"
 
 # Help function

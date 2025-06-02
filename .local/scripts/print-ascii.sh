@@ -1,5 +1,5 @@
 #!/bin/bash
-# Print the ASCII codes given a range of numbers
+# Print ASCII codes for number range.
 
 a=0
 b=255

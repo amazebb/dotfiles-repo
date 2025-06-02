@@ -1,5 +1,5 @@
 #!/bin/dash
-# Preview files and directories used by nnn
+# Preview files, directories for nnn.
 # Description: Minimal example to preview files and directories
 #              No external dependencies
 #              Can be easily extended

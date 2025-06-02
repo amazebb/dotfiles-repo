@@ -1,5 +1,5 @@
 #!/bin/dash
-# Manage Gitea with start, stop, status, and log options
+# Manage Gitea: start, stop, status, logs.
 
 # Help message
 show_help() {

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Pre-processor used by fz and ripgrep to search pdf's and zsd files
+# Pre-process PDFs, ZSDs for fz, ripgrep.
 case "$1" in
   *.pdf)
     # The -s flag ensures that the file is non-empty.
