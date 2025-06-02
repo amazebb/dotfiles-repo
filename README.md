@@ -64,22 +64,22 @@ Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
 ```
 
-check-scripts.sh     #!/bin/bash               Runs shellcheck on scripts and identify issues
-compare-folders.sh   #!/bin/bash               Compare files in folders using diff
-data-backup.sh       #!/bin/bash               Backs up folders to SPARSE image bundle in iCloud
-disk-useage.sh       #!/bin/dash               Disk usage analyzer that groups folders by size
-dotfiles.sh          #!/opt/homebrew/bin/bash  Git wrapper to manage dotfiles in home folder using a bare repo
-fz.sh                #!/opt/homebrew/bin/bash  Search for text in files interactively using ripgrep and fzf
-gitea-cli.sh         #!/bin/dash               Manage Gitea with start, stop, status, and log options
-info2vim.sh          #!/bin/dash               Launch GNU info for a coreutils command and pipe to Neovim
-list-scripts.sh      #!/bin/dash               List all scripts in ~/.local/bin with a description
-n.sh                 #!/bin/dash               Launch nnn with auto preview if from tmux
-new-script.sh        #!/opt/homebrew/bin/bash  Generate a new shell script template with specified positional inputs and optional arguments
-pre-rg.sh            #!/bin/sh                 Pre-processor used by fz and ripgrep to search pdf's and zsd files
-preview_cmd.sh       #!/bin/dash               Preview files and directories used by nnn
-print-ascii.sh       #!/bin/bash               Print the ASCII codes given a range of numbers
-print-colors.sh      #!/bin/bash               Display all 256 ANSI colors in the terminal
-select-manpath.sh    #!/bin/zsh                Get current MANPATH entries as an array
+check-scripts.sh    	#!/bin/bash              	Run shellcheck to identify script issues.
+compare-folders.sh  	#!/bin/bash              	Compare folders using diff command.
+data-backup.sh      	#!/bin/bash              	Backup to SPARSE image in iCloud.
+disk-useage.sh      	#!/bin/dash              	Analyze disk usage by folder size.
+dotfiles.sh         	#!/opt/homebrew/bin/bash 	Manage dotfiles with Git bare repo.
+fz.sh               	#!/opt/homebrew/bin/bash 	Search text interactively with ripgrep, fzf.
+gitea-cli.sh        	#!/bin/dash              	Manage Gitea: start, stop, status, logs.
+info2vim.sh         	#!/bin/dash              	Launch GNU info for coreutils in Neovim.
+list-scripts.sh     	#!/bin/dash              	List scripts with descriptions in ~/.local/scripts.
+n.sh                	#!/bin/dash              	Launch nnn with preview in tmux.
+new-script.sh       	#!/opt/homebrew/bin/bash 	Generate shell script with inputs, options.
+pre-rg.sh           	#!/bin/sh                	Pre-process PDFs, ZSDs for fz, ripgrep.
+preview_cmd.sh      	#!/bin/dash              	Preview files, directories for nnn.
+print-ascii.sh      	#!/bin/bash              	Print ASCII codes for number range.
+print-colors.sh     	#!/bin/bash              	Show all 256 ANSI terminal colors.
+select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
 ```
 </details>
 
