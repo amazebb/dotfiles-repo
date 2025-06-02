@@ -15,16 +15,17 @@ unsetopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
-# Prevent 'less' from saving command historyi
+# Prevent 'less' from saving command history
 # no trace of less interactions (e.g., when viewing man pages)
 export LESSHISTFILE=-
 
+# Set zsh prompt
 # shellcheck source-path=SCRIPTDIR
 export TERM="xterm-256color"
 source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
 setup_prompt
 
-## Set preview for nnn
+# Set preview for nnn
 export NNN_FIFO=/tmp/nnn.fifo
 
 # Tell MATLAB to use the MacOS Accelerate framework
@@ -69,6 +70,7 @@ bindkey '^h' fzf-man
 # Alias to run fzf-man-widget function
 alias fzfman='fzf-man'
 
+# Create aliases without .sh for ~/.local/scripts/*.sh files
 create_aliases() {
   for script in ~/.local/scripts/*.sh; do
     base_name=$(basename "$script" .sh)
@@ -76,8 +78,6 @@ create_aliases() {
     alias "$base_name"="$script"
   done
 }
-
-# Call the function to create aliases when zsh starts
 create_aliases
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
