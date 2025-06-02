@@ -60,23 +60,26 @@ Also see [here](https://askubuntu.com/a/1316230)
 
 A collection of personal shell scripts in ~/.local/scripts
 
-This list was created by running **list-scripts**
+Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
 ```
-check-scripts.sh     bash     Runs shellcheck on .sh scripts in a given folder to identify issues
-compare-folders.sh   bash     Compare files in different folders
-data-backup.sh       bash     Backs up folders to SPARSE image bundle in iCloud
-disk-useage.sh       dash     Disk usage analyzer with configurable options
-dotfiles.sh          bash     Used for adding dotfiles in home directory to git bare repo
-gitea-cli.sh         dash     Manage Gitea with start, stop, and log options
-info2vim.sh          dash     Launch GNU info for a coreutils command and pipe to Neovim
-list-scripts.sh      dash     List all scripts in ~/.local/bin with a description
-llamaup.sh           dash     Update all Ollama models
-n.sh                 dash     Launch nnn and with auto preview if from tmux
-new-script.sh        bash     A script to generate a new shell script template with specified options
-preview_cmd.sh       dash     Preview files and directories function executed by nnn
-print-ascii.sh       bash     Print the ASCII codes given a range of numbers
-print-colors.sh      bash     Display all 256 ANSI colors in the terminal
+
+check-scripts.sh     #!/bin/bash               Runs shellcheck on scripts and identify issues
+compare-folders.sh   #!/bin/bash               Compare files in folders using diff
+data-backup.sh       #!/bin/bash               Backs up folders to SPARSE image bundle in iCloud
+disk-useage.sh       #!/bin/dash               Disk usage analyzer that groups folders by size
+dotfiles.sh          #!/opt/homebrew/bin/bash  Git wrapper to manage dotfiles in home folder using a bare repo
+fz.sh                #!/opt/homebrew/bin/bash  Search for text in files interactively using ripgrep and fzf
+gitea-cli.sh         #!/bin/dash               Manage Gitea with start, stop, status, and log options
+info2vim.sh          #!/bin/dash               Launch GNU info for a coreutils command and pipe to Neovim
+list-scripts.sh      #!/bin/dash               List all scripts in ~/.local/bin with a description
+n.sh                 #!/bin/dash               Launch nnn with auto preview if from tmux
+new-script.sh        #!/opt/homebrew/bin/bash  Generate a new shell script template with specified positional inputs and optional arguments
+pre-rg.sh            #!/bin/sh                 Pre-processor used by fz and ripgrep to search pdf's and zsd files
+preview_cmd.sh       #!/bin/dash               Preview files and directories used by nnn
+print-ascii.sh       #!/bin/bash               Print the ASCII codes given a range of numbers
+print-colors.sh      #!/bin/bash               Display all 256 ANSI colors in the terminal
+select-manpath.sh    #!/bin/zsh                Get current MANPATH entries as an array
 ```
 </details>
 
