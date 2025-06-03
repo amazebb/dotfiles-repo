@@ -18,11 +18,16 @@ setup_prompt() {
     ra='\uE0B0' # 
     g='\uE0A0'  # 
     s='%{%F{blue}%}'$ra'%f'
-    # Prevent Mac terminal brightening font color with no background
+    # Prevent Mac Terminal.app brightening font color with no background
     # https://apple.stackexchange.com/questions/282911/
     # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
     # Setting background to an out of range value works, %k and %K{256} do not work
-    n='%{\e[48;5;256m%}'
+    # Not needed for Kitty
+    if [[ "$TERM" == "xterm-256color" ]]; then
+      n='%{\e[48;5;256m%}'
+    else
+      n='%k'
+    fi
     if [[ -n ${betz_content_vcs} ]]; then
       local branch="${betz_content_vcs%% *}"
       local modifiers="${betz_content_vcs#$branch}"
@@ -98,9 +103,12 @@ setup_prompt() {
   rprompt_segment_dynamic() {
     g=$'\uE606' # 
     t=$'\uE0B2' # 
-    n=$'%{\e[48;5;256m%}'
     v=""
-
+    if [[ "$TERM" == "xterm-256color" ]]; then
+      n=$'%{\e[48;5;256m%}'
+    else
+      n=''
+    fi
     if [[ -n "$VIRTUAL_ENV" ]]; then
       venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
       if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
