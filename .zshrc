@@ -21,7 +21,6 @@ export LESSHISTFILE=-
 
 # Set zsh prompt
 # shellcheck source-path=SCRIPTDIR
-export TERM="xterm-256color"
 source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
 setup_prompt
 
