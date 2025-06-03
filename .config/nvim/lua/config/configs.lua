@@ -26,3 +26,6 @@ vim.api.nvim_set_hl(0, 'NormalFloat', { ctermbg = 'Black' })
 vim.api.nvim_set_hl(0, 'Comment', { ctermfg = 'DarkGray', italic = true })
 vim.api.nvim_set_hl(0, 'CurrentTag', { underline = true, bold = true, standout = true })
 vim.api.nvim_set_hl(0, 'PmenuSel', { fg = 'white', bold = true, reverse = true })
+
+-- yank to the clipboard automatically
+vim.cmd('set clipboard+=unnamedplus')
