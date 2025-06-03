@@ -96,7 +96,7 @@ return {
             prompt_library = {
                 ['Commit Message'] = {
                     strategy = 'chat',
-                    description = 'Generate a commit message',
+                    description = 'Generate a commit message using our dotfiles.sh script',
                     opts = {
                         is_default = true,
                         is_slash_cmd = true,
@@ -109,11 +109,11 @@ return {
                             content = function()
                                 return string.format(
                                     [[You are an expert at following the Conventional Commit specification.
-                                    Please generate a commit message for the below diff and nothing else!:
+                                    Please generate a commit message for the below diff in a plain text markdown block and nothing else!:
                                     ```diff
                                     %s
                                     ```]],
-                                    vim.fn.system('~/.local/scripts/dotfiles.sh --no-pager diff --no-ext-diff')
+                                    vim.fn.system('~/.local/scripts/dotfiles.sh --no-pager diff --no-ext-diff -U0')
                                 )
                             end,
                             opts = {
