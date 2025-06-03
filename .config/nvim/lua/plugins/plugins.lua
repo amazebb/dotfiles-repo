@@ -93,6 +93,36 @@ return {
                 -- Set debug logging
                 log_level = 'DEBUG',
             },
+            prompt_library = {
+                ['Commit Message'] = {
+                    strategy = 'chat',
+                    description = 'Generate a commit message',
+                    opts = {
+                        is_default = true,
+                        is_slash_cmd = true,
+                        short_name = 'commit',
+                        auto_submit = true,
+                    },
+                    prompts = {
+                        {
+                            role = 'user',
+                            content = function()
+                                return string.format(
+                                    [[You are an expert at following the Conventional Commit specification.
+                                    Please generate a commit message for the below diff and nothing else!:
+                                    ```diff
+                                    %s
+                                    ```]],
+                                    vim.fn.system('~/.local/scripts/dotfiles.sh --no-pager diff --no-ext-diff')
+                                )
+                            end,
+                            opts = {
+                                contains_code = true,
+                            },
+                        },
+                    },
+                },
+            },
             adapters = {
                 mlx_lm = function()
                     return require('codecompanion.adapters').extend('openai_compatible', {
