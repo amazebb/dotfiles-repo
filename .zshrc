@@ -36,6 +36,7 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 
 # Remove blinking text in the date column
 export EZA_COLORS="da=90"
+export EDITOR="/opt/homebrew/bin/nvim"
 
 # PATH
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
