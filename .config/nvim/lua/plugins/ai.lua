@@ -43,11 +43,11 @@ return {
             prompt_library = {
                 ['Commit Message'] = {
                     strategy = 'chat',
-                    description = 'Generate a commit message using our dotfiles.sh script',
+                    description = 'Generate a commit message based on the current git diff',
                     opts = {
                         is_default = true,
                         is_slash_cmd = true,
-                        short_name = 'commit',
+                        short_name = 'commit-cached-msg',
                         auto_submit = true,
                     },
                     prompts = {
