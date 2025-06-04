@@ -101,13 +101,14 @@ setup_prompt() {
 
   # Update right prompt dynamically
   rprompt_segment_dynamic() {
-    g=$'\uE606' # 
     t=$'\uE0B2' # 
     v=""
     if [[ "$TERM" == "xterm-256color" ]]; then
       n=$'%{\e[48;5;256m%}'
+      g=$'\uE606' #   Hack Nerd Font Propo Regular
     else
       n=''
+      g=$'\uF3E2' #   Kitty we use Font Awesome 6 Brands
     fi
     if [[ -n "$VIRTUAL_ENV" ]]; then
       venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
