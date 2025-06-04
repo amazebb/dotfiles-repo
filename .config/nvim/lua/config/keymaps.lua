@@ -15,8 +15,12 @@ vim.keymap.set('n', '<leader>h', ':HelpPopup<cr>', { noremap = true, silent = tr
 vim.keymap.set('n', '<C-n>', ':bnext<CR>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<C-p>', ':bprev<CR>', { desc = 'Previous Buffer' })
 
--- Open FzfLua buffers
+-- FzfLua
 vim.keymap.set('n', '<leader>b', ':FzfLua buffers<CR>', { desc = 'Open buffers list using FzfLua', silent = true })
+vim.keymap.set('n', '<leader>f', ':FzfLua<CR>', { desc = 'Open FzfLua', silent = true })
+
+-- Codecompanion AI
+vim.keymap.set('n', '<leader>c', ':CodeCompanionChat Toggle<CR>', { desc = 'CodeCompanionChat Toggle', silent = true })
 
 -- Enable Copy/Paste and Slect All
 vim.keymap.set({ 'n', 'v' }, '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Copy to system clipboard' })
