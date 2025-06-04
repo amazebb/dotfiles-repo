@@ -23,7 +23,7 @@ setup_prompt() {
     # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
     # Setting background to an out of range value works, %k and %K{256} do not work
     # Not needed for Kitty
-    if [[ "$TERM" == "xterm-256color" ]]; then
+    if [[ -z "$KITTY_WINDOW_ID" ]]; then
       n='%{\e[48;5;256m%}'
     else
       n='%k'
@@ -103,7 +103,7 @@ setup_prompt() {
   rprompt_segment_dynamic() {
     t=$'\uE0B2' # 
     v=""
-    if [[ "$TERM" == "xterm-256color" ]]; then
+    if [[ -z "$KITTY_WINDOW_ID" ]]; then
       n=$'%{\e[48;5;256m%}'
       g=$'\uE606' #   Hack Nerd Font Propo Regular
     else
