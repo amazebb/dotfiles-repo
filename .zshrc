@@ -49,6 +49,7 @@ alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos
 alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 alias gg="dotfiles"
+alias ggg="dotfiles commit -va"
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
 # Setup for zoxide smarter 'cd'
