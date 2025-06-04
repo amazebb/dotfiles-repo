@@ -19,18 +19,18 @@ vim.diagnostic.config({
     virtual_text = true,
 })
 
-vim.api.nvim_set_hl(0, 'CursorLineNr', { ctermfg = 'Yellow' })
-vim.api.nvim_set_hl(0, 'LineNr', { ctermbg = 'DarkGray', ctermfg = 'Black', bold = false })
+vim.api.nvim_set_hl(0, 'CurrentTag', { underline = true, bold = true, standout = true })
 vim.api.nvim_set_hl(0, 'MatchParen', { standout = true })
 
 if os.getenv('TERM') == 'xterm-256color' then
+    vim.api.nvim_set_hl(0, 'CursorLineNr', { ctermfg = 'Yellow' })
+    vim.api.nvim_set_hl(0, 'LineNr', { ctermbg = 'DarkGray', ctermfg = 'Black', bold = false })
     vim.api.nvim_set_hl(0, 'NormalFloat', { ctermbg = 'Black' })
     vim.api.nvim_set_hl(0, 'PmenuSel', { fg = 'white', bold = true, reverse = true })
+    vim.api.nvim_set_hl(0, 'Comment', { ctermfg = 'DarkGray', italic = true })
 else
     vim.opt.termguicolors = true
 end
-vim.api.nvim_set_hl(0, 'Comment', { ctermfg = 'DarkGray', italic = true })
-vim.api.nvim_set_hl(0, 'CurrentTag', { underline = true, bold = true, standout = true })
 
 -- yank to the clipboard automatically
-vim.opt.clipboard:append({ 'unnamedplus' })
+vim.opt.clipboard:append('unnamedplus')

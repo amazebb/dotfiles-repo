@@ -56,7 +56,7 @@ return {
             -- C-k: Toggle signature help (if signature.enabled = true)
             --
             -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'default' },
+            keymap = { preset = 'super-tab' },
 
             appearance = {
                 -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -156,5 +156,17 @@ return {
                 },
             },
         },
+    },
+
+    -- Github color theme
+    {
+        'projekt0n/github-nvim-theme',
+        name = 'github-theme',
+        lazy = false,
+        config = function()
+            if vim.env.TERM == 'xterm-kitty' then
+                vim.cmd('colorscheme github_dark')
+            end
+        end,
     },
 }

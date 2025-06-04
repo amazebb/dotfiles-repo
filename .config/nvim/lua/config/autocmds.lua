@@ -73,7 +73,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- noselect prevent from automatically selecting the first completion item in the popup menu
-vim.cmd('set completeopt+=noselect')
+vim.opt.completeopt:append('noselect')
 
 local function show_help_popup(topic)
     vim.cmd('help ' .. (topic or ''))
