@@ -34,8 +34,6 @@ export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.7-tem
 # If we reinstall Gitea default to ~/.gitea-data
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 
-# Remove blinking text in the date column
-export EZA_COLORS="da=90"
 export EDITOR="/opt/homebrew/bin/nvim"
 
 # PATH
@@ -69,6 +67,9 @@ bindkey '^h' fzf-man
 
 # Alias to run fzf-man-widget function
 alias fzfman='fzf-man'
+# CTRL-T - Paste the selected files and directories onto the command-line
+# CTRL-R - Paste the selected command from history onto the command-line
+# ALT-C - cd into the selected directory
 
 # Create aliases without .sh for ~/.local/scripts/*.sh files
 create_aliases() {
