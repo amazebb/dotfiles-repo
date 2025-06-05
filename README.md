@@ -64,7 +64,6 @@ A collection of personal shell scripts in ~/.local/scripts
 Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
 ```
-
 check-scripts.sh    	#!/bin/bash              	Run shellcheck to identify script issues.
 compare-folders.sh  	#!/bin/bash              	Compare folders using diff command.
 data-backup.sh      	#!/bin/bash              	Backup to SPARSE image in iCloud.
@@ -85,7 +84,7 @@ select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
 </details>
 
 <details>
-<summary><h4>Zsh color quirks</h4></summary>
+<summary><h4>MacOS Terminal.app color quirks</h4></summary>
 There is a quirk with setting colors on MacOS (15.4.1) and zsh (5.9 arm64-apple-darwin24.0) 
 
 This is irregardless of the ANSI colors setup in Terminal for Normal and Bright.
