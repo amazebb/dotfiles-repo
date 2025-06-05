@@ -48,6 +48,7 @@ That’s it. Your local Gitea will now mirror your dotfiles repo. Since it’s b
 ```bash
 git clone --bare http://localhost:3000/username/dotfiles.git $HOME/.dotfiles
 ```
+
 Then set up the alias again and pull.
 
 Works like a charm with Gitea, GitLab, or any git server. Just make sure your Gitea instance is accessible where you need it—local LAN or VPN if you’re syncing across devices.
