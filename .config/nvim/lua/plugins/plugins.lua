@@ -140,16 +140,12 @@ return {
                 lualine_c = {
                     {
                         function()
-                            local ft = vim.bo.filetype
-                            -- List filetypes to exclude
                             local excluded = { 'codecompanion' }
-                            if vim.tbl_contains(excluded, ft) then
+                            if vim.tbl_contains(excluded, vim.bo.filetype) then
                                 return ''
                             end
-                            return vim.fn.expand('%:p') -- Show filename only
+                            return vim.fn.expand('%:~')
                         end,
-                        -- 'filename',
-                        -- path = 3,
                     },
                 },
             },
