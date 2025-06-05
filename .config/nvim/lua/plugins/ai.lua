@@ -41,11 +41,10 @@ return {
                 log_level = 'DEBUG',
             },
             prompt_library = {
-                ['Commit Message'] = {
+                ['commit message'] = {
                     strategy = 'chat',
                     description = 'Generate a commit message based on the current git diff',
                     opts = {
-                        is_default = true,
                         is_slash_cmd = true,
                         short_name = 'commit-cached-msg',
                         auto_submit = true,

@@ -131,7 +131,7 @@ return {
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         opts = {
             options = {
-                theme = 'solarized_dark',
+                theme = 'github_dark',
                 component_separators = '|',
                 section_separators = { left = '', right = '' },
             },
