@@ -135,11 +135,21 @@ return {
                 component_separators = '|',
                 section_separators = { left = '', right = '' },
             },
+
             sections = {
                 lualine_c = {
                     {
-                        'filename',
-                        path = 3,
+                        function()
+                            local ft = vim.bo.filetype
+                            -- List filetypes to exclude
+                            local excluded = { 'codecompanion' }
+                            if vim.tbl_contains(excluded, ft) then
+                                return ''
+                            end
+                            return vim.fn.expand('%:p') -- Show filename only
+                        end,
+                        -- 'filename',
+                        -- path = 3,
                     },
                 },
             },
