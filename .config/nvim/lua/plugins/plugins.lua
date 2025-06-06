@@ -78,7 +78,8 @@ return {
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {
-            completions = { lsp = { enabled = true } },
+            -- completions = { lsp = { enabled = true } },
+            completions = { blink = { enabled = true } },
             code = { sign = false },
         },
         ft = { 'markdown', 'quarto', 'codecompanion' },

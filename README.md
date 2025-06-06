@@ -456,3 +456,172 @@ vim.opt.statusline = '%#StatusLine#%f [%m] %= %l:%c %{luaeval("progress_bar()")}
 
 If you need a specific statusline feature (e.g., mode-based colors, git integration) or help debugging, let me know!
 </details>
+
+
+<details>
+<summary>Working with tree-sitter queries and syntax</summary>
+
+Working with Tree-sitter syntax in Neovim, particularly in `.scm` (Scheme-like) query files, involves defining queries to manipulate syntax trees for features like syntax highlighting, code folding, or text objects. These files use a LISP-like S-expression syntax to capture specific nodes in a Tree-sitter parse tree. Below, I’ll explain how to work with `.scm` files, provide examples, and point to relevant resources, including Neovim’s built-in documentation and online references.
+
+---
+
+### Understanding Tree-sitter `.scm` Files
+
+Tree-sitter is a parsing library integrated into Neovim for fast, accurate syntax analysis. The `.scm` files contain queries that define how to match and capture nodes in the syntax tree for a specific language. These queries are used for:
+- **Syntax highlighting** (`highlights.scm`): Assign highlight groups to code elements.
+- **Code folding** (`folds.scm`): Define foldable regions.
+- **Text objects** (`textobjects.scm`): Enable navigation or selection of code blocks.
+- **Indentation** (`indents.scm`): Control indentation behavior.
+- **Injections** (`injections.scm`): Handle embedded languages (e.g., JavaScript in HTML).
+
+The syntax is based on S-expressions, with a structure like `(node_type [child_nodes] @capture_name)`. For example:
+```scm
+(if_statement ["if" "elseif" "else" "then" "end"] @conditional)
+```
+This query captures Lua’s `if_statement` nodes (keywords like `if`, `else`) and tags them as `@conditional` for highlighting.
+
+---
+
+### How to Work with `.scm` Files
+
+1. **Locate or Create `.scm` Files**:
+   - Neovim looks for `.scm` files in the `queries/<language>/` directory within its `runtimepath` (e.g., `~/.config/nvim/queries/lua/highlights.scm`).
+   - For a language like Lua, you might find or create `highlights.scm` to define highlighting rules.
+   - If using the `nvim-treesitter` plugin, parsers and queries are often installed automatically under `~/.local/share/nvim/site/pack/*/start/nvim-treesitter/queries/`.
+
+2. **Write a Query**:
+   - **Basic Structure**: A query consists of patterns to match nodes in the syntax tree. For example:
+     ```scm
+     (function_declaration name: (identifier) @function.name)
+     ```
+     This captures the `identifier` node in a `function_declaration` as `@function.name`.
+   - **Capture Names**: Use `@<name>` to tag nodes. For highlighting, these names (e.g., `@function.name`) map to highlight groups.
+   - **Node Types**: Refer to the language’s Tree-sitter grammar to know node types (e.g., `if_statement`, `identifier`). Use `:TSPlaygroundToggle` to inspect the syntax tree in Neovim.
+   - **Predicates**: Add conditions like `(#eq? @capture "value")` to filter matches. See `:help treesitter-predicates` for supported predicates.
+
+3. **Test and Apply Queries**:
+   - Place the `.scm` file in `~/.config/nvim/queries/<language>/<feature>.scm` (e.g., `highlights.scm`).
+   - Open a file of the target filetype (e.g., `.lua`) and enable Tree-sitter with `:TSBufEnable highlight`.
+   - To reload changes without restarting Neovim:
+     - Run `:lua require('nvim-treesitter.query').invalidate_query_cache()` to clear the query cache.
+     - Destroy the highlighter for the current buffer: `:lua require('vim.treesitter.highlighter').active[vim.api.nvim_get_current_buf()]:destroy()`.
+     - Reload the file with `:e` or restart Neovim.
+   - Use `:Inspect` to check highlight groups under the cursor or `:TSPlaygroundToggle` to view the syntax tree.
+
+4. **Debugging**:
+   - If highlighting doesn’t work, ensure the parser is installed (`:TSInstall <language>`) and the filetype is registered (`:set filetype?`).
+   - Check for errors with `:checkhealth nvim-treesitter`.
+   - Verify the query file’s path is in `runtimepath` using `:echo nvim_get_runtime_file('queries/<language>/*.scm', v:true)`.
+
+5. **Customizing Highlight Groups**:
+   - Captures like `@conditional` map to highlight groups (e.g., `TSConditional` or `@conditional` in Neovim 0.8+).
+   - Link these to Vim highlight groups in your colorscheme:
+     ```lua
+     vim.api.nvim_set_hl(0, "@conditional", { link = "Conditional" })
+     ```
+   - Use `:help treesitter-highlight-groups` for details.
+
+---
+
+### Example: Creating a `highlights.scm` for Lua
+
+Here’s a simple `highlights.scm` for Lua syntax highlighting:
+```scm
+; Highlight keywords
+["if" "elseif" "else" "then" "end"] @keyword.conditional
+
+; Highlight function names
+(function_declaration name: (identifier) @function.name)
+
+; Highlight parameters
+(parameters (identifier) @variable.parameter)
+
+; Highlight strings
+(string) @string
+```
+- Save this in `~/.config/nvim/queries/lua/highlights.scm`.
+- Open a Lua file, run `:TSBufEnable highlight`, and test. The `@keyword.conditional` capture might highlight `if`/`else` as keywords, while `@function.name` highlights function names.
+
+---
+
+### Neovim Built-in Documentation
+
+Neovim’s documentation is comprehensive for Tree-sitter. Access it via:
+- `:help treesitter`: Overview of Tree-sitter integration.
+- `:help treesitter-query`: Details on query syntax and Lua API.
+- `:help treesitter-highlight`: Explains highlighting setup and capture groups.
+- `:help treesitter-predicates`: Lists supported query predicates.
+- `:help nvim-treesitter`: If using the `nvim-treesitter` plugin, covers configuration and commands like `:TSInstall` or `:TSUpdate`.
+- `:help lua-treesitter`: Lua interface for Tree-sitter queries.
+
+To search, use `:helpgrep treesitter` or `:help <topic>` (e.g., `:help treesitter-highlight-groups`).
+
+---
+
+### Online Resources
+
+1. **Official Tree-sitter Documentation**:
+   - [Tree-sitter Query Syntax](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax): Covers the S-expression query language. Note that Neovim supports a subset of predicates (see `:help treesitter-predicates`).[](https://neovim.io/doc/user/treesitter.html)
+   - Explains nodes, captures, and predicates like `(#match? @capture "pattern")`.
+
+2. **nvim-treesitter GitHub**:
+   - [nvim-treesitter Repository](https://github.com/nvim-treesitter/nvim-treesitter): Includes setup guides, query examples, and a gallery of highlighting improvements.[](https://github.com/nvim-treesitter/nvim-treesitter)
+   - Check the `queries/` directory for example `.scm` files (e.g., `lua/highlights.scm`).
+
+3. **Community Tutorials**:
+   - [The Valuable Dev: Neovim and Tree-sitter](https://thevaluable.dev/treesitter-neovim/): A detailed guide with examples for syntax highlighting and query writing.[](https://thevaluable.dev/tree-sitter-neovim-overview/)
+   - [Medium: Neovim 101 — Tree-sitter Usage](https://alpha2phi.medium.com/neovim-101-treesitter-usage-7b3e6303a6e3): Practical tips for queries and text objects.[](https://alpha2phi.medium.com/neovim-101-tree-sitter-usage-fa3e8bed921a)
+   - [Jonas Hietala: Creating a Tree-sitter Grammar](https://www.jonashietala.se/blog/2024/03/18/lets_create_a_tree-sitter_grammar/): Includes query writing for custom languages.[](https://www.jonashietala.se/blog/2024/03/19/lets_create_a_tree-sitter_grammar/)
+
+4. **Reddit and Stack Overflow**:
+   - [r/neovim: How to Manually Source `.scm` Files](https://www.reddit.com/r/neovim/comments/10i7z1z/how_to_manually_source_the_treesitters_scm_file/): Discusses reloading queries.[](https://www.reddit.com/r/neovim/comments/10ifbkj/how_to_manually_source_the_treesitters_scm_file/)
+   - [r/neovim: Hot Reload `highlights.scm`](https://www.reddit.com/r/neovim/comments/16e1y0g/how_to_hot_reload_highlightsscm_in_nvimtreesitter/): Tips for live query updates.[](https://www.reddit.com/r/neovim/comments/16e0l4o/how_to_hot_reload_highlightsscm_in_nvimtreesitter/)
+   - [Stack Overflow: Treesitter and Syntax Folding](https://stackoverflow.com/questions/78037609/neovim-treesitter-and-syntax-folding): Covers related query issues.[](https://stackoverflow.com/questions/78077278/treesitter-and-syntax-folding)
+
+5. **Neovim Discourse and Forums**:
+   - Search [neovim.io](https://neovim.io) or the Neovim GitHub Discussions for community solutions.
+
+---
+
+### Tips for Learning `.scm` Syntax
+
+- **Start Small**: Copy an existing `highlights.scm` from `nvim-treesitter` (e.g., for Lua or Python) and modify it.
+- **Use `:TSPlaygroundToggle`**: Visualize the syntax tree to understand node types.
+- **Experiment with Captures**: Test queries with simple captures like `@keyword` and link them to highlight groups.
+- **Leverage `nvim-treesitter` Plugin**: Simplifies parser installation and query management. Install with:
+  ```lua
+  require('nvim-treesitter.configs').setup {
+    highlight = { enable = true },
+    ensure_installed = { "lua", "python" }, -- Add languages
+  }
+  ```
+- **Check Colorscheme Compatibility**: Ensure your colorscheme defines Tree-sitter highlight groups (e.g., `@keyword`, `@function`). Use `:Inspect` to debug.
+
+---
+
+### Troubleshooting Common Issues
+
+- **Highlighting Not Working**:
+  - Verify parser installation: `:TSInstall <language>`.
+  - Check filetype: `:set filetype=<language>`.
+  - Ensure query file is in `runtimepath`: `:echo nvim_get_runtime_file('queries/<language>/*.scm', v:true)`.
+- **Query Syntax Errors**:
+  - Use `:checkhealth nvim-treesitter` to detect parser/query mismatches.
+  - Validate queries with the Tree-sitter CLI: `tree-sitter parse <file>`.
+- **Reloading Queries**:
+  - See the reload steps above or check Reddit discussions for Lua-based solutions.[](https://www.reddit.com/r/neovim/comments/16e0l4o/how_to_hot_reload_highlightsscm_in_nvimtreesitter/)
+
+---
+
+### Summary
+
+To work with Tree-sitter `.scm` files in Neovim:
+1. Write S-expression queries in `~/.config/nvim/queries/<language>/<feature>.scm`.
+2. Use captures like `@keyword` to tag nodes for highlighting or other features.
+3. Test with `:TSBufEnable highlight` and debug with `:TSPlaygroundToggle` or `:Inspect`.
+4. Reload queries using Lua commands or by reopening the file.
+5. Refer to Neovim’s `:help treesitter` and online resources like Tree-sitter’s query documentation or `nvim-treesitter`’s GitHub.
+
+For further exploration, Neovim’s built-in help (`:help treesitter-query`) and the `nvim-treesitter` repository are your best starting points. If you need specific examples or have a language in mind, let me know, and I can tailor a query for you!
+</details>
+

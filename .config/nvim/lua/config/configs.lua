@@ -15,6 +15,8 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = 'number'
 vim.o.updatetime = 500
 vim.o.signcolumn = 'auto'
+-- vim.opt.foldmethod = 'expr'
+-- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 vim.diagnostic.config({
     signs = true,
