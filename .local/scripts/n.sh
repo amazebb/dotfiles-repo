@@ -2,10 +2,10 @@
 # Launch nnn with preview in tmux.
 
 # Block nesting of nnn in subshells
-if [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+[ "${NNNLVL:-0}" -eq 0 ] || {
   echo "nnn is already running"
   return
-fi
+}
 
 # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
 # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to see.
@@ -30,5 +30,10 @@ if [ -e "${TMUX%%,*}" ]; then
 fi
 
 nnn "$@"
+
+[ ! -f "$NNN_TMPFILE" ] || {
+  . "$NNN_TMPFILE"
+  rm -f -- "$NNN_TMPFILE" >/dev/null
+}
 
 rm -f "$NNN_FIFO"

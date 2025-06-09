@@ -62,7 +62,7 @@ while read -r selection; do
   elif [ -f "$selection" ]; then
     detect_file_info "$selection"
     #head -n $((lines - 3)) "$selection" | cut -c 1-"$cols"
-    bat --line-range :$((lines - 3)) "$selection" | cut -c 1-"$cols"
+    bat --line-range :$((lines - 3)) "$selection" #| cut -c 1-"$cols"
   else
     # Something went wrong
     echo "Unknown type: '$selection'"
