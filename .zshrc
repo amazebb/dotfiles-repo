@@ -24,9 +24,6 @@ export LESSHISTFILE=-
 source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
 setup_prompt
 
-# Set preview for nnn
-export NNN_FIFO=/tmp/nnn.fifo
-
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
 export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.7-tem
