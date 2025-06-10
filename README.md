@@ -85,14 +85,13 @@ select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
 
 <details>
 <summary><h4>MacOS Terminal.app color quirks</h4></summary>
-There is a quirk with setting colors on MacOS (15.5 and earlier) using Terminal.app with zsh (5.9 arm64-apple-darwin24.0)
-Not tested with bash but suspect its not related to which shell is used.
+There is a quirk with setting colors on MacOS (15.5 and earlier) using Terminal.app with zsh (5.9 arm64-apple-darwin24.0). Not tested with other shells, but suspect its not related to which shell is used.
 
 For instance if we try to set the foreground and background to the same blue, **%F{blue}** and **%K{blue}**, they will look different
 in the Terminal.app.
 
-No amount of using the expansions with named, 'blue', or numeric values, 004, 
-or trying to reset the colors using %k or %f seems to fix it.
+No amount of using the expansions with named, ```blue```, or numeric values, ```004```, 
+or trying to reset the colors using ```%k``` or ```%f``` seems to fix it.
 
 The fix is, instead of using %k to reset the background, we need to use a number that is out of range of Terminals 0-255 colors,
 and to use it with an [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) **\e[48;5;256m**
