@@ -21,6 +21,8 @@ export NNN_FIFO
   mkfifo "$NNN_FIFO"
 )
 
+export NNN_PLUG='p:preview-tui'
+
 # Preview command
 preview_cmd="$HOME/.local/scripts/preview_cmd.sh"
 
@@ -29,7 +31,7 @@ if [ -e "${TMUX%%,*}" ]; then
   tmux split-window -e "NNN_FIFO=$NNN_FIFO" -dh "$preview_cmd"
 fi
 
-nnn -G "$@"
+nnn -G -a -Pp "$@"
 
 [ ! -f "$NNN_TMPFILE" ] || {
   . "$NNN_TMPFILE"
