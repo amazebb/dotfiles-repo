@@ -95,7 +95,7 @@ No amount of using the expansions with named, ```blue```, or numeric values, ```
 or trying to reset the colors using ```%k``` or ```%f``` seems to fix it.
 
 The fix is, instead of using ```%k``` to reset the background, we need to use a number that is out of range of Terminals 0-255 colors,
-and to use it with an [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) **\e[48;5;256m**
+and to use it with an [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) ```e[48;5;256m```
 
 So instead of matching the right trianlge foreground color to the background of previous space character
 ```zsh
