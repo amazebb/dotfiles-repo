@@ -112,13 +112,16 @@ Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3
 just absolutely struggling with this on 4/17/25
 </details>
 
-## Neovim Tips:
+
+<details>
+<summary><h4>Neovim Tips</h4></summary>
 Format all Lua files under current folder recursively:
 
 ```vim
 :args **/*.lua
 :argdo lua vim.lsp.buf.format()
 ```
+</details>
 
 <details>
 <summary><h4>Storing private information</h4></summary>
@@ -457,7 +460,7 @@ If you need a specific statusline feature (e.g., mode-based colors, git integrat
 
 
 <details>
-<summary>Working with tree-sitter queries and syntax</summary>
+<summary><h4>Working with tree-sitter queries and syntax</h4></summary>
 
 Working with Tree-sitter syntax in Neovim, particularly in `.scm` (Scheme-like) query files, involves defining queries to manipulate syntax trees for features like syntax highlighting, code folding, or text objects. These files use a LISP-like S-expression syntax to capture specific nodes in a Tree-sitter parse tree. Below, I’ll explain how to work with `.scm` files, provide examples, and point to relevant resources, including Neovim’s built-in documentation and online references.
 
