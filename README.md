@@ -85,15 +85,16 @@ select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
 
 <details>
 <summary><h4>MacOS Terminal.app color quirks</h4></summary>
+
 There is a quirk with setting colors on MacOS (15.5 and earlier) using Terminal.app with zsh (5.9 arm64-apple-darwin24.0). Not tested with other shells, but suspect its not related to which shell is used.
 
-For instance if we try to set the foreground and background to the same blue, **%F{blue}** and **%K{blue}**, they will look different
-in the Terminal.app.
+For instance if we try to set the foreground and background to the same blue, ```%F{blue}``` and ```%K{blue}```, 
+they will look different in the Terminal.app.
 
 No amount of using the expansions with named, ```blue```, or numeric values, ```004```, 
 or trying to reset the colors using ```%k``` or ```%f``` seems to fix it.
 
-The fix is, instead of using %k to reset the background, we need to use a number that is out of range of Terminals 0-255 colors,
+The fix is, instead of using ```%k``` to reset the background, we need to use a number that is out of range of Terminals 0-255 colors,
 and to use it with an [escape sequence](https://apple.stackexchange.com/questions/282911/prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604) **\e[48;5;256m**
 
 So instead of matching the right trianlge foreground color to the background of previous space character
@@ -107,7 +108,8 @@ We do the following:
 print -P "%K{blue} \e[48;5;256m%F{blue}\uE0B0"
 ```
 
-Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3725) just absolutely struggling with this on 4/17/25
+Here is [Grok](https://grok.com/share/bGVnYWN5_44f1eb29-e093-436e-8b53-7a0206ae3725) 
+just absolutely struggling with this on 4/17/25
 </details>
 
 ## Neovim Tips:
