@@ -1,6 +1,5 @@
 vim.g.mapleader = ' '
 vim.g.python3_host_prog = '~/.config/nvim/rplugin/python3/.venv/bin/python3'
-
 vim.g.markdown_fenced_languages =
     { 'python', 'bash=sh', 'javascript', 'html', 'css', 'lua', 'matlab', 'java', 'c', 'gitcommit', 'sql', 'diff' }
 vim.o.tabstop = 2
@@ -35,6 +34,3 @@ if os.getenv('TERM') == 'xterm-256color' then
 else
     vim.opt.termguicolors = true
 end
-
--- yank to the clipboard automatically
-vim.opt.clipboard:append('unnamedplus')
