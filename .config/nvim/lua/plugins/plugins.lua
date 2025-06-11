@@ -89,7 +89,11 @@ return {
     {
         'ibhagwan/fzf-lua',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        opts = {},
+        opts = {
+            buffers = {
+                sort_lastused = false, -- sort buffers() by last used
+            },
+        },
     },
 
     -- Debug Adapter Protocol client implementation for Neovim
@@ -114,7 +118,16 @@ return {
     -- nnn File Explorer
     {
         'luukvbaal/nnn.nvim',
-        opts = {},
+        opts = {
+            cfg = {
+                picker = {
+                    cmd = 'tmux new-session ~/.local/scripts/n.sh',
+                    style = { border = 'rounded' },
+                    session = 'shared',
+                },
+                replace_netrw = 'picker',
+            },
+        },
     },
 
     --  Neovim statusline
