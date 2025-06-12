@@ -626,3 +626,23 @@ To work with Tree-sitter `.scm` files in Neovim:
 For further exploration, Neovim’s built-in help (`:help treesitter-query`) and the `nvim-treesitter` repository are your best starting points. If you need specific examples or have a language in mind, let me know, and I can tailor a query for you!
 </details>
 
+<details>
+<summary><h4>#!/usr/bin/env</h4></summary>
+The `#!/usr/bin/env` shebang is a common Unix convention to make scripts portable by using the `env` command to locate the interpreter (e.g., `uv` in your case) in the user's `PATH`. Here’s where to find help on it:
+
+1. **Man Pages**:
+   - Run `man env` in your Terminal.app to see the manual for the `env` command, which explains its role in finding executables.
+
+2. **Unix/Linux Documentation**:
+   - Check online resources like [tldp.org](https://tldp.org/LDP/abs/html/abs-guide.html#PORTABILITYISSUES) (The Linux Documentation Project) for guides on shebang lines and `env` usage.
+   - Search for “shebang env” on [unix.stackexchange.com](https://unix.stackexchange.com) for practical Q&A.
+
+3. **MacOS-Specific**:
+   - Apple’s developer docs ([developer.apple.com](https://developer.apple.com/library/archive/documentation/OpenSource/Conceptual/ShellScripting)) cover shell scripting on macOS, including shebang portability.
+
+4. **General Web**:
+   - Articles on [stackoverflow.com](https://stackoverflow.com) (search “#!/usr/bin/env”) explain why `env` is preferred over hardcoding paths like `#!/usr/bin/python`.
+
+The `#!/usr/bin/env -S uv run --script` uses `-S` to split arguments for `uv`, ensuring `uv run --script` runs the script with uv’s environment. If you need details on a specific aspect (e.g., `-S` flag, portability), just ask!
+</details>
+
