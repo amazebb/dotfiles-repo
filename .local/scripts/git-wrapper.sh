@@ -24,7 +24,7 @@ fi
 
 if [[ $1 == "git-cmd" ]]; then
   if [[ $is_tracked -eq 1 ]]; then
-    echo "$HOME/.local/scripts/git_wrapper.sh"
+    echo "$HOME/.local/scripts/git-wrapper.sh"
   elif [[ $("$GIT_BINARY" rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
     echo "$GIT_BINARY"
   else
