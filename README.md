@@ -684,5 +684,31 @@ Use `#!/usr/bin/env` over an explicit shebang like `#!/usr/bin/zsh` when **porta
 - **Default to `#!/usr/bin/env`** for portability unless you have a specific reason (controlled environment, performance, security) to hardcode the path.
 
 If you need a code example or have a specific script case, let me know!
+
+A **performance-critical case** for using an explicit shebang (e.g., `#!/usr/bin/zsh`) instead of `#!/usr/bin/env zsh` is when a script is executed **frequently** in a **high-throughput** or **low-latency** environment, where the overhead of `env` resolving the interpreter path (though small, typically microseconds) accumulates significantly. Here's an example:
+
+### Example: Shell Script in a High-Frequency System Hook
+**Scenario**: A `zsh` script is used as a Git hook (e.g., `pre-commit`) on a busy CI/CD server processing thousands of commits per minute. The script performs quick checks (e.g., linting) and must run as fast as possible to avoid slowing down the pipeline.
+
+**Script**: `pre-commit`
+```zsh
+#!/usr/bin/zsh
+# Check for trailing whitespace in staged files
+git diff --cached --check
+exit $?
+```
+
+**Why Explicit Shebang?**
+- **Execution Frequency**: The `pre-commit` hook runs on every `git commit`, potentially thousands of times per minute in a large team’s CI system.
+- **Overhead**: `#!/usr/bin/env zsh` invokes `env` to search the `PATH`, adding ~10-100 microseconds per invocation (depending on system and `PATH` length). For 10,000 commits, this could add 0.1–1 second of total delay.
+- **Controlled Environment**: The CI server is a controlled environment where `/usr/bin/zsh` is guaranteed to exist (e.g., a specific Ubuntu version).
+- **Cumulative Impact**: In a high-throughput pipeline, shaving microseconds per hook execution improves overall performance.
+
+**Contrast with `env`**:
+- If you used `#!/usr/bin/env zsh`, the `env` lookup would work fine but introduce unnecessary overhead in this specific case. Portability isn’t a concern since the server’s environment is fixed.
+
+**Note**: This is a niche case. For most scripts (e.g., run occasionally or in varied environments), the `env` overhead is negligible, and portability is more important. On your M1 Mac with Homebrew, `env` is usually better unless you’re scripting something like a frequently triggered system utility.
+
+If you want another example or a benchmark to test this, let me know!
 </details>
 
