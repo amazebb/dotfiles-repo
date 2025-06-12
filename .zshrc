@@ -20,13 +20,13 @@ alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos
 # Show only dot files and folders, add -D for folders only and -f for files only
 alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-alias git='dotfiles'
-alias gcv="dotfiles commit -va"
+alias git='git_wrapper'
+alias gcv="git_wrapper commit -va"
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
 autoload -Uz compinit
 compinit
-compdef dotfiles.sh=git
+compdef git_wrapper.sh=git
 
 # Prevent 'less' from saving command history
 # no trace of less interactions (e.g., when viewing man pages)
