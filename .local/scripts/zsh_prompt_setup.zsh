@@ -54,9 +54,8 @@ setup_prompt() {
     # Reset VCS content
     betz_content_vcs=""
 
-    # Get git command using dotfiles.sh
-    local git_cmd
-    git_cmd=$($HOME/.local/scripts/dotfiles.sh git-cmd)
+    # Get git command using git-wrapper.sh
+    local git_cmd=$($HOME/.local/scripts/git-wrapper.sh git-cmd)
     if [[ -z $git_cmd ]]; then
       return
     fi

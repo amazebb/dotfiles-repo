@@ -91,7 +91,7 @@ return {
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         opts = {
             buffers = {
-                sort_lastused = false, -- sort buffers() by last used
+                sort_lastused = false, -- this ensures buffers are sorted alphabetically
             },
         },
     },
@@ -121,9 +121,8 @@ return {
         opts = {
             cfg = {
                 picker = {
-                    cmd = 'tmux new-session ~/.local/scripts/n.sh',
+                    cmd = 'nnn -G -a -Pp', --~/.local/scripts/n.sh',
                     style = { border = 'rounded' },
-                    session = 'shared',
                 },
                 replace_netrw = 'picker',
             },

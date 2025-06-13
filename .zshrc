@@ -15,6 +15,19 @@ unsetopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
+# Aliases
+alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
+# Show only dot files and folders, add -D for folders only and -f for files only
+alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
+alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
+alias git='git-wrapper'
+alias gcv="git-wrapper commit -va"
+alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
+
+autoload -Uz compinit
+compinit
+compdef git-wrapper.sh=git
+
 # Prevent 'less' from saving command history
 # no trace of less interactions (e.g., when viewing man pages)
 export LESSHISTFILE=-
@@ -39,15 +52,6 @@ export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin"
-
-# Aliases
-alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
-# Show only dot files and folders, add -D for folders only and -f for files only
-alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-alias gg="dotfiles"
-alias ggg="dotfiles commit -va"
-alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
 # Setup for zoxide smarter 'cd'
 eval "$(zoxide init zsh)"

@@ -1,10 +1,7 @@
 #!/bin/dash
-# Preview files and directories function executed by nnn
+# Preview files, directories for nnn.
 # Description: Minimal example to preview files and directories
-#              No external dependencies
-#              Can be easily extended
 #              Automatically exits when the NNN_FIFO closes
-#              Prints a `tree` if directory or `head` if it's a file
 
 # Check FIFO
 NNN_FIFO=${NNN_FIFO:-$1}
@@ -62,7 +59,7 @@ while read -r selection; do
   elif [ -f "$selection" ]; then
     detect_file_info "$selection"
     #head -n $((lines - 3)) "$selection" | cut -c 1-"$cols"
-    bat --line-range :$((lines - 3)) "$selection" | cut -c 1-"$cols"
+    bat --line-range :$((lines - 3)) "$selection" #| cut -c 1-"$cols"
   else
     # Something went wrong
     echo "Unknown type: '$selection'"

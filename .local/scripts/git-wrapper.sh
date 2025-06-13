@@ -5,7 +5,8 @@
 # Feeds a string directly to a command's stdin
 # Equivalent to: echo "$(git config ...)" | IFS=',' read -r -a tracked_files
 # More efficient, avoids pipe/subshell
-IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$(git config --global --get dotfiles.tracked-folders)"
+GIT_BINARY="$(brew --prefix)/bin/git"
+IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$("$GIT_BINARY" config --global --get dotfiles.tracked-folders)"
 
 # Check if PWD is HOME or within DOTFILES_TRACKED_FOLDERS
 if [[ $PWD == "$HOME" ]]; then
@@ -23,9 +24,9 @@ fi
 
 if [[ $1 == "git-cmd" ]]; then
   if [[ $is_tracked -eq 1 ]]; then
-    echo "$HOME/.local/scripts/dotfiles.sh"
-  elif [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
-    echo "/opt/homebrew/bin/git"
+    echo "$HOME/.local/scripts/git-wrapper.sh"
+  elif [[ $("$GIT_BINARY" rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
+    echo "$GIT_BINARY"
   else
     echo ""
   fi
@@ -35,11 +36,11 @@ fi
 if [[ $is_tracked -eq 1 ]]; then
   if [[ $1 == "status" ]]; then
     if [[ $2 == "--porcelain" ]]; then
-      git --git-dir="$HOME/.git" --work-tree="$HOME" status --porcelain
-      git --git-dir="$HOME/.git" --work-tree="$HOME" ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}" | sed 's/^/?? /'
+      "$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" status --porcelain
+      "$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}" | sed 's/^/?? /'
     else
-      git --git-dir="$HOME/.git" --work-tree="$HOME" "$@"
-      untracked=$(git --git-dir="$HOME/.git" --work-tree="$HOME" ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}")
+      "$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" "$@"
+      untracked=$("$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}")
       if [[ -n $untracked ]]; then
         printf "\n%s\n%s\n" "Untracked files in tracked folders:" '(use "git add <file>..." to include in what will be committed)'
         echo -e "\033[31m"
@@ -49,10 +50,10 @@ if [[ $is_tracked -eq 1 ]]; then
       fi
     fi
   elif [[ $1 == "clean" ]]; then
-    git --git-dir="$HOME/.git" --work-tree="$HOME" clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
+    exec "$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
   else
-    git --git-dir="$HOME/.git" --work-tree="$HOME" "$@"
+    exec "$GIT_BINARY" --git-dir="$HOME/.git" --work-tree="$HOME" "$@"
   fi
 else
-  git "$@"
+  exec "$GIT_BINARY" "$@"
 fi
