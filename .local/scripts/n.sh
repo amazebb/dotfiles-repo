@@ -24,7 +24,7 @@ export NNN_FIFO
 export NNN_PLUG='p:preview-tui'
 
 # Preview command
-preview_cmd="$HOME/.local/scripts/preview_cmd.sh"
+preview_cmd="$HOME/.local/scripts/preview_cmd.dash"
 
 # Use `tmux` split as preview
 if [ -e "${TMUX%%,*}" ]; then
