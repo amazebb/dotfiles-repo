@@ -1,11 +1,11 @@
 #!/opt/homebrew/bin/bash
 # Generate shell script with inputs, options.
 
-# Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
+# Function to validate argument names (no longer restricted to single chars, but can't be 'h')
 validate_arg_name() {
   local arg_name="$1"
   if [[ $arg_name == "h" ]]; then
-    echo "Error: Argument name '$arg_name' is reserved for help."
+    echo "Error: Argument name '$arg_name' is reserved for help (-h)."
     exit 1
   fi
 }
@@ -34,12 +34,12 @@ optional_defaults=()
 
 # Usage function
 usage() {
-  echo "Usage: $(basename "$0") [-s shell] -n script_name -d description [-r required_arg:desc] [-o opt_arg:internal:desc:default]"
+  echo "Usage: $(basename "$0") [-s shell] -n script_name -d description [-r required_arg|desc] [-o opt_arg|internal|desc|default]"
   echo "  -s: Shell to use (default: bash)"
   echo "  -n: Script name (e.g., myscript.sh)"
   echo "  -d: One-line script description"
-  echo "  -r: Required positional input (format: name:desc)"
-  echo "  -o: Optional argument (format: letter:internal:desc:default)"
+  echo "  -r: Required positional input (format: name|desc)"
+  echo "  -o: Optional argument (format: letter|internal|desc|default)"
   echo "  -h: Show help"
   exit 0
 }
@@ -52,18 +52,19 @@ while getopts ":s:n:d:r:o:h" opt; do
     n) script_name="$OPTARG" ;;
     d) script_desc="$OPTARG" ;;
     r)
-      IFS=':' read -r arg desc <<<"$OPTARG"
+      IFS='|' read -r arg desc <<<"$OPTARG"
       validate_arg_name "$arg"
       check_duplicate "$arg" "Required" "${required_args[@]}"
       required_args+=("$arg")
       required_desc+=("$desc")
       ;;
     o)
-      IFS=':' read -r arg internal desc default <<<"$OPTARG"
+      IFS='|' read -r arg internal desc default <<<"$OPTARG"
       validate_arg_name "$arg"
       check_duplicate "$arg" "Optional" "${optional_args[@]}"
       optional_args+=("$arg")
-      optional_internal+=("${internal:-$arg}")
+      internal_upper=$(echo "${internal:-$arg}" | tr '[:lower:]' '[:upper:]')
+      optional_internal+=("$internal_upper")
       optional_desc+=("$desc")
       optional_defaults+=("$default")
       ;;
@@ -101,7 +102,6 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
 
   # Prompt for script name
   read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
-
   # Prompt for script description
   read -r -p "Enter a one-line explanation of what the script does: " script_desc
   validate_script_info
