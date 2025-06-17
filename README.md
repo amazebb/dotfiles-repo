@@ -628,6 +628,7 @@ For further exploration, Neovim’s built-in help (`:help treesitter-query`) and
 
 <details>
 <summary><h4>#!/usr/bin/env</h4></summary>
+
 The `#!/usr/bin/env` shebang is a common Unix convention to make scripts portable by using the `env` command to locate the interpreter (e.g., `uv` in your case) in the user's `PATH`. Here’s where to find help on it:
 
 1. **Man Pages**:
