@@ -1,13 +1,24 @@
-#!/usr/bin/env bash
+#!/opt/homebrew/bin/bash
 # Generate shell script with inputs, options.
 
 # Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
 validate_arg_name() {
   local arg_name="$1"
-  if [[ $arg_name == "h" || $arg_name == "v" ]]; then
-    echo "Error: Argument name '$arg_name' is reserved for help (-h) or version (-v)."
+  if [[ $arg_name == "h" ]]; then
+    echo "Error: Argument name '$arg_name' is reserved for help."
     exit 1
   fi
+}
+
+# Function to check for duplicate arguments
+check_duplicate() {
+  local arg="$1" type="$2" array=("${@:3}")
+  for existing in "${array[@]}"; do
+    if [[ $existing == "$arg" ]]; then
+      echo "Error: $type argument '$arg' already used."
+      exit 1
+    fi
+  done
 }
 
 # Default values
@@ -36,30 +47,51 @@ usage() {
 # Parse command-line options
 while getopts ":s:n:d:r:o:h" opt; do
   case "$opt" in
+    h) usage ;;
     s) shell="$OPTARG" ;;
     n) script_name="$OPTARG" ;;
     d) script_desc="$OPTARG" ;;
     r)
       IFS=':' read -r arg desc <<<"$OPTARG"
       validate_arg_name "$arg"
+      check_duplicate "$arg" "Required" "${required_args[@]}"
       required_args+=("$arg")
       required_desc+=("$desc")
       ;;
     o)
       IFS=':' read -r arg internal desc default <<<"$OPTARG"
       validate_arg_name "$arg"
+      check_duplicate "$arg" "Optional" "${optional_args[@]}"
       optional_args+=("$arg")
       optional_internal+=("${internal:-$arg}")
       optional_desc+=("$desc")
       optional_defaults+=("$default")
       ;;
-    h) usage ;;
     ?)
       echo "Error: Invalid option -$OPTARG"
       usage
       ;;
   esac
 done
+
+# Validate script name and description
+validate_script_info() {
+  if [[ -z $script_name ]]; then
+    echo "Error: Script name (-n) is required."
+    exit 1
+  fi
+  if [[ ! $script_name =~ \.sh$ ]]; then
+    script_name="$script_name.sh"
+  fi
+  if [[ -f $script_name ]]; then
+    echo "Error: File '$script_name' already exists."
+    exit 1
+  fi
+  if [[ -z $script_desc ]]; then
+    echo "Error: Script description (-d) is required."
+    exit 1
+  fi
+}
 
 # Interactive mode if no arguments provided
 if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#optional_args[@]} -eq 0 ]]; then
@@ -69,28 +101,10 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
 
   # Prompt for script name
   read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
-  if [[ -z $script_name ]]; then
-    echo "Error: Script name cannot be empty."
-    exit 1
-  fi
-
-  # Ensure script name ends with .sh
-  if [[ ! $script_name =~ \.sh$ ]]; then
-    script_name="$script_name.sh"
-  fi
-
-  # Check if file already exists
-  if [[ -f $script_name ]]; then
-    echo "Error: File '$script_name' already exists."
-    exit 1
-  fi
 
   # Prompt for script description
   read -r -p "Enter a one-line explanation of what the script does: " script_desc
-  if [[ -z $script_desc ]]; then
-    echo "Error: Script description cannot be empty."
-    exit 1
-  fi
+  validate_script_info
 
   # Prompt for required positional inputs
   echo "Enter required positional inputs (one at a time)"
@@ -100,6 +114,7 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
       break
     fi
     validate_arg_name "$arg"
+    check_duplicate "$arg" "Required" "${required_args[@]}"
     read -r -p "Description for $arg: " desc
     if [[ -z $desc ]]; then
       echo "Error: Description cannot be empty."
@@ -117,6 +132,7 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
       break
     fi
     validate_arg_name "$arg"
+    check_duplicate "$arg" "Optional" "${optional_args[@]}"
     read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
     if [[ -z $internal ]]; then
       internal="$arg"
@@ -133,22 +149,7 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
     optional_defaults+=("$default")
   done
 else
-  # Validate command-line inputs
-  if [[ -z $script_name ]]; then
-    echo "Error: Script name (-n) is required."
-    exit 1
-  fi
-  if [[ ! $script_name =~ \.sh$ ]]; then
-    script_name="$script_name.sh"
-  fi
-  if [[ -f $script_name ]]; then
-    echo "Error: File '$script_name' already exists."
-    exit 1
-  fi
-  if [[ -z $script_desc ]]; then
-    echo "Error: Script description (-d) is required."
-    exit 1
-  fi
+  validate_script_info
 fi
 
 # Extract basename for help message
@@ -166,6 +167,9 @@ VERSION="1.0.0"
 # Help function
 usage() {
     echo "Usage: $script_basename"
+    echo "Options:"
+    echo "  -h           Show this help message"
+    echo "  --version    Show version information"
 EOF
 
 # Add required positional inputs to usage
@@ -208,7 +212,7 @@ version() {
 if [[ "$1" == "-h" ]]; then
     usage
 fi
-if [[ "$1" == "-v" ]]; then
+if [[ "$1" == "--version" ]]; then
     version
 fi
 
@@ -226,7 +230,7 @@ for i in "${!optional_args[@]}"; do
 done
 
 # Construct the getopts string for optional arguments
-getopts_string="hv"
+getopts_string="h"
 for arg in "${optional_args[@]}"; do
   getopts_string="${getopts_string}${arg}:"
 done
@@ -237,7 +241,6 @@ cat >>"$script_name" <<EOF
 while getopts "$getopts_string" opt; do
     case "\$opt" in
         h) usage ;;
-        v) version ;;
 EOF
 
 # Add cases for optional arguments
