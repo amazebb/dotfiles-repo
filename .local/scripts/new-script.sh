@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/bash
+#!/usr/bin/env bash
 # Generate shell script with inputs, options.
 
 # Function to validate argument names (no longer restricted to single chars, but can't be 'h' or 'v')
@@ -10,84 +10,153 @@ validate_arg_name() {
   fi
 }
 
-# Prompt for the script name
-read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
-if [[ -z $script_name ]]; then
-  echo "Error: Script name cannot be empty."
-  exit 1
-fi
-
-# Ensure the script name ends with .sh
-if [[ ! $script_name =~ \.sh$ ]]; then
-  script_name="$script_name.sh"
-fi
-
-# Check if file already exists
-if [[ -f $script_name ]]; then
-  echo "Error: File '$script_name' already exists."
-  exit 1
-fi
-
-# Prompt for script description
-read -r -p "Enter a one-line explanation of what the script does: " script_desc
-if [[ -z $script_desc ]]; then
-  echo "Error: Script description cannot be empty."
-  exit 1
-fi
-
-# Prompt for required positional inputs
-echo "Enter required positional inputs (one at a time)"
+# Default values
+shell="bash"
+script_name=""
+script_desc=""
 required_args=()
 required_desc=()
-while true; do
-  read -r -p "Required input name (or Enter to finish): " arg
-  if [[ -z $arg ]]; then
-    break
-  fi
-  validate_arg_name "$arg"
-  read -r -p "Description for $arg: " desc
-  if [[ -z $desc ]]; then
-    echo "Error: Description cannot be empty."
-    exit 1
-  fi
-  required_args+=("$arg")
-  required_desc+=("$desc")
-done
-
-# Prompt for optional arguments
-echo "Enter optional arguments (single letters, one at a time). Press Enter without input to finish."
 optional_args=()
 optional_internal=()
 optional_desc=()
 optional_defaults=()
-while true; do
-  read -r -p "Optional argument letter (or Enter to finish): " arg
-  if [[ -z $arg ]]; then
-    break
-  fi
-  validate_arg_name "$arg"
-  read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
-  if [[ -z $internal ]]; then
-    internal="$arg"
-  fi
-  read -r -p "Description for -$arg: " desc
-  if [[ -z $desc ]]; then
-    echo "Error: Description cannot be empty."
+
+# Usage function
+usage() {
+  echo "Usage: $(basename "$0") [-s shell] -n script_name -d description [-r required_arg:desc] [-o opt_arg:internal:desc:default]"
+  echo "  -s: Shell to use (default: bash)"
+  echo "  -n: Script name (e.g., myscript.sh)"
+  echo "  -d: One-line script description"
+  echo "  -r: Required positional input (format: name:desc)"
+  echo "  -o: Optional argument (format: letter:internal:desc:default)"
+  echo "  -h: Show help"
+  exit 0
+}
+
+# Parse command-line options
+while getopts ":s:n:d:r:o:h" opt; do
+  case "$opt" in
+    s) shell="$OPTARG" ;;
+    n) script_name="$OPTARG" ;;
+    d) script_desc="$OPTARG" ;;
+    r)
+      IFS=':' read -r arg desc <<<"$OPTARG"
+      validate_arg_name "$arg"
+      required_args+=("$arg")
+      required_desc+=("$desc")
+      ;;
+    o)
+      IFS=':' read -r arg internal desc default <<<"$OPTARG"
+      validate_arg_name "$arg"
+      optional_args+=("$arg")
+      optional_internal+=("${internal:-$arg}")
+      optional_desc+=("$desc")
+      optional_defaults+=("$default")
+      ;;
+    h) usage ;;
+    ?)
+      echo "Error: Invalid option -$OPTARG"
+      usage
+      ;;
+  esac
+done
+
+# Interactive mode if no arguments provided
+if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#optional_args[@]} -eq 0 ]]; then
+  # Prompt for shell
+  read -r -p "Enter the shell to use (default: bash): " shell
+  shell=${shell:-bash}
+
+  # Prompt for script name
+  read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
+  if [[ -z $script_name ]]; then
+    echo "Error: Script name cannot be empty."
     exit 1
   fi
-  read -r -p "Default value for -$arg (or Enter for none): " default
-  optional_args+=("$arg")
-  optional_internal+=("${internal^^}")
-  optional_desc+=("$desc")
-  optional_defaults+=("$default")
-done
+
+  # Ensure script name ends with .sh
+  if [[ ! $script_name =~ \.sh$ ]]; then
+    script_name="$script_name.sh"
+  fi
+
+  # Check if file already exists
+  if [[ -f $script_name ]]; then
+    echo "Error: File '$script_name' already exists."
+    exit 1
+  fi
+
+  # Prompt for script description
+  read -r -p "Enter a one-line explanation of what the script does: " script_desc
+  if [[ -z $script_desc ]]; then
+    echo "Error: Script description cannot be empty."
+    exit 1
+  fi
+
+  # Prompt for required positional inputs
+  echo "Enter required positional inputs (one at a time)"
+  while true; do
+    read -r -p "Required input name (or Enter to finish): " arg
+    if [[ -z $arg ]]; then
+      break
+    fi
+    validate_arg_name "$arg"
+    read -r -p "Description for $arg: " desc
+    if [[ -z $desc ]]; then
+      echo "Error: Description cannot be empty."
+      exit 1
+    fi
+    required_args+=("$arg")
+    required_desc+=("$desc")
+  done
+
+  # Prompt for optional arguments
+  echo "Enter optional arguments (single letters, one at a time). Press Enter without input to finish."
+  while true; do
+    read -r -p "Optional argument letter (or Enter to finish): " arg
+    if [[ -z $arg ]]; then
+      break
+    fi
+    validate_arg_name "$arg"
+    read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
+    if [[ -z $internal ]]; then
+      internal="$arg"
+    fi
+    read -r -p "Description for -$arg: " desc
+    if [[ -z $desc ]]; then
+      echo "Error: Description cannot be empty."
+      exit 1
+    fi
+    read -r -p "Default value for -$arg (or Enter for none): " default
+    optional_args+=("$arg")
+    optional_internal+=("${internal^^}")
+    optional_desc+=("$desc")
+    optional_defaults+=("$default")
+  done
+else
+  # Validate command-line inputs
+  if [[ -z $script_name ]]; then
+    echo "Error: Script name (-n) is required."
+    exit 1
+  fi
+  if [[ ! $script_name =~ \.sh$ ]]; then
+    script_name="$script_name.sh"
+  fi
+  if [[ -f $script_name ]]; then
+    echo "Error: File '$script_name' already exists."
+    exit 1
+  fi
+  if [[ -z $script_desc ]]; then
+    echo "Error: Script description (-d) is required."
+    exit 1
+  fi
+fi
 
 # Extract basename for help message
 script_basename=$(basename "$script_name" .sh)
 
 # Start generating the script
 cat >"$script_name" <<EOF
-#!/bin/bash
+#!/usr/bin/env $shell
 
 # $script_name: $script_desc
 
