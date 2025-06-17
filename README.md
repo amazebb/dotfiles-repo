@@ -115,12 +115,14 @@ just absolutely struggling with this on 4/17/25
 
 <details>
 <summary><h4>Neovim Tips</h4></summary>
+
 Format all Lua files under current folder recursively:
 
 ```vim
 :args **/*.lua
 :argdo lua vim.lsp.buf.format()
 ```
+
 </details>
 
 <details>
@@ -211,6 +213,7 @@ If you need a specific tweak (e.g., different buffer handling or model config), 
 
 <details>
 <summary><h4>Plain text streaming in mlx-lm</h4></summary>
+
 You're correct—there's no fundamental barrier to implementing plain text streaming in `mlx-lm` to minimize data transmission. The JSON structure in the OpenAI-compatible `/v1/chat/completions` endpoint is a design choice for compatibility and structured data handling, but a custom plain text streaming endpoint could be added to `mlx-lm` with minimal overhead. This would involve modifying the `mlx_lm.server` code or creating a new endpoint. A pull request (PR) to the `mlx-lm` repo is a viable option if the change aligns with the project's goals. Here's a concise breakdown of how to approach this:
 
 ### Feasibility
@@ -302,6 +305,7 @@ If you want help with specific `mlx-lm` code (e.g., exact files to edit) or draf
 
 <details>
 <summary><h4>statusline customization</h4></summary>
+
 Neovim’s status line is a customizable, per-window bar at the bottom of each window that displays information about the current buffer, cursor position, or other editor state. Without plugins like `lualine`, you can configure it natively using the `statusline` option, which supports static text, dynamic expressions, and even simple animations (e.g., a progress bar). Since you’re a terminal-savvy user with a full dev setup (Neovim, Lua, M1 MacBook Pro), I’ll keep this concise, focusing on barebones status lines, how they work, and how to create a simple custom one with text and a progress bar.
 
 ### How Status Lines Work in Neovim
