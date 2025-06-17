@@ -115,20 +115,6 @@ return {
         },
     },
 
-    -- nnn File Explorer
-    {
-        'luukvbaal/nnn.nvim',
-        opts = {
-            cfg = {
-                picker = {
-                    cmd = 'nnn -G -a -Pp', --~/.local/scripts/n.sh',
-                    style = { border = 'rounded' },
-                },
-                replace_netrw = 'picker',
-            },
-        },
-    },
-
     --  Neovim statusline
     {
         'nvim-lualine/lualine.nvim',
