@@ -84,6 +84,19 @@ create_aliases() {
 }
 create_aliases
 
+# In the Kitty terminal we can plot using iplot: iplot 'sin(x*3)*exp(x*.2)'
+function iplot {
+  cat <<EOF | gnuplot
+    set terminal pngcairo enhanced font 'Fira Sans,10'
+    set autoscale
+    set samples 1000
+    set output '|kitten icat --stdin yes'
+    set object 1 rectangle from screen 0,0 to screen 1,1 fillcolor rgb"#fdf6e3" behind
+    plot $@
+    set output '/dev/null'
+EOF
+}
+
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
