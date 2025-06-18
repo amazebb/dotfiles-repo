@@ -1,8 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Pre-process PDFs, ZSDs for fz, ripgrep.
 case "$1" in
   *.pdf)
-    # The -s flag ensures that the file is non-empty.
     if [ -s "$1" ]; then
       exec pdftotext "$1" -
     else
