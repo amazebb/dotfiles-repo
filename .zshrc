@@ -47,7 +47,7 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="/opt/homebrew/bin/nvim"
 
 # PATH
-export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
