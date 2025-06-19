@@ -1,3 +1,5 @@
+_G.latex_enabled = true
+
 return {
     -- Markdown renderer
     {

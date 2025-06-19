@@ -134,23 +134,21 @@ vim.api.nvim_create_user_command('TogglePythonWarnings', function(args)
     toggle_unknown_types(args.args)
 end, { nargs = '?', desc = 'Toggle basedpyright Warnings', complete = completion_list })
 
--- Ensure git commit -v shows syntax/color highlighting in the diff
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-    pattern = { 'gitcommit' },
-    callback = function()
-        -- Apply diff syntax to diff regions
-        vim.cmd('syntax include @Diff syntax/diff.vim')
-        vim.cmd('syntax region gitcommitDiff start="^diff --git" end="%$" contains=@Diff')
-    end,
-})
+-- render-markdown
+-- Note: Adding this here explcitily otherwise renderer-markdown is not highlighting correctly
+-- Should not have to do this but could be an interfering plugin/setting causing the issue
 vim.api.nvim_create_autocmd('FileType', {
-    -- Note: Adding this here explcitily otherwise renderer-markdown is not highlighting correctly
-    -- Should not have to do this but could be an interfering plugin/setting causing the issue
     pattern = { 'markdown', 'quatro', 'codecompanion' },
     callback = function()
         vim.treesitter.start()
     end,
 })
+
+vim.api.nvim_create_user_command('ToggleLatex', function()
+    _G.latex_enabled = not _G.latex_enabled
+    require('render-markdown').setup({ latex = { enabled = _G.latex_enabled } })
+end, { desc = 'Toglle Latex rendering in markdown' })
+-- render-markdown
 
 vim.api.nvim_create_user_command('GitDiffFileMerge', function()
     vim.fn.jobstart('git difftool --cached', { detach = true })
