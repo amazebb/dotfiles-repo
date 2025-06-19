@@ -1,4 +1,27 @@
 return {
+    -- Markdown renderer
+    {
+        'MeanderingProgrammer/render-markdown.nvim',
+        lazy = false,
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        opts = {
+            completions = { lsp = { enabled = true } },
+            -- completions = { blink = { enabled = true } },
+            code = { sign = false },
+            latex = {
+                enabled = true,
+                converter = 'latex2text',
+                highlight = 'RenderMarkdownMath',
+                position = 'above',
+                top_pad = 0,
+                bottom_pad = 0,
+            },
+        },
+        file_types = { 'markdown', 'quarto', 'codecompanion' },
+    },
+
     -- Neovim TreeSitter
     {
         'nvim-treesitter/nvim-treesitter',
@@ -69,20 +92,6 @@ return {
             fuzzy = { implementation = 'prefer_rust_with_warning' },
         },
         opts_extend = { 'sources.default' },
-    },
-
-    -- Markdown renderer
-    {
-        'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
-        ---@module 'render-markdown'
-        ---@type render.md.UserConfig
-        opts = {
-            -- completions = { lsp = { enabled = true } },
-            completions = { blink = { enabled = true } },
-            code = { sign = false },
-        },
-        ft = { 'markdown', 'quarto', 'codecompanion' },
     },
 
     -- fzf Neovim

@@ -143,6 +143,14 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
         vim.cmd('syntax region gitcommitDiff start="^diff --git" end="%$" contains=@Diff')
     end,
 })
+vim.api.nvim_create_autocmd('FileType', {
+    -- Note: Adding this here explcitily otherwise renderer-markdown is not highlighting correctly
+    -- Should not have to do this but could be an interfering plugin/setting causing the issue
+    pattern = { 'markdown', 'quatro', 'codecompanion' },
+    callback = function()
+        vim.treesitter.start()
+    end,
+})
 
 vim.api.nvim_create_user_command('GitDiffFileMerge', function()
     vim.fn.jobstart('git difftool --cached', { detach = true })
