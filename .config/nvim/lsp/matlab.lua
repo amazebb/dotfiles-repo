@@ -4,7 +4,7 @@ return {
     root_markers = { '.git' },
     settings = {
         MATLAB = {
-            indexWorkspace = false,
+            indexWorkspace = true,
             installPath = '',
             matlabConnectionTiming = 'onStart',
             telemetry = false,
