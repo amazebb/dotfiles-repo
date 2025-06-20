@@ -11,7 +11,7 @@ return {
             -- directly in the home directory (e.g. ~/foo.sh).
             --
             -- Default upstream pattern is '**/*@(.sh|.inc|.bash|.command)'.
-            globPattern = vim.env.GLOB_PATTERN or '*@(.sh|.inc|.bash|.command)',
+            globPattern = vim.env.GLOB_PATTERN or '*@(.sh|.inc|.bash|.command|.zsh)',
         },
     },
 }
