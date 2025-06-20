@@ -33,7 +33,7 @@ return {
                 checkThirdParty = false,
                 library = {
                     vim.env.VIMRUNTIME,
-                    -- Add render-markdown.nvim's lua directory and all other Lazy managed plugins
+                    -- Add Lazy managed plugins
                     vim.fn.stdpath('data') .. '/lazy',
                     '${3rd}/luv/library',
                 },
