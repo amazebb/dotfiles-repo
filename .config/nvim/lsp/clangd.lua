@@ -21,7 +21,7 @@ local function switch_source_header(bufnr)
         )
     end
     local params = vim.lsp.util.make_text_document_params(bufnr)
-    client:request(method_name, params, function(err, result)
+    client.request(method_name, params, function(err, result)
         if err then
             error(tostring(err))
         end
@@ -36,12 +36,12 @@ end
 local function symbol_info()
     local bufnr = vim.api.nvim_get_current_buf()
     local clangd_client = vim.lsp.get_clients({ bufnr = bufnr, name = 'clangd' })[1]
-    if not clangd_client or not clangd_client:supports_method('textDocument/symbolInfo') then
+    if not clangd_client or not clangd_client.supports_method('textDocument/symbolInfo') then
         return vim.notify('Clangd client not found', vim.log.levels.ERROR)
     end
     local win = vim.api.nvim_get_current_win()
     local params = vim.lsp.util.make_position_params(win, clangd_client.offset_encoding)
-    clangd_client:request('textDocument/symbolInfo', params, function(err, res)
+    clangd_client.request('textDocument/symbolInfo', params, function(err, res)
         if err or #res == 0 then
             -- Clangd always returns an error, there is not reason to parse it
             return
@@ -58,6 +58,9 @@ local function symbol_info()
         })
     end, bufnr)
 end
+
+---@class ClangdInitializeResult: lsp.InitializeResult
+---@field offsetEncoding? string
 
 return {
     cmd = { 'clangd' },
@@ -79,12 +82,19 @@ return {
         },
         offsetEncoding = { 'utf-8', 'utf-16' },
     },
-    on_attach = function()
-        vim.api.nvim_buf_create_user_command(0, 'LspClangdSwitchSourceHeader', function()
-            switch_source_header(0)
+    ---@param client vim.lsp.Client
+    ---@param init_result ClangdInitializeResult
+    on_init = function(client, init_result)
+        if init_result.offsetEncoding then
+            client.offset_encoding = init_result.offsetEncoding
+        end
+    end,
+    on_attach = function(_, bufnr)
+        vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdSwitchSourceHeader', function()
+            switch_source_header(bufnr)
         end, { desc = 'Switch between source/header' })
 
-        vim.api.nvim_buf_create_user_command(0, 'LspClangdShowSymbolInfo', function()
+        vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdShowSymbolInfo', function()
             symbol_info()
         end, { desc = 'Show symbol info' })
     end,
