@@ -72,7 +72,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
--- noselect prevent from automatically selecting the first completion item in the popup menu
+-- prevent from automatically selecting the first completion item in the popup menu
 vim.opt.completeopt:append('noselect')
 
 local function show_help_popup(topic)
@@ -329,7 +329,7 @@ vim.api.nvim_create_autocmd('User', {
     pattern = 'Nnn',
     group = augroup,
     callback = create_floating_terminal,
-    desc = 'Nnn',
+    desc = 'Nnn file picker',
 })
 
 -- Define :Nnn command
@@ -339,3 +339,16 @@ end, { desc = 'Open floating terminal with n.sh' })
 
 -- Keymap
 vim.keymap.set('n', '<leader>n', ':Nnn<CR>', { desc = 'Trigger Nnn floating terminal', silent = true })
+
+vim.api.nvim_create_user_command('ShellCheckDisable', function()
+    local line = vim.fn.line('.') - 1
+    local diagnostics = vim.diagnostic.get(0, { lnum = line })
+    for _, diag in ipairs(diagnostics) do
+        if diag.source == 'shellcheck' and diag.code then
+            local code = string.match(diag.code, 'SC%d+') or diag.code
+            vim.api.nvim_buf_set_lines(0, line, line, false, { '# shellcheck disable=' .. code })
+            return
+        end
+    end
+    vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
+end, { desc = 'Disbale ShellCheck warning for current line' })

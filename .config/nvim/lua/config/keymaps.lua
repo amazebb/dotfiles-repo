@@ -65,9 +65,7 @@ vim.keymap.set('n', '[t', function()
     vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
 end, { desc = 'Prev tag' })
 
--- vim.keymap.set("n", "<leader>rs", ":%s/\\<<C-r><C-w>\\>/gc", { desc = "Rename in file" })
-
--- Show diagnostics under cursor in a float
+-- Show diagnosticcs under cursor in a float
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostics' })
 
 -- Jump to next diagnostic
@@ -83,22 +81,8 @@ end, { desc = 'Prev diagnostic' })
 -- Show all diagnostics in a list (quickfix or location list)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
 
--- Function to insert ShellCheck disable directive for warning under cursor
-local function insert_shellcheck_disable()
-    local line = vim.fn.line('.') - 1
-    local diagnostics = vim.diagnostic.get(0, { lnum = line })
-    for _, diag in ipairs(diagnostics) do
-        if diag.source == 'shellcheck' and diag.code then
-            local code = string.match(diag.code, 'SC%d+') or diag.code
-            vim.api.nvim_buf_set_lines(0, line, line, false, { '# shellcheck disable=' .. code })
-            return
-        end
-    end
-    vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
-end
-
 --  Disbale ShellCheck for current line
-vim.keymap.set('n', '<C-i>', insert_shellcheck_disable, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-i>', ':ShellCheckDisable<CR>', { noremap = true, silent = true })
 
 -- Toggle basedpyright type warnings
 vim.keymap.set(
