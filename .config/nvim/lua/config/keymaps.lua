@@ -1,15 +1,12 @@
--- Help on word under cursor
 vim.keymap.set('n', 'H', function()
     local word = vim.fn.expand('<cWORD>')
     word = word:match('^[^%(%[{]+') or word
     local ok, _ = pcall(vim.cmd.help, word)
     if not ok then
-        local cword = vim.fn.expand('<cword>')
-        vim.cmd('HelpPopup ' .. cword)
+        word = vim.fn.expand('<cword>')
     end
-end, { desc = 'Help with TOC' })
-
-vim.keymap.set('n', '<leader>h', ':HelpPopup<cr>', { noremap = true, silent = true })
+    vim.cmd('HelpPopup ' .. word)
+end, { desc = 'Show Help in a floating window' })
 
 -- Switch buffers
 vim.keymap.set('n', '<C-n>', ':bnext<CR>', { desc = 'Next Buffer' })
@@ -22,10 +19,10 @@ vim.keymap.set('n', '<leader>f', ':FzfLua<CR>', { desc = 'Open FzfLua', silent =
 -- Codecompanion AI
 vim.keymap.set('n', '<leader>c', ':CodeCompanionChat Toggle<CR>', { desc = 'CodeCompanionChat Toggle', silent = true })
 
--- Enable Copy/Paste and Slect All
-vim.keymap.set({ 'n', 'v' }, '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Copy to system clipboard' })
-vim.keymap.set({ 'n', 'v' }, '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
-vim.keymap.set('n', '<C-a>', 'ggVG', { noremap = true, silent = true, desc = 'Select all text' })
+-- Enable Copy/Paste and Select All
+vim.keymap.set({ 'n', 'v' }, '<C-c>', '"+y', { desc = 'Copy to system clipboard', noremap = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, '<C-v>', '"+p', { desc = 'Paste from system clipboard', noremap = true, silent = true })
+vim.keymap.set('n', '<C-a>', 'ggVG', { desc = 'Select all text', noremap = true, silent = true })
 
 -- Open a new terminal window in the bottom right corner
 vim.keymap.set('n', '<leader>t', function()
@@ -65,7 +62,7 @@ vim.keymap.set('n', '[t', function()
     vim.cmd('match CurrentTag /\\%#|.\\{-}|/')
 end, { desc = 'Prev tag' })
 
--- Show diagnosticcs under cursor in a float
+-- Show diagnostics under cursor in a float
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostics' })
 
 -- Jump to next diagnostic
@@ -81,13 +78,11 @@ end, { desc = 'Prev diagnostic' })
 -- Show all diagnostics in a list (quickfix or location list)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
 
---  Disbale ShellCheck for current line
-vim.keymap.set('n', '<C-i>', ':ShellCheckDisable<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-i>', ':ShellCheckDisable<CR>', {
+    desc = 'Disable ShellCheck for current line',
+    noremap = true,
+    silent = true,
+})
 
 -- Toggle basedpyright type warnings
-vim.keymap.set(
-    'n',
-    '<leader>w',
-    ':TogglePythonWarnings<CR>',
-    { desc = 'Toggle basedpyright warnings between standard and recommended', silent = true }
-)
+vim.keymap.set('n', '<leader>w', ':TogglePythonWarnings<CR>', { desc = 'Toggle basedpyright warnings', silent = true })

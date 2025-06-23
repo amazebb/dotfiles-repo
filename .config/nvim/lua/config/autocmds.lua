@@ -75,7 +75,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- prevent from automatically selecting the first completion item in the popup menu
 vim.opt.completeopt:append('noselect')
 
+-- Help in a floating window
 local function show_help_popup(topic)
+    vim.print(topic)
     vim.cmd('help ' .. (topic or ''))
     local help_buf = vim.api.nvim_get_current_buf()
     -- Close original help window
@@ -85,7 +87,7 @@ local function show_help_popup(topic)
         vim.cmd('clearjumps')
     end)
     vim.api.nvim_open_win(help_buf, true, {
-        relative = 'editor',
+        relative = 'win',
         width = math.floor(0.8 * vim.o.columns),
         height = math.floor(0.8 * vim.o.lines),
         row = math.floor(0.1 * vim.o.lines),
@@ -97,10 +99,9 @@ local function show_help_popup(topic)
     vim.api.nvim_buf_set_keymap(help_buf, 'n', '<Esc>', ':q<cr>', { noremap = true, silent = true })
 end
 
--- Command for manual use
 vim.api.nvim_create_user_command('HelpPopup', function(args)
     show_help_popup(args.args)
-end, { nargs = '?' })
+end, { desc = 'Show Help in floating window', nargs = '?' })
 
 -- Toggle basedpyright warnings function
 local function toggle_unknown_types(value)
@@ -147,61 +148,14 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_user_command('ToggleLatex', function()
     _G.latex_enabled = not _G.latex_enabled
     require('render-markdown').setup({ latex = { enabled = _G.latex_enabled } })
-end, { desc = 'Toglle Latex rendering in markdown' })
--- render-markdown
+end, { desc = 'Toggle Latex rendering in markdown' })
 
 vim.api.nvim_create_user_command('GitDiffFileMerge', function()
     vim.fn.jobstart('git difftool --cached', { detach = true })
-end, {})
-
--- -- Basic Neovim configuration for MATLAB-style layout
--- -- Ensure required plugins are installed (e.g., via a plugin manager like packer.nvim)
--- -- Plugins: nvim-tree.lua (file explorer), vim-terminal (terminal)
---
--- -- Function to set up the layout
--- function SetupMatlabLayout()
---     -- Open NvimTree on the left
---     vim.cmd('NnnExplorer')
---
---     -- Split the main window vertically for editor and variables
---     vim.cmd('vsplit')
---
---     -- Move to the right window (editor)
---     vim.cmd('wincmd l')
---
---     -- Split the editor window horizontally for editor and terminal
---     vim.cmd('split')
---
---     -- Open terminal in the bottom window
---     vim.cmd('wincmd j')
---     vim.cmd('terminal')
---     vim.cmd('resize 15') -- Adjust terminal height
---
---     -- Move back to the editor window
---     vim.cmd('wincmd k')
---
---     -- Move to the rightmost window (for variables)
---     vim.cmd('wincmd l')
---     vim.cmd('vertical resize 30') -- Adjust variable window width
---
---     -- Create a new buffer for variable explorer
---     vim.cmd('enew')
---     vim.bo.buftype = 'nofile'
---     vim.bo.bufhidden = 'hide'
---     vim.bo.swapfile = false
---     vim.api.nvim_buf_set_name(0, 'Variables')
--- end
---
--- -- Command to trigger the layout
--- vim.api.nvim_create_user_command('MatlabLayout', SetupMatlabLayout, {})
---
--- -- Keybinding to trigger the layout
--- vim.api.nvim_set_keymap('n', '<leader>ml', ':MatlabLayout<CR>', { noremap = true, silent = true })
---
--- Neovim configuration for three side-by-side buffers
+end, { desc = 'Launch Git difftool' })
 
 -- Function to set up the layout
-function SetupThreeBufferLayout()
+function setup_three_buffer_layout()
     -- Clear all windows
     vim.cmd('only')
 
@@ -266,7 +220,11 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 
 -- Command and keybinding
-vim.api.nvim_create_user_command('ThreeBufferLayout', SetupThreeBufferLayout, {})
+vim.api.nvim_create_user_command(
+    'ThreeBufferLayout',
+    setup_three_buffer_layout,
+    { desc = 'Create three buffer layout' }
+)
 vim.api.nvim_set_keymap('n', '<leader>tb', ':ThreeBufferLayout<CR>', { noremap = true, silent = true })
 
 -- Create floating terminal buffer
@@ -335,7 +293,7 @@ vim.api.nvim_create_autocmd('User', {
 -- Define :Nnn command
 vim.api.nvim_create_user_command('Nnn', function()
     vim.api.nvim_exec_autocmds('User', { pattern = 'Nnn' })
-end, { desc = 'Open floating terminal with n.sh' })
+end, { desc = 'Launch nnn file picker in floating window' })
 
 -- Keymap
 vim.keymap.set('n', '<leader>n', ':Nnn<CR>', { desc = 'Trigger Nnn floating terminal', silent = true })
@@ -351,4 +309,4 @@ vim.api.nvim_create_user_command('ShellCheckDisable', function()
         end
     end
     vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
-end, { desc = 'Disbale ShellCheck warning for current line' })
+end, { desc = 'Disable ShellCheck warning for current line' })
