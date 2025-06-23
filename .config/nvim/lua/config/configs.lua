@@ -1,7 +1,5 @@
 vim.g.mapleader = ' '
-vim.g.python3_host_prog = '~/.config/nvim/rplugin/python3/.venv/bin/python3'
-vim.g.markdown_fenced_languages =
-    { 'python', 'bash=sh', 'javascript', 'html', 'css', 'lua', 'matlab', 'java', 'c', 'gitcommit', 'sql', 'diff' }
+vim.g.python3_host_prog = '~/.virtualenvs/nvim/.venv/bin/python3'
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
@@ -14,6 +12,8 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = 'number'
 vim.o.updatetime = 500
 vim.o.signcolumn = 'auto'
+-- vim.g.markdown_fenced_languages =
+--     { 'python', 'bash=sh', 'javascript', 'html', 'css', 'lua', 'matlab', 'java', 'c', 'gitcommit', 'sql', 'diff' }
 -- vim.opt.foldmethod = 'expr'
 -- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 

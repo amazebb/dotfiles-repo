@@ -9,6 +9,10 @@
 !/.config/nvim/rplugin/python3
 #!/.config/nvim/lua/custom
 
+!/.virtualenvs
+/.virtualenvs/*
+!/.virtualenvs/nvim
+
 !.gitignore
 !.gitignore_global
 !.gitconfig
