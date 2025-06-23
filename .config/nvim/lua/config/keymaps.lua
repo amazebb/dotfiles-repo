@@ -30,8 +30,10 @@ vim.keymap.set('n', '<C-a>', 'ggVG', { noremap = true, silent = true, desc = 'Se
 -- Open a new terminal window in the bottom right corner
 vim.keymap.set('n', '<leader>t', function()
     vim.cmd('belowright term')
-    vim.fn.feedkeys('<C-\\><C-n>')
-    vim.api.nvim_input('i')
+    -- We do not need this to enter insert mode
+    -- vim.fn.feedkeys('<C-\\><C-n>')
+    -- vim.api.nvim_input('i')
+    vim.fn.feedkeys('i')
 end, { desc = 'Terminal below right' })
 
 -- Commenting
