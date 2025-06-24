@@ -155,7 +155,7 @@ vim.api.nvim_create_user_command('GitDiffFileMerge', function()
 end, { desc = 'Launch Git difftool' })
 
 -- Function to set up the layout
-function setup_three_buffer_layout()
+local function setup_three_buffer_layout()
     -- Clear all windows
     vim.cmd('only')
 
