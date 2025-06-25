@@ -64,6 +64,7 @@ A collection of personal shell scripts in ~/.local/scripts
 Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
 ```
+```
 check-scripts.sh    	#!/bin/bash              	Run shellcheck to identify script issues.
 compare-folders.sh  	#!/bin/bash              	Compare folders using diff command.
 data-backup.sh      	#!/bin/bash              	Backup to SPARSE image in iCloud.
@@ -72,7 +73,7 @@ fz.sh               	#!/opt/homebrew/bin/bash 	Search text interactively with ri
 generate-script.sh  	#!//usr/bin/env bash     	Generate shell script with inputs, options.
 git-wrapper.sh      	#!/opt/homebrew/bin/bash 	Manage dotfiles with Git bare repo.
 gitea-cli.sh        	#!/bin/dash              	Manage Gitea: start, stop, status, logs.
-github-info.sh      	#!/usr/bin/env bash      	github-info.sh: GitHub repo information
+github-info.sh      	#!/usr/bin/env bash      	GitHub repo information
 info2vim.sh         	#!/bin/dash              	Launch GNU info for coreutils in Neovim.
 list-scripts.sh     	#!/bin/dash              	List scripts with descriptions in ~/.local/scripts.
 n.sh                	#!/bin/dash              	Launch nnn with preview in tmux.
@@ -80,7 +81,6 @@ pre-rg.sh           	#!/usr/bin/env sh        	Pre-process PDFs, ZSDs for fz, ri
 print-ascii.sh      	#!/bin/bash              	Print ASCII codes for number range.
 print-colors.sh     	#!/bin/bash              	Show all 256 ANSI terminal colors.
 select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
-```
 </details>
 
 <details>

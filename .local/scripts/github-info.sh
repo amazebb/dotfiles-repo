@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# github-info.sh: GitHub repo information
+# GitHub repo information
 
 # Version
 VERSION="1.0.0"

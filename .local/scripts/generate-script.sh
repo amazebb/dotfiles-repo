@@ -159,7 +159,7 @@ script_basename=$(basename "$script_name" .sh)
 cat >"$script_name" <<EOF
 #!/usr/bin/env $shell
 
-# $script_name: $script_desc
+# $script_desc
 
 # Version
 VERSION="1.0.0"
