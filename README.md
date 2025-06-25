@@ -68,15 +68,15 @@ check-scripts.sh    	#!/bin/bash              	Run shellcheck to identify script
 compare-folders.sh  	#!/bin/bash              	Compare folders using diff command.
 data-backup.sh      	#!/bin/bash              	Backup to SPARSE image in iCloud.
 disk-useage.sh      	#!/bin/dash              	Analyze disk usage by folder size.
-dotfiles.sh         	#!/opt/homebrew/bin/bash 	Manage dotfiles with Git bare repo.
 fz.sh               	#!/opt/homebrew/bin/bash 	Search text interactively with ripgrep, fzf.
+generate-script.sh  	#!//usr/bin/env bash     	Generate shell script with inputs, options.
+git-wrapper.sh      	#!/opt/homebrew/bin/bash 	Manage dotfiles with Git bare repo.
 gitea-cli.sh        	#!/bin/dash              	Manage Gitea: start, stop, status, logs.
+github-info.sh      	#!/usr/bin/env bash      	github-info.sh: GitHub repo information
 info2vim.sh         	#!/bin/dash              	Launch GNU info for coreutils in Neovim.
 list-scripts.sh     	#!/bin/dash              	List scripts with descriptions in ~/.local/scripts.
 n.sh                	#!/bin/dash              	Launch nnn with preview in tmux.
-new-script.sh       	#!/opt/homebrew/bin/bash 	Generate shell script with inputs, options.
-pre-rg.sh           	#!/bin/sh                	Pre-process PDFs, ZSDs for fz, ripgrep.
-preview_cmd.sh      	#!/bin/dash              	Preview files, directories for nnn.
+pre-rg.sh           	#!/usr/bin/env sh        	Pre-process PDFs, ZSDs for fz, ripgrep.
 print-ascii.sh      	#!/bin/bash              	Print ASCII codes for number range.
 print-colors.sh     	#!/bin/bash              	Show all 256 ANSI terminal colors.
 select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
