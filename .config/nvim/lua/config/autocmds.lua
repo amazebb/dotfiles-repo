@@ -310,3 +310,22 @@ vim.api.nvim_create_user_command('ShellCheckDisable', function()
     end
     vim.notify('No ShellCheck warning found under cursor', vim.log.levels.WARN)
 end, { desc = 'Disable ShellCheck warning for current line' })
+
+-- Format AppleScript files
+vim.api.nvim_create_user_command('FormatAppleScript', function()
+    local file = vim.fn.expand('%:p')
+    local posix_file = vim.fn.fnameescape(file)
+    local cmd = string.format(
+        'osadecompile %q > %q.formatted && mv %q.formatted %q',
+        posix_file,
+        posix_file,
+        posix_file,
+        posix_file
+    )
+    local _, err = vim.fn.system(cmd)
+    if vim.v.shell_error == 0 then
+        vim.cmd('edit') -- Reload buffer
+    else
+        print('Error formatting AppleScript: ' .. err)
+    end
+end, { desc = 'Format AppleScript using osadecompile' })
