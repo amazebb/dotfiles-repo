@@ -12,6 +12,15 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = 'number'
 vim.o.updatetime = 500
 vim.o.signcolumn = 'auto'
+
+vim.filetype.add({
+    extension = {
+        scpt = 'applescript',
+        applescript = 'applescript',
+        scptd = 'applescript',
+    },
+})
+
 -- vim.g.markdown_fenced_languages =
 --     { 'python', 'bash=sh', 'javascript', 'html', 'css', 'lua', 'matlab', 'java', 'c', 'gitcommit', 'sql', 'diff' }
 -- vim.opt.foldmethod = 'expr'
