@@ -1326,4 +1326,56 @@ input.pdf output.pdf
 - **Backup Certificates**: Export your certificate from Keychain (as `.p12`) and store it securely in case of system failure.
 
 If you need further details or run into issues, let me know![](https://www.reddit.com/r/MacOS/comments/x0jlvj/sign_pdf_using_certificate/)
+
+
+The high cost of commercial providers like DigiCert for infrequent use is indeed a pain, and the trust model is exactly why self-signing is tricky but not impossible. Here's a brief rundown:
+
+### Why Commercial CAs Are Expensive
+- **Trust Model**: DigiCert and similar Certificate Authorities (CAs) are trusted by software (e.g., browsers, OS, PDF readers) because their root certificates are pre-installed in trust stores. They handle vetting, infrastructure, and compliance (e.g., eIDAS, WebTrust), which drives costs.
+- **Use Case**: For one-off document signing, their pricing (often $200–$500/year) is overkill for individuals.
+
+### Can You Self-Sign?
+Yes, you can create your own digital signature, but the catch is trust:
+- **Self-Signed Certificates**: You can generate a private key and certificate using tools like OpenSSL to sign documents (e.g., PDFs). Recipients, however, must manually trust your certificate, which isn’t practical for broad use.
+- **Limitations**: Self-signed signatures are often flagged as untrusted by software (e.g., Adobe Acrobat, Microsoft Office). They’re fine for internal use or with parties who explicitly trust you, but they lack legal weight in many jurisdictions without a trusted CA.
+
+### Free or Low-Cost Alternatives
+For an individual signing one document a year, here are options:
+1. **Let’s Encrypt (Free, Limited)**:
+   - Primarily for SSL/TLS, but their certificates can be used for code signing in some cases. Not ideal for document signing due to short validity (90 days) and lack of document-specific support.
+2. **Sectigo (Free Document Signing)**:
+   - Offers free one-year document signing certificates for individuals via their eIDAS-compliant service. Check their website for availability (used to be through Comodo).
+3. **CAcert (Free, Community-Based)**:
+   - Provides free certificates, but their root isn’t trusted by default in most software. You’d need to distribute their root certificate to recipients, which is clunky.
+4. **DocuSign/Adobe Sign (Subscription or Per-Use)**:
+   - Cloud-based e-signature platforms often include legally binding signatures for a lower per-document fee (e.g., ~$10–$20). Not PKI-based, but compliant with eIDAS/U.S. ESIGN.
+5. **Self-Signing with OpenSSL (Free, Manual)**:
+   - You can create a certificate and sign a PDF using open-source tools. It’s free but requires setup and recipient trust.
+
+### Self-Signing Example (OpenSSL)
+If you want to try self-signing a PDF on your M1 MacBook Pro, here’s a minimal code snippet using OpenSSL (assuming Homebrew-installed):
+
+```bash
+# Generate private key and self-signed certificate
+openssl genrsa -out private.key 2048
+openssl req -new -x509 -key private.key -out certificate.crt -days 365 -subj "/CN=YourName"
+
+# Sign a PDF (requires additional tools like `pdftk` or `qpdf`)
+# Example with `qpdf` (install via `brew install qpdf`)
+qpdf --sign --key private.key --cert certificate.crt input.pdf output-signed.pdf
+```
+
+**Note**: This produces a signature, but Adobe Acrobat will mark it as untrusted unless the recipient adds your certificate to their trust store. Install `qpdf` or similar if you want to test this.
+
+### Why Trust Matters
+- **Legal Binding**: In jurisdictions like Australia (under the Electronic Transactions Act 1999), digital signatures need a trusted CA for legal enforceability in court.
+- **Interoperability**: Trusted CAs ensure signatures are recognized across platforms without manual configuration.
+
+### Recommendation
+For one document a year:
+- **Easiest**: Use a service like DocuSign for a one-off e-signature (cheap, legally binding).
+- **Free but Manual**: Try Sectigo’s free certificate or self-sign with OpenSSL if you’re okay with recipients needing to trust your certificate.
+- **Avoid**: Paying for DigiCert unless you need broad compatibility or code signing.
+
+If you want to test the OpenSSL approach or need help setting up a specific tool on your Mac, let me know, and I’ll provide the exact steps or code.
 </details>
