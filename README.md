@@ -1195,3 +1195,135 @@ jobs:
 
 If you want a more complex example (e.g., testing `generate_script.sh` itself or adding deployment), or need help setting up Gitea/GitHub repos, let me know!
 </details>
+
+<details>
+<summary><h4>Digital Signing Certificates</h4></summary>
+### Safety of Using CAcert for Signing Digital Signatures
+
+CAcert is a community-driven Certificate Authority (CA) that issues free digital certificates. While it can be used for signing digital signatures, its safety and suitability depend on several factors:
+
+- **Trustworthiness**: CAcert certificates are not included in the default trust stores of major operating systems (e.g., macOS, Windows) or browsers. This means that signatures created with CAcert certificates may not be inherently trusted by recipients unless they manually add CAcert’s root certificate to their trust store. For personal or internal use, this might be acceptable, but for legal or professional purposes, a certificate from a widely trusted CA (e.g., DigiCert, Sectigo, or Adobe Approved Trust List members) is preferred to ensure universal validation.
+
+- **Security**: CAcert has faced criticism in the past for security practices and audit issues, which led to its root certificates being excluded from major trust stores. While it can still be used, you should evaluate the risk of relying on a less rigorously audited CA, especially for sensitive documents. Ensure your private key is securely stored and protected.
+
+- **Use Case**: For non-critical, personal, or testing purposes, CAcert can be safe enough if you understand its limitations. For legally binding signatures or high-stakes transactions, opt for a certificate from a trusted CA that complies with standards like PAdES (PDF Advanced Electronic Signatures) or eIDAS (EU regulation for electronic signatures).
+
+- **Validation**: Signatures created with CAcert certificates may show warnings or be marked as untrusted in PDF readers like Adobe Acrobat unless the recipient trusts CAcert’s root certificate. This could undermine the document’s credibility.
+
+**Recommendation**: CAcert is reasonably safe for informal or internal use but not ideal for professional or legally binding signatures due to limited trust and recognition. If you need a free alternative, consider creating a self-signed certificate for testing (though it has similar trust issues) or obtaining a certificate from a trusted CA for production use.
+
+### Best Method for Signing a PDF on macOS Using the Command Line
+
+For signing PDFs on macOS using the command line, the most robust and flexible tool is `pyhanko`, a Python-based CLI tool that supports certificate-based digital signatures. It’s well-documented, supports PAdES-compliant signatures, and works with certificates stored in macOS Keychain or as files. Below is the step-by-step method:
+
+#### Prerequisites
+1. **Install Python and pyhanko**:
+   Ensure Python 3 is installed (use Homebrew: `brew install python3` if needed).
+   Install `pyhanko` via pip:
+   ```bash
+   pip install pyhanko
+   ```
+
+2. **Obtain a Digital Certificate**:
+   - **CAcert**: If using CAcert, request a certificate from their website and import it into macOS Keychain (`.p12` or `.pem` format). Use Keychain Access to import: `File > Import Items`, select the certificate file, and enter the password provided by CAcert.
+   - **Self-Signed (for Testing)**: Create a self-signed certificate using Keychain Access:
+     - Open Keychain Access.
+     - Go to `Keychain Access > Certificate Assistant > Create a Certificate`.
+     - Choose “Self Signed Root”, set the certificate type to “Code Signing” or “S/MIME”, and save it to the login keychain.
+   - **Trusted CA**: Obtain a certificate from a trusted CA (e.g., DigiCert, Sectigo) and import it similarly.
+
+3. **Install OpenSSL (if needed)**:
+   For handling certificate files outside Keychain, ensure OpenSSL is installed:
+   ```bash
+   brew install openssl
+   ```
+
+#### Signing a PDF Using `pyhanko`
+`pyhanko` supports signing with certificates stored in Keychain or as PKCS#12 files. Here’s how to sign a PDF:
+
+1. **Prepare the Certificate**:
+   - If the certificate is in Keychain, note its Common Name (CN) or SHA-1 fingerprint (viewable in Keychain Access).
+   - If using a `.p12` file, ensure you have the file and its password.
+
+2. **Basic Command to Sign**:
+   Use the following command to sign a PDF with a Keychain-stored certificate:
+   ```bash
+   pyhanko sign addedsig --field Sig1 \
+   --keychain-cert-label "Your Certificate CN" \
+   input.pdf output.pdf
+   ```
+   - Replace `"Your Certificate CN"` with the certificate’s Common Name or SHA-1 fingerprint.
+   - `Sig1` is the name of the signature field (can be custom).
+   - `input.pdf` is the unsigned PDF; `output.pdf` is the signed output.
+
+   If using a `.p12` file instead:
+   ```bash
+   pyhanko sign addedsig --field Sig1 \
+   --p12 "path/to/cert.p12" --p12-passwd "your_password" \
+   input.pdf output.pdf
+   ```
+
+3. **Add a Timestamp (Optional but Recommended)**:
+   To enhance signature validity, include a timestamp from a trusted timestamp authority (TSA):
+   ```bash
+   pyhanko sign addedsig --field Sig1 \
+   --keychain-cert-label "Your Certificate CN" \
+   --timestamp-url http://tsa.example.com/tsa \
+   input.pdf output.pdf
+   ```
+   - Replace `http://tsa.example.com/tsa` with a valid TSA URL (e.g., `http://timestamp.digicert.com` or a free TSA like `http://time.certum.pl`).
+   - Timestamps ensure long-term validation (PAdES-LTV compliance).
+
+4. **Customize Signature Appearance (Optional)**:
+   To add a visible signature with custom text or appearance:
+   ```bash
+   pyhanko sign addedsig --field Sig1/visible \
+   --keychain-cert-label "Your Certificate CN" \
+   --timestamp-url http://tsa.example.com/tsa \
+   --appearance-text "Signed by Your Name" \
+   input.pdf output.pdf
+   ```
+   - The `/visible` flag makes the signature visible on the PDF.
+   - `--appearance-text` sets the text displayed in the signature field.
+
+5. **Verify the Signature**:
+   After signing, verify the output PDF:
+   ```bash
+   pyhanko validate output.pdf
+   ```
+   This checks the signature’s integrity and trust status.
+
+#### Notes
+- **Keychain Access**: When running the command, macOS may prompt for permission to access the private key in Keychain. Click “Allow” or “Always Allow” to avoid repeated prompts.
+- **PAdES Compliance**: `pyhanko` supports PAdES standards (Part 2, 3, or 4) for legally binding signatures. Use `--pades` for explicit PAdES compliance:
+  ```bash
+  pyhanko sign addedsig --pades --field Sig1 ...
+  ```
+- **Dependencies**: Ensure `pyhanko` dependencies (e.g., `cryptography`, `pypdf`) are installed. Run `pip install pyhanko[all]` to include optional features like PKCS#11 support.
+- **Alternative Tools**: If `pyhanko` doesn’t suit your needs, consider `openssl` with `pdfsign` (less user-friendly) or commercial tools like Adobe Acrobat Pro (GUI-based, not CLI).
+
+#### Example Full Command
+Sign a PDF with a CAcert certificate in Keychain, including a timestamp and visible signature:
+```bash
+pyhanko sign addedsig --field Sig1/visible \
+--keychain-cert-label "CAcert User Certificate" \
+--timestamp-url http://time.certum.pl \
+--appearance-text "Signed by John Doe" \
+--pades \
+input.pdf output.pdf
+```
+
+### Why `pyhanko`?
+- **CLI-Friendly**: Designed for command-line use, ideal for automation.
+- **macOS Integration**: Seamlessly works with Keychain-stored certificates.
+- **PAdES Support**: Ensures compliance with advanced signature standards.
+- **Active Development**: Regularly updated with good documentation (https://pyhanko.readthedocs.io/en/latest/cli-guide/signing.html).
+
+### Security Tips
+- **Protect Private Keys**: Store certificates securely and never share private keys.
+- **Use Trusted TSAs**: For timestamps, use reputable TSAs to ensure long-term signature validity.
+- **Validate Signatures**: Always verify signatures after signing to confirm integrity.
+- **Backup Certificates**: Export your certificate from Keychain (as `.p12`) and store it securely in case of system failure.
+
+If you need further details or run into issues, let me know![](https://www.reddit.com/r/MacOS/comments/x0jlvj/sign_pdf_using_certificate/)
+</details>
