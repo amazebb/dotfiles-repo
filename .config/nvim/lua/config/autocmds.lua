@@ -135,13 +135,17 @@ vim.api.nvim_create_user_command('TogglePythonWarnings', function(args)
     toggle_unknown_types(args.args)
 end, { nargs = '?', desc = 'Toggle basedpyright Warnings', complete = completion_list })
 
--- render-markdown
--- Note: Adding this here explcitily otherwise renderer-markdown is not highlighting correctly
--- Should not have to do this but could be an interfering plugin/setting causing the issue
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'markdown', 'quatro', 'codecompanion' },
-    callback = function()
-        vim.treesitter.start()
+    pattern = { 'markdown', 'quatro', 'codecompanion', 'applescript' },
+    callback = function(args)
+        -- render-markdown
+        -- Note: Adding this here explcitily otherwise renderer-markdown is not highlighting correctly
+        -- Should not have to do this but could be an interfering plugin/setting causing the issue
+        if vim.tbl_contains({ 'markdown', 'quatro', 'codecompanion' }, args.match) then
+            vim.treesitter.start()
+        elseif args.match == 'applescript' then
+            vim.bo.commentstring = '-- %s'
+        end
     end,
 })
 
