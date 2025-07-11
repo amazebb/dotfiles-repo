@@ -205,12 +205,14 @@ if [[ -n $pos_name ]]; then
   fi
 fi
 usage_line+="\""
-echo "$usage_line" >>"$script_name"
 
-# Add options section
-echo '    echo "Options:"' >>"$script_name"
-echo '    echo "  -h, --help    Show this help message"' >>"$script_name"
-echo '    echo "  --version     Show version information"' >>"$script_name"
+{
+  echo "$usage_line"
+  # Add options section
+  echo '    echo "Options:"'
+  echo '    echo "  -h, --help    Show this help message"'
+  echo '    echo "  --version     Show version information"'
+} >>"$script_name"
 
 # Add optional arguments to options section
 if [[ ${#optional_args[@]} -gt 0 ]]; then
@@ -266,6 +268,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help) usage ;;
     --version) version ;;
+    --) shift; break ;;
 EOF
 
 # Add cases for optional arguments (assume they require value)
