@@ -9,6 +9,8 @@ VERSION="1.0.0"
 usage() {
   echo "Usage: git-check [options] [path...]"
   echo "Options:"
+  echo "  -u            Include untracked files in change check"
+  echo "  -v            Verbose: show git status for changed repos"
   echo "  -h, --help    Show this help message"
   echo "  --version     Show version information"
   echo "Arguments:"
@@ -22,6 +24,9 @@ version() {
   exit 0
 }
 
+untracked=no
+verbose=false
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -31,6 +36,8 @@ while [[ $# -gt 0 ]]; do
       shift
       break
       ;;
+    -u) untracked=normal ;;
+    -v) verbose=true ;;
     -*)
       echo "Unknown option: $1" >&2
       usage
@@ -67,8 +74,12 @@ while IFS= read -r repodir; do
   repos+=("$repodir")
 done < <(fd -H -t d '^\.git$' "${unique_dirs[@]}" | while IFS= read -r gitdir; do dirname "$gitdir"; done | sort -u)
 for repodir in "${repos[@]}"; do
-  if [ -n "$(git -C "$repodir" status --porcelain)" ]; then
+  if [ -n "$(git -C "$repodir" status --porcelain --untracked-files=$untracked)" ]; then
     status=$'\033[31mX\033[0m'
+    if [[ $verbose = true ]]; then
+      echo -e "\nStatus for $repodir:"
+      git -C "$repodir" status
+    fi
   else
     status="OK"
   fi
