@@ -40,6 +40,20 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+# De-duplicate and validate input directories
+declare -a unique_dirs=()
+declare -A seen_dirs=()
+for dir in "$@"; do
+  if [ ! -d "$dir" ]; then
+    echo "Error: '$dir' is not a directory" >&2
+    continue
+  fi
+  if [[ -z ${seen_dirs[$dir]} ]]; then
+    seen_dirs[$dir]=1
+    unique_dirs+=("$dir")
+  fi
+done
+
 # Main script logic here
 echo "Script running with the following inputs:"
 echo "path: $*"
@@ -51,7 +65,7 @@ while IFS= read -r repodir; do
   len=${#repodir}
   if ((len > max_len)); then max_len=$len; fi
   repos+=("$repodir")
-done < <(fd -H -t d '^\.git$' "$@" | while IFS= read -r gitdir; do dirname "$gitdir"; done | sort -u)
+done < <(fd -H -t d '^\.git$' "${unique_dirs[@]}" | while IFS= read -r gitdir; do dirname "$gitdir"; done | sort -u)
 for repodir in "${repos[@]}"; do
   if [ -n "$(git -C "$repodir" status --porcelain)" ]; then
     status=$'\033[31mX\033[0m'
