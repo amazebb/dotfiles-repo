@@ -73,15 +73,22 @@ while IFS= read -r repodir; do
   if ((len > max_len)); then max_len=$len; fi
   repos+=("$repodir")
 done < <(fd -H -t d '^\.git$' "${unique_dirs[@]}" | while IFS= read -r gitdir; do dirname "$gitdir"; done | sort -u)
+
+changed=0
+ok=0
 for repodir in "${repos[@]}"; do
   if [ -n "$(git -C "$repodir" status --porcelain --untracked-files=$untracked)" ]; then
     status=$'\033[31mX\033[0m'
+    ((changed++))
     if [[ $verbose = true ]]; then
       echo -e "\nStatus for $repodir:"
       git -C "$repodir" status
     fi
   else
     status="OK"
+    ((ok++))
   fi
   printf "%-${max_len}s  %s\n" "$repodir" "$status"
 done
+
+echo "$changed repos have changes, $ok are OK"
