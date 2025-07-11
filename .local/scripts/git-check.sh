@@ -44,30 +44,19 @@ done
 echo "Script running with the following inputs:"
 echo "path: $*"
 
-for dir in "$@"; do
-  if [ ! -d "$dir" ]; then
-    echo "Error: '$dir' is not a directory" >&2
-    continue
+max_len=0
+declare -a repos=()
+while IFS= read -r repodir; do
+  if [ -z "$repodir" ]; then continue; fi
+  len=${#repodir}
+  if ((len > max_len)); then max_len=$len; fi
+  repos+=("$repodir")
+done < <(fd -H -t d '^\.git$' "$@" | while IFS= read -r gitdir; do dirname "$gitdir"; done | sort -u)
+for repodir in "${repos[@]}"; do
+  if [ -n "$(git -C "$repodir" status --porcelain)" ]; then
+    status=$'\033[31mX\033[0m'
+  else
+    status="OK"
   fi
-  max_len=0
-  declare -a repos=()
-  declare -A seen=()
-  while IFS= read -r gitdir; do
-    if [ -z "$gitdir" ]; then continue; fi
-    repodir=$(dirname "$gitdir")
-    if [[ -z ${seen[$repodir]} ]]; then
-      seen[$repodir]=1
-      len=${#repodir}
-      if ((len > max_len)); then max_len=$len; fi
-      repos+=("$repodir")
-    fi
-  done < <(fd -H -t d '^\.git$' "$dir")
-  for repodir in "${repos[@]}"; do
-    if [ -n "$(git -C "$repodir" status --porcelain)" ]; then
-      status=$'\033[31mX\033[0m'
-    else
-      status="OK"
-    fi
-    printf "%-${max_len}s  %s\n" "$repodir" "$status"
-  done
+  printf "%-${max_len}s  %s\n" "$repodir" "$status"
 done
