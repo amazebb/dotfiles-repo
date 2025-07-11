@@ -355,14 +355,13 @@ for i in "${!optional_args[@]}"; do
 done
 
 # Echo variable positionals if present
-if [[ -n $pos_name ]]; then
-  echo "echo \"${pos_name}: \$@\"" >>"$script_name"
+if [[ -n "$pos_name" ]]; then
+  echo "echo \"${pos_name}: \$*\"" >>"$script_name"
 fi
 
 # Finalize the script
 cat >>"$script_name" <<'EOF'
 
-# Add your script logic below
 EOF
 
 # Make the script executable
