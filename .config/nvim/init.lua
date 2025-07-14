@@ -69,4 +69,4 @@ vim.lsp.config('bashls', {
     },
 })
 
-vim.lsp.enable({ 'lua_ls', 'bashls', 'basedpyright', 'gopls', 'ruff', 'yamlls' })
+vim.lsp.enable({ 'lua_ls', 'bashls', 'basedpyright', 'gopls', 'ruff', 'yamlls', 'sourcekit' })
