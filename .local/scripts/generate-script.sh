@@ -47,21 +47,43 @@ usage() {
   exit 0
 }
 
-# Parse command-line options
-while getopts ":s:d:r:o:p:h" opt; do
-  case "$opt" in
-    h) usage ;;
-    s) shell="$OPTARG" ;;
-    d) script_desc="$OPTARG" ;;
-    r)
-      IFS='|' read -r arg desc <<<"$OPTARG"
-      # No validate_arg_name for required (can be words like 'input_file')
+# Parse command-line options manually to allow mixed positionals and options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h) usage ;;
+    -s)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -s requires an argument"
+        usage
+      fi
+      shell="$2"
+      shift
+      ;;
+    -d)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -d requires an argument"
+        usage
+      fi
+      script_desc="$2"
+      shift
+      ;;
+    -r)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -r requires an argument"
+        usage
+      fi
+      IFS='|' read -r arg desc <<<"$2"
       check_duplicate "$arg" "Required" "${required_args[@]}"
       required_args+=("$arg")
       required_desc+=("$desc")
+      shift
       ;;
-    o)
-      IFS='|' read -r arg internal desc default <<<"$OPTARG"
+    -o)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -o requires an argument"
+        usage
+      fi
+      IFS='|' read -r arg internal desc default <<<"$2"
       validate_arg_name "$arg"
       check_duplicate "$arg" "Optional" "${optional_args[@]}"
       optional_args+=("$arg")
@@ -69,28 +91,35 @@ while getopts ":s:d:r:o:p:h" opt; do
       optional_internal+=("$internal_upper")
       optional_desc+=("$desc")
       optional_defaults+=("$default")
+      shift
       ;;
-    p)
-      IFS='|' read -r pos_name pos_desc pos_min_temp <<<"$OPTARG"
+    -p)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -p requires an argument"
+        usage
+      fi
+      IFS='|' read -r pos_name pos_desc pos_min_temp <<<"$2"
       pos_min=${pos_min_temp:-0}
       if ! [[ $pos_min =~ ^[0-9]+$ ]]; then
         echo "Error: min for -p must be integer >=0."
         exit 1
       fi
+      shift
       ;;
-    ?)
-      echo "Error: Invalid option -$OPTARG"
+    -*)
+      echo "Error: Invalid option $1"
       usage
       ;;
+    *)
+      if [[ -n $script_name ]]; then
+        echo "Error: Multiple script names provided"
+        usage
+      fi
+      script_name="$1"
+      ;;
   esac
-done
-
-shift $((OPTIND - 1))
-
-script_name="${1:-}"
-if [[ -n $script_name ]]; then
   shift
-fi
+done
 
 # Validate script name
 validate_script_info() {
@@ -108,6 +137,11 @@ validate_script_info() {
 }
 
 validate_script_info
+
+# If no description, set a placeholder
+if [[ -z $script_desc ]]; then
+  script_desc="DESCRIPTION GOES HERE"
+fi
 
 # Extract basename for help message
 script_basename=$(basename "$script_name" .sh)
