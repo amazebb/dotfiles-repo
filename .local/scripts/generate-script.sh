@@ -24,7 +24,7 @@ check_duplicate() {
 # Default values
 shell="bash"
 script_name=""
-script_desc=""
+script_desc="DESCRIPTION GOES HERE"
 required_args=()
 required_desc=()
 optional_args=()
