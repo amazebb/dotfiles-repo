@@ -92,11 +92,11 @@ if [[ -n $script_name ]]; then
   shift
 fi
 
-# Validate script name and description
+# Validate script name
 validate_script_info() {
   if [[ -z $script_name ]]; then
     echo "Error: Script name is required."
-    exit 1
+    usage
   fi
   if [[ ! $script_name =~ \.sh$ ]]; then
     script_name="$script_name.sh"
@@ -107,75 +107,7 @@ validate_script_info() {
   fi
 }
 
-# Interactive mode if no arguments provided
-if [[ -z $script_name ]]; then
-  # Prompt for shell
-  read -r -p "Enter the shell to use (default: bash): " shell
-  shell=${shell:-bash}
-
-  # Prompt for script name
-  read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
-  # Prompt for script description
-  read -r -p "Enter a one-line explanation of what the script does (optional): " script_desc
-  validate_script_info
-
-  # Prompt for required positional inputs (fixed)
-  echo "Enter required positional inputs (one at a time)"
-  while true; do
-    read -r -p "Required input name (or Enter to finish): " arg
-    if [[ -z $arg ]]; then
-      break
-    fi
-    check_duplicate "$arg" "Required" "${required_args[@]}"
-    read -r -p "Description for $arg: " desc
-    if [[ -z $desc ]]; then
-      echo "Error: Description cannot be empty."
-      exit 1
-    fi
-    required_args+=("$arg")
-    required_desc+=("$desc")
-  done
-
-  # Prompt for variable positional
-  read -r -p "Use variable positional args? (y/n): " use_var
-  if [[ $use_var == "y" ]]; then
-    read -r -p "Variable positional name (e.g., dirs): " pos_name
-    read -r -p "Description for ${pos_name}: " pos_desc
-    read -r -p "Minimum count (default 0): " pos_min
-    pos_min=${pos_min:-0}
-    if ! [[ $pos_min =~ ^[0-9]+$ ]]; then
-      echo "Error: min must be integer >=0."
-      exit 1
-    fi
-  fi
-
-  # Prompt for optional arguments
-  echo "Enter optional arguments (single letters, one at a time). Press Enter without input to finish."
-  while true; do
-    read -r -p "Optional argument letter (or Enter to finish): " arg
-    if [[ -z $arg ]]; then
-      break
-    fi
-    validate_arg_name "$arg"
-    check_duplicate "$arg" "Optional" "${optional_args[@]}"
-    read -r -p "Internal variable name for -$arg (Enter to use '$arg'): " internal
-    if [[ -z $internal ]]; then
-      internal="$arg"
-    fi
-    read -r -p "Description for -$arg: " desc
-    if [[ -z $desc ]]; then
-      echo "Error: Description cannot be empty."
-      exit 1
-    fi
-    read -r -p "Default value for -$arg (or Enter for none): " default
-    optional_args+=("$arg")
-    optional_internal+=("${internal^^}")
-    optional_desc+=("$desc")
-    optional_defaults+=("$default")
-  done
-else
-  validate_script_info
-fi
+validate_script_info
 
 # Extract basename for help message
 script_basename=$(basename "$script_name" .sh)
