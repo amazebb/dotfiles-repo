@@ -37,10 +37,9 @@ pos_min=0
 
 # Usage function
 usage() {
-  echo "Usage: $(basename "$0") [-s shell] -n script_name -d description [-r required_arg|desc] [-o opt_arg|internal|desc|default] [-p pos_name|desc|min]"
+  echo "Usage: $(basename "$0") [-s shell | -d description] script_name [-r required_arg|desc] [-o opt_arg|internal|desc|default] [-p pos_name|desc|min]"
   echo "  -s: Shell to use (default: bash)"
-  echo "  -n: Script name (e.g., myscript.sh)"
-  echo "  -d: One-line script description"
+  echo "  -d: One-line script description (optional)"
   echo "  -r: Required positional input (format: name|desc); fixed count"
   echo "  -o: Optional argument (format: letter|internal|desc|default)"
   echo "  -p: Variable positional args (format: name|desc|min); min optional (default 0, integer)"
@@ -49,11 +48,10 @@ usage() {
 }
 
 # Parse command-line options
-while getopts ":s:n:d:r:o:p:h" opt; do
+while getopts ":s:d:r:o:p:h" opt; do
   case "$opt" in
     h) usage ;;
     s) shell="$OPTARG" ;;
-    n) script_name="$OPTARG" ;;
     d) script_desc="$OPTARG" ;;
     r)
       IFS='|' read -r arg desc <<<"$OPTARG"
@@ -87,10 +85,17 @@ while getopts ":s:n:d:r:o:p:h" opt; do
   esac
 done
 
+shift $((OPTIND - 1))
+
+script_name="${1:-}"
+if [[ -n $script_name ]]; then
+  shift
+fi
+
 # Validate script name and description
 validate_script_info() {
   if [[ -z $script_name ]]; then
-    echo "Error: Script name (-n) is required."
+    echo "Error: Script name is required."
     exit 1
   fi
   if [[ ! $script_name =~ \.sh$ ]]; then
@@ -100,14 +105,10 @@ validate_script_info() {
     echo "Error: File '$script_name' already exists."
     exit 1
   fi
-  if [[ -z $script_desc ]]; then
-    echo "Error: Script description (-d) is required."
-    exit 1
-  fi
 }
 
 # Interactive mode if no arguments provided
-if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#optional_args[@]} -eq 0 && -z $pos_name ]]; then
+if [[ -z $script_name ]]; then
   # Prompt for shell
   read -r -p "Enter the shell to use (default: bash): " shell
   shell=${shell:-bash}
@@ -115,7 +116,7 @@ if [[ -z $script_name && -z $script_desc && ${#required_args[@]} -eq 0 && ${#opt
   # Prompt for script name
   read -r -p "Enter the name of the script to create (e.g., myscript.sh): " script_name
   # Prompt for script description
-  read -r -p "Enter a one-line explanation of what the script does: " script_desc
+  read -r -p "Enter a one-line explanation of what the script does (optional): " script_desc
   validate_script_info
 
   # Prompt for required positional inputs (fixed)
