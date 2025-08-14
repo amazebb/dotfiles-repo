@@ -61,16 +61,17 @@ Also see [here](https://askubuntu.com/a/1316230)
 
 A collection of personal shell scripts in ~/.local/scripts
 
-Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
+[!HINT] Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
 ```
-```
+audioenc.sh         	#!/usr/bin/env bash      	Convert audio files
 check-scripts.sh    	#!/bin/bash              	Run shellcheck to identify script issues.
 compare-folders.sh  	#!/bin/bash              	Compare folders using diff command.
 data-backup.sh      	#!/bin/bash              	Backup to SPARSE image in iCloud.
 disk-useage.sh      	#!/bin/dash              	Analyze disk usage by folder size.
 fz.sh               	#!/opt/homebrew/bin/bash 	Search text interactively with ripgrep, fzf.
-generate-script.sh  	#!//usr/bin/env bash     	Generate shell script with inputs, options.
+generate-script.sh  	#!/usr/bin/env bash      	Generate shell script with inputs, options.
+git-check.sh        	#!/usr/bin/env bash      	Check Git respository status
 git-wrapper.sh      	#!/opt/homebrew/bin/bash 	Manage dotfiles with Git bare repo.
 gitea-cli.sh        	#!/bin/dash              	Manage Gitea: start, stop, status, logs.
 github-info.sh      	#!/usr/bin/env bash      	GitHub repo information
@@ -81,6 +82,7 @@ pre-rg.sh           	#!/usr/bin/env sh        	Pre-process PDFs, ZSDs for fz, ri
 print-ascii.sh      	#!/bin/bash              	Print ASCII codes for number range.
 print-colors.sh     	#!/bin/bash              	Show all 256 ANSI terminal colors.
 select-manpath.sh   	#!/bin/zsh               	Get MANPATH entries as array.
+```
 </details>
 
 <details>
