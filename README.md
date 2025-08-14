@@ -61,7 +61,7 @@ Also see [here](https://askubuntu.com/a/1316230)
 
 A collection of personal shell scripts in ~/.local/scripts
 
-!TIP
+[!TIP]
 
 Run `:r !~/.local/scripts/list-scripts.sh` in vim to refresh the list below.
 
