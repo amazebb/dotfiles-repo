@@ -2,7 +2,6 @@
 setup_prompt() {
   # Enable command substitution in prompt
   setopt PROMPT_SUBST
-
   betz_content_vcs=""
 
   prompt_segment() {
