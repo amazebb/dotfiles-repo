@@ -1,8 +1,8 @@
 # Setup the history
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
+HISTSIZE=100000
 # shellcheck disable=SC2034
-SAVEHIST=10000
+SAVEHIST=100000
 setopt APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
@@ -39,19 +39,19 @@ setup_prompt
 
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.7-tem
-
-# If we reinstall Gitea default to ~/.gitea-data
+# MATLAB JRE Setup
+# 1. Update the MATLAB_JAVA version below
+# 2. source ~/.zshrc
+# 3. Start MATLAB from terminal: /Applications/MATLAB_R2024b.app/bin/matlab
+# 4. Run jenv(getenv('MATLAB_JAVA')), close MATLAB and now can restart normally without terminal
+export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-
 export EDITOR="/opt/homebrew/bin/nvim"
-
-GEMINI_API_KEY=$(security find-generic-password -s gemini-api-key -w 2>/dev/null)
-export GEMINI_API_KEY
+# shellcheck disable=SC2155
+export GEMINI_API_KEY=$(security find-generic-password -s gemini-api-key -w 2>/dev/null)
 
 # PATH
 export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
@@ -75,7 +75,7 @@ bindkey '^h' fzf-man
 alias fzfman='fzf-man'
 # CTRL-T - Paste the selected files and directories onto the command-line
 # CTRL-R - Paste the selected command from history onto the command-line
-# ALT-C - cd into the selected directory
+# ALT-C  - cd into the selected directory
 
 # Create aliases without .sh for ~/.local/scripts/*.sh files
 create_aliases() {

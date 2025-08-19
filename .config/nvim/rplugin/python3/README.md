@@ -20,7 +20,7 @@ The `rplugin.vim` file should like the following for our single LLMChat python p
 
 
 " python3 plugins
-call remote#host#RegisterPlugin('python3', '/Users/x626f/.config/nvim/rplugin/python3/llm_chat.py', [
+call remote#host#RegisterPlugin('python3', '~/.config/nvim/rplugin/python3/llm_chat.py', [
       \ {'sync': v:true, 'name': 'LLMCreateChatBuffer', 'type': 'command', 'opts': {}},
       \ {'sync': v:true, 'name': 'LLMChatSend', 'type': 'command', 'opts': {}},
       \ {'sync': v:true, 'name': 'LLMSetModel', 'type': 'command', 'opts': {'nargs': '1'}},
