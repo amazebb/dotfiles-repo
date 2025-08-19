@@ -33,8 +33,7 @@ compdef git-wrapper.sh=git
 export LESSHISTFILE=-
 
 # Set zsh prompt
-# shellcheck source-path=SCRIPTDIR
-source "$HOME"/.local/scripts/zsh_prompt_setup.zsh
+source "$HOME"/.zsh_prompt.zsh
 setup_prompt
 
 # Tell MATLAB to use the MacOS Accelerate framework
