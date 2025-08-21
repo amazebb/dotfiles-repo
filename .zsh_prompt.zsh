@@ -106,12 +106,14 @@ setup_prompt() {
       g=$'\uE606' #   Hack Nerd Font Propo Regular
     else
       n=''
-      g=$'\uF3E2' #   Kitty we use Font Awesome 6 Brands
+      g=$'\uF3E2' #   Kitty we use Font Awesome
     fi
     if [[ -n "$VIRTUAL_ENV" ]]; then
       venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
       if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
         v="%{%F{blue}%}$t%f%{%K{blue}%}$g"
+      else
+        v="%{%F{magenta}%}$t%f%{%K{magenta}%}$g"
       fi
     fi
     RPS1="${n}${v} %(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
