@@ -1,8 +1,8 @@
 return {
-    'nvim-treesitter/nvim-treesitter',
+    "nvim-treesitter/nvim-treesitter",
     lazy = false,
-    branch = 'master',
-    build = ':TSUpdate',
+    branch = "master",
+    build = ":TSUpdate",
     opts = {
         highlight = {
             enable = true,

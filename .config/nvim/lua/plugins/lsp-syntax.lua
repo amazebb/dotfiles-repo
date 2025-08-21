@@ -1,17 +1,17 @@
 return {
     {
-        'vim-scripts/applescript.vim',
-        ft = 'applescript', -- Load only for AppleScript files
+        "vim-scripts/applescript.vim",
+        ft = "applescript", -- Load only for AppleScript files
     },
 
     {
-        'neovim/nvim-lspconfig',
+        "neovim/nvim-lspconfig",
         init = function()
-            vim.lsp.config('basedpyright', {
+            vim.lsp.config("basedpyright", {
                 settings = {
                     basedpyright = {
                         analysis = {
-                            typeCheckingMode = 'standard',
+                            typeCheckingMode = "standard",
                         },
 
                         -- Using Ruff's import organizer
@@ -19,11 +19,11 @@ return {
                     },
                 },
             })
-            vim.lsp.config('ruff', {
+            vim.lsp.config("ruff", {
                 capabilities = {
                     general = {
                         -- get rid of pesky encode warning when running :checkhealth lsp
-                        positionEncodings = { 'utf-16' },
+                        positionEncodings = { "utf-16" },
                     },
                 },
                 on_attach = function(client)
@@ -31,18 +31,18 @@ return {
                     client.server_capabilities.completionProvider = false
                 end,
             })
-            vim.lsp.config('lua_ls', {
+            vim.lsp.config("lua_ls", {
                 settings = {
                     Lua = {
                         runtime = {
                             -- Tell the language server which version of Lua you're using (most
                             -- likely LuaJIT in the case of Neovim)
-                            version = 'LuaJIT',
+                            version = "LuaJIT",
                             -- Tell the language server how to find Lua modules same way as Neovim
                             -- (see `:h lua-module-load`)
                             path = {
-                                'lua/?.lua',
-                                'lua/?/init.lua',
+                                "lua/?.lua",
+                                "lua/?/init.lua",
                             },
                         },
                         -- Make the server aware of Neovim runtime files
@@ -51,30 +51,30 @@ return {
                             library = {
                                 vim.env.VIMRUNTIME,
                                 -- Add Lazy managed plugins
-                                vim.fn.stdpath('data') .. '/lazy',
-                                '${3rd}/luv/library',
+                                vim.fn.stdpath("data") .. "/lazy",
+                                "${3rd}/luv/library",
                             },
                         },
                     },
                 },
             })
-            vim.lsp.config('bashls', {
-                root_markers = { '.git', '.sh' },
-                filetypes = { 'bash', 'sh', 'zsh' },
+            vim.lsp.config("bashls", {
+                root_markers = { ".git", ".sh" },
+                filetypes = { "bash", "sh", "zsh" },
                 settings = {
                     bashIde = {
                         -- Default upstream pattern is '**/*@(.sh|.inc|.bash|.command)'.
-                        globPattern = vim.env.GLOB_PATTERN or '*@(.sh|.inc|.bash|.command|.zsh)',
+                        globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command|.zsh)",
                     },
                 },
             })
         end,
     },
     {
-        '3rd/image.nvim',
+        "3rd/image.nvim",
         build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
         opts = {
-            processor = 'magick_cli',
+            processor = "magick_cli",
         },
     },
 }

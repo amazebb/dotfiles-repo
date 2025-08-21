@@ -10,5 +10,5 @@ binary-next-line = true
 
 [*.lua]
 indent_style = space
-quote_type = single
+quote_type = double
 

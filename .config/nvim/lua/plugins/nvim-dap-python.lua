@@ -1,6 +1,6 @@
 return {
-    'mfussenegger/nvim-dap-python',
+    "mfussenegger/nvim-dap-python",
     config = function()
-        require('dap-python').setup('uv')
+        require("dap-python").setup("uv")
     end,
 }
