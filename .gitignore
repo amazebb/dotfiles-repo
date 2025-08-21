@@ -7,11 +7,10 @@
 /.config/*
 !/.config/nvim
 !/.config/nvim/rplugin/python3
-#!/.config/nvim/lua/custom
 
 !/.virtualenvs
 /.virtualenvs/*
-!/.virtualenvs/nvim
+!/.virtualenvs/py-nvim
 
 !.gitignore
 !.gitignore_global
