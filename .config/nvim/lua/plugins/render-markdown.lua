@@ -17,6 +17,6 @@ return {
             top_pad = 0,
             bottom_pad = 0,
         },
+        file_types = { "markdown", "quarto", "codecompanion" },
     },
-    file_types = { "markdown", "quarto", "codecompanion" },
 }
