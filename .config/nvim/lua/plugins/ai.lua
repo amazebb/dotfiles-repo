@@ -70,50 +70,52 @@ return {
                 },
             },
             adapters = {
-                opts = {
-                    show_defaults = false,
+                http = {
+                    opts = {
+                        show_defaults = false,
+                    },
+                    mlx_lm = function()
+                        return require("codecompanion.adapters").extend("openai_compatible", {
+                            name = "mlx_lm",
+                            formatted_name = "MLX LM",
+                            env = {
+                                url = "http://localhost:8080", -- mlx-lm server endpoint
+                            },
+                            schema = {
+                                model = {
+                                    default = "mlx-community/Qwen3-4B-4bit", -- define llm model to be used
+                                    choices = {
+                                        "mlx-community/Qwen3-8B-4bit",
+                                        "mlx-community/Josiefied-Qwen3-1.7B-abliterated-v1-4bit",
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                    xai = function()
+                        return require("codecompanion.adapters").extend("xai", {
+                            env = {
+                                api_key = "cmd:security find-generic-password -s xai-api-key -w 2>/dev/null",
+                            },
+                            schema = {
+                                ---@type CodeCompanion.Schema
+                                model = {
+                                    order = 1,
+                                    mapping = "parameters",
+                                    type = "enum",
+                                    desc = "ID of the model to use",
+                                    default = "grok-3-beta",
+                                    choices = {
+                                        "grok-3-beta",
+                                        "grok-3-mini-beta",
+                                        "grok-3-fast-beta",
+                                        "grok-3-min-fast-beta",
+                                    },
+                                },
+                            },
+                        })
+                    end,
                 },
-                mlx_lm = function()
-                    return require("codecompanion.adapters").extend("openai_compatible", {
-                        name = "mlx_lm",
-                        formatted_name = "MLX LM",
-                        env = {
-                            url = "http://localhost:8080", -- mlx-lm server endpoint
-                        },
-                        schema = {
-                            model = {
-                                default = "mlx-community/Qwen3-4B-4bit", -- define llm model to be used
-                                choices = {
-                                    "mlx-community/Qwen3-8B-4bit",
-                                    "mlx-community/Josiefied-Qwen3-1.7B-abliterated-v1-4bit",
-                                },
-                            },
-                        },
-                    })
-                end,
-                xai = function()
-                    return require("codecompanion.adapters").extend("xai", {
-                        env = {
-                            api_key = "cmd:security find-generic-password -s xai-api-key -w 2>/dev/null",
-                        },
-                        schema = {
-                            ---@type CodeCompanion.Schema
-                            model = {
-                                order = 1,
-                                mapping = "parameters",
-                                type = "enum",
-                                desc = "ID of the model to use",
-                                default = "grok-3-beta",
-                                choices = {
-                                    "grok-3-beta",
-                                    "grok-3-mini-beta",
-                                    "grok-3-fast-beta",
-                                    "grok-3-min-fast-beta",
-                                },
-                            },
-                        },
-                    })
-                end,
             },
         },
     },
