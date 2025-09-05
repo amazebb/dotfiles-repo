@@ -29,3 +29,5 @@
 	s = status
 [difftool]
 	prompt = false
+[github]
+	user = x626f
