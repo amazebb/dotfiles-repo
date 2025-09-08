@@ -5,8 +5,17 @@
 # Feeds a string directly to a command's stdin
 # Equivalent to: echo "$(git config ...)" | IFS=',' read -r -a tracked_files
 # More efficient, avoids pipe/subshell
-GIT_BINARY="$(brew --prefix)/bin/git"
-IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$("$GIT_BINARY" config --global --get dotfiles.tracked-folders)"
+GIT_BINARY=$(command -v git) || {
+  echo "Error: Git not found" >&2
+  exit 1
+}
+
+tracked_folders=$("$GIT_BINARY" config --global --get dotfiles.tracked-folders)
+if [[ -z $tracked_folders ]]; then
+  DOTFILES_TRACKED_FOLDERS=()
+else
+  IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$tracked_folders"
+fi
 
 # Check if PWD is HOME or within DOTFILES_TRACKED_FOLDERS
 if [[ $PWD == "$HOME" ]]; then
