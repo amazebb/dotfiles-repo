@@ -23,6 +23,7 @@ alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --ver
 alias git='git-wrapper'
 alias gcv="git-wrapper commit -va"
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
+alias brewlist="brew leaves -r | xargs brew desc | sed 's/^\([^:]*\):/\1\t/' | column -t -s $'\t' | fzf"
 
 autoload -Uz compinit
 compinit
