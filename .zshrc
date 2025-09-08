@@ -48,8 +48,8 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="/opt/homebrew/bin/nvim"
 # shellcheck disable=SC2155
 export GEMINI_API_KEY=$(security find-generic-password -s gemini-api-key -w 2>/dev/null)
+export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
-# PATH
 export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"

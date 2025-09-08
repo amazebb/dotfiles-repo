@@ -5,7 +5,7 @@
 	required = true
 [init]
 	defaultBranch = master
-	defaultObjectFormat = sha256
+	defaultObjectFormat = sha1
 [credential]
 	helper = osxkeychain
 [core]
@@ -23,7 +23,7 @@
 	c = commit
 	cv = commit -v
 	cva = commit -va
-  co = checkout
+	co = checkout
 	d = diff
 	pom = push origin master
 	s = status
