@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/bash
+#!/usr/bin/env bash
 # Manage dotfiles with Git bare repo.
 
 # <<< is a here-string in Bash

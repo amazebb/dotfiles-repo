@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/usr/bin/env dash
 # Launch nnn with preview in tmux.
 
 # Block nesting of nnn in subshells
@@ -33,6 +33,7 @@ fi
 
 nnn -G -a -Pp "$@"
 
+# shellcheck source=/dev/null
 [ ! -f "$NNN_TMPFILE" ] || {
   . "$NNN_TMPFILE"
   rm -f -- "$NNN_TMPFILE" >/dev/null
