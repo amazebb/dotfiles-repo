@@ -6,7 +6,7 @@ GIT_BINARY=$(command -v git) || {
   exit 1
 }
 
-DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.git --work-tree=$HOME"
+DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 
 tracked_folders=$("$GIT_BINARY" config --global --get dotfiles.tracked-folders)
 if [[ -z $tracked_folders ]]; then
@@ -67,5 +67,6 @@ if [[ $is_tracked -eq 1 ]]; then
     exec $DOTFILES_GIT "$@"
   fi
 else
+
   exec "$GIT_BINARY" "$@"
 fi
