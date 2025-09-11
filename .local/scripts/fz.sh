@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/bash
+#!/usr/bin/env bash
 # Search text interactively with ripgrep, fzf.
 VERSION="1.0.0"
 
@@ -45,9 +45,26 @@ shift $((OPTIND - 1))
 
 PATTERN=$1
 
-# This is taken from https://junegunn.github.io/fzf/tips/ripgrep-integration/
 RELOAD="reload:rg $PRE_RG --column --line-number --no-heading --color=always --smart-case {q} || :"
-
+# dotgit="$HOME/.local/scripts/git-wrapper.sh"
+#
+# # Check if in dotfiles bare repo by inspecting git git-cmd output
+# if "$dotgit" git-cmd 2>/dev/null | grep -q "bin/git$"; then
+#   # Not in dotfiles repo, use standard ripgrep behavior
+#   RELOAD="reload:rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
+# else
+#   # Temporary file for storing file list
+#   TMP_FILE=$(mktemp)
+#
+#   # In dotfiles repo, use git ls-files with absolute paths
+#   "$dotgit" ls-files --cached --others --exclude-standard | while IFS= read -r line; do
+#     realpath "$HOME/$line"
+#   done >"$TMP_FILE"
+#
+#   # Modified reload command to use pre-generated file list
+#   RELOAD="reload:rg \$PRE_RG --column --line-number --no-heading --color=always --smart-case {q} \$(cat \$TMP_FILE) || :"
+# fi
+#
 # shellcheck disable=SC2016
 OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
             nvim {1} +{2}     # No selection. Open the current line in Vim.

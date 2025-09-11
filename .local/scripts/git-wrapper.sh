@@ -6,27 +6,37 @@ GIT_BINARY=$(command -v git) || {
   exit 1
 }
 
-DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
-
-tracked_folders=$("$GIT_BINARY" config --global --get dotfiles.tracked-folders)
-if [[ -z $tracked_folders ]]; then
+if ! tracked_folders=$("$GIT_BINARY" config --global --get dotfiles.tracked-folders 2>/dev/null); then
+  echo "Failed getting dotfiles.tracked-folders from .gitconfig" >&2
   DOTFILES_TRACKED_FOLDERS=()
 else
-  # <<< is a here-string in Bash
-  # Feeds a string directly to a command's stdin
-  # Equivalent to: echo "$(git config ...)" | IFS=',' read -r -a tracked_files
-  # More efficient, avoids pipe/subshell
   IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$tracked_folders"
 fi
 
+# Pre-resolve tracked folder paths with readlink -f
+resolved_folders=()
+for folder in "${DOTFILES_TRACKED_FOLDERS[@]}"; do
+  folder="${folder/#\~/$HOME}"
+  resolved_path=$(readlink -f "$folder" 2>/dev/null || echo "$folder")
+  if [[ -z "$resolved_path" ]]; then
+    echo "Warning: Failed to resolve path for $folder" >&2
+    continue
+  fi
+  if [[ ! -d "$resolved_path" ]]; then
+    echo "Warning: $resolved_path is not a directory" >&2
+    continue
+  fi
+  resolved_folders+=("$resolved_path")
+done
+
 # Check if PWD is HOME or within DOTFILES_TRACKED_FOLDERS
-if [[ $PWD == "$HOME" ]]; then
+pwd_resolved=$(readlink -f "$PWD" 2>/dev/null || echo "$PWD")
+if [[ $pwd_resolved == "$HOME" ]]; then
   is_tracked=1
 else
   is_tracked=0
-  for folder in "${DOTFILES_TRACKED_FOLDERS[@]}"; do
-    folder=${folder/#\~/$HOME}
-    if [[ $(realpath "$PWD") == $(realpath "$folder")* ]]; then
+  for folder in "${resolved_folders[@]}"; do
+    if [[ $pwd_resolved == $folder* ]]; then
       is_tracked=1
       break
     fi
@@ -46,6 +56,7 @@ if [[ $1 == "git-cmd" ]]; then
 fi
 
 if [[ $is_tracked -eq 1 ]]; then
+  DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
   if [[ $1 == "status" ]]; then
     if [[ $2 == "--porcelain" ]]; then
       $DOTFILES_GIT status --porcelain
@@ -53,7 +64,7 @@ if [[ $is_tracked -eq 1 ]]; then
     else
       $DOTFILES_GIT "$@"
       untracked=$($DOTFILES_GIT ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}")
-      if [[ -n $untracked ]]; then
+      if [[ -n "$untracked" ]]; then
         printf "\n%s\n%s\n" "Untracked files in tracked folders:" '(use "git add <file>..." to include in what will be committed)'
         echo -e "\033[31m"
         # shellcheck disable=SC2001
@@ -62,11 +73,10 @@ if [[ $is_tracked -eq 1 ]]; then
       fi
     fi
   elif [[ $1 == "clean" ]]; then
-    exec $DOTFILES_GIT clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
+    $DOTFILES_GIT clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
   else
-    exec $DOTFILES_GIT "$@"
+    $DOTFILES_GIT "$@"
   fi
 else
-
-  exec "$GIT_BINARY" "$@"
+  "$GIT_BINARY" "$@"
 fi
