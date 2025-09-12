@@ -6,7 +6,7 @@
 
 ## Setting up remote Python plugin
 
-Python plugins need to go into a folder rplugins/python3 that is on the runtimepath `~/.config/nvim/rplugin/python3`
+Python plugins need to go into a folder `rplugins/python3` that is on the runtimepath such as, `~/.config/nvim/rplugin/python3`
 
 Re-register the plugins by running
 
@@ -16,7 +16,7 @@ nvim
 :UpdateRemotePlugins
 ```
 
-The `rplugin.vim` file should like the following for our single LLMChat python plugin
+The `rplugin.vim` file should look like the following for our single LLMChat python plugin
 
 ```vim
 " perl plugins
