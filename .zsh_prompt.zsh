@@ -5,10 +5,10 @@ setup_prompt() {
   betz_content_vcs=""
 
   prompt_segment() {
-    # We need to wrap in %{ %} to ensure the %K{blue} is not intpereted as spaces
-    # If we dont it will counted towards the character length of the prompt,
-    # thus messing up the internal logic of zsh and not padding the RPS1 flusg
-    # to the right ahnd side of the terminal
+    # We need to wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
+    # If we don't it will counted towards the character length of the prompt,
+    # thus messing up the internal logic of zsh and not padding the RPS1 flush
+    # to the right hand side of the terminal
     k='%{%K{blue}%}'
     echo -n "$k%60<..<%~"
   }
