@@ -9,13 +9,12 @@
 !/.config/nvim/rplugin/python3
 
 !/.virtualenvs
-/.virtualenvs/*
-!/.virtualenvs/py-nvim
 
 !.gitignore
 !.gitignore_global
 !.gitconfig
 !.zshrc
+!.zsh_prompt.zsh
 !.editor_config
 !README.md
 
