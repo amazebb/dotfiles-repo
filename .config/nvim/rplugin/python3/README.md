@@ -1,3 +1,7 @@
+## Neovim remote plugins using Python
+
+!> [!WARNING] This code is experimental, does not work and not finished!! 
+
 ## Setting up remote Python plugin
 
 Python plugins need to go into a folder rplugins/python3 that is on the runtimepath `~/.config/nvim/rplugin/python3`
