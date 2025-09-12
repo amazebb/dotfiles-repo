@@ -18,7 +18,7 @@
 [diff]
 	tool = opendiff
 [dotfiles]
-	tracked-folders = ~/.local/scripts,~/.config/nvim
+	tracked-folders = ~/.local/scripts,~/.config/nvim,~/.config/kitty,~/.virtualenvs
 [alias]
 	c = commit
 	cv = commit -v
