@@ -1,6 +1,8 @@
 ## Neovim remote plugins using Python
 
-!> [!WARNING] This code is experimental, does not work and not finished!! 
+> [!WARNING] 
+> The actual python code is experimental, most does not work and not finished!! 
+> It was just a simple test of the pynvim interface
 
 ## Setting up remote Python plugin
 
