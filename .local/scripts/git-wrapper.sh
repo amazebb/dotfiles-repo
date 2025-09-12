@@ -78,5 +78,5 @@ if [[ $is_tracked -eq 1 ]]; then
     $DOTFILES_GIT "$@"
   fi
 else
-  "$GIT_BINARY" "$@"
+  $GIT_BINARY "$@"
 fi
