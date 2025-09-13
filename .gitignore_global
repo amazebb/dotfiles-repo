@@ -53,3 +53,5 @@ uv.lock
 .venv/
 .env
 *.swp
+lazy-lock.json
+
