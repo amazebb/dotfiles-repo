@@ -10,10 +10,3 @@
 
 !/.virtualenvs
 
-!.gitignore
-!.gitignore_global
-!.gitconfig
-!.zshrc
-!.zsh_prompt.zsh
-!.editor_config
-
