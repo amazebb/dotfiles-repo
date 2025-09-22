@@ -1,4 +1,4 @@
-# Setup the history
+## Setup the history
 # Configure history storage and size parameters
 HISTFILE=~/.zsh_history
 # Set maximum number of commands stored in memory for current session
@@ -16,6 +16,10 @@ setopt SHARE_HISTORY          # Share history across sessions
 unsetopt HIST_IGNORE_ALL_DUPS # Allow consecutive duplicates in history
 unsetopt HIST_IGNORE_SPACE    # Add commands starting with space to history
 
+# Prevent 'less' from saving command history
+# no trace of less interactions (e.g., when viewing man pages)
+export LESSHISTFILE=-
+
 # Setup history search using the up/down keys
 # Matches the characters from the beginning of the line
 # Bind Up arrow key (ANSI escape sequence) to search history backward for commands starting with current line prefix
@@ -23,7 +27,7 @@ bindkey "^[[A" history-beginning-search-backward
 # Bind Down arrow key (ANSI escape sequence) to search history forward for commands starting with current line prefix
 bindkey "^[[B" history-beginning-search-forward
 
-# Aliases
+## Aliases
 # Define file listing aliases using eza
 alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only and -f for files only
@@ -40,15 +44,12 @@ alias gcv="git-wrapper commit -va"
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 alias brewlist="brew leaves -r | xargs brew desc | sed 's/^\([^:]*\):/\1\t/' | column -t -s $'\t' | fzf"
 
-# Prevent 'less' from saving command history
-# no trace of less interactions (e.g., when viewing man pages)
-export LESSHISTFILE=-
-
 # Set zsh prompt
 # Source and initialize custom prompt configuration
 source "$HOME"/.zsh_prompt.zsh
 setup_prompt
 
+## Environment variables
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
 # MATLAB JRE Setup

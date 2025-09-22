@@ -19,5 +19,4 @@ vim.lsp.enable({
     "jdtls",
     "jsonls",
     "julials",
-    "ts_ls",
 })

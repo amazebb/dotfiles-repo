@@ -7,7 +7,7 @@ return {
     {
         "neovim/nvim-lspconfig",
         init = function()
-            vim.lsp.config("basedpyright", {
+            vim.lsp.config.basedpyright = {
                 settings = {
                     basedpyright = {
                         analysis = {
@@ -18,7 +18,7 @@ return {
                         disableOrganizeImports = true,
                     },
                 },
-            })
+            }
             vim.lsp.config("ruff", {
                 capabilities = {
                     general = {
@@ -31,7 +31,7 @@ return {
                     client.server_capabilities.completionProvider = false
                 end,
             })
-            vim.lsp.config("lua_ls", {
+            vim.lsp.config.lua_ls = {
                 settings = {
                     Lua = {
                         runtime = {
@@ -57,17 +57,11 @@ return {
                         },
                     },
                 },
-            })
-            vim.lsp.config("bashls", {
-                root_markers = { ".git", ".sh" },
+            }
+            vim.lsp.config.bashls = {
+                root_markers = { ".git", ".dotfiles" },
                 filetypes = { "bash", "sh", "zsh" },
-                settings = {
-                    bashIde = {
-                        -- Default upstream pattern is '**/*@(.sh|.inc|.bash|.command)'.
-                        globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command|.zsh)",
-                    },
-                },
-            })
+            }
         end,
     },
     {
