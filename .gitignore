@@ -7,5 +7,13 @@
 /.config/*
 !/.config/nvim
 !/.config/nvim/rplugin/python3
+!/.config/kitty/kitty.conf
 
 !/.virtualenvs
+
+!.zshrc
+!.zsh_prompt.zsh
+!.editorconfig
+!.gitconfig
+!.gitignore
+!.gitignore_global
