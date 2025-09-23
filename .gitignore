@@ -7,6 +7,8 @@
 /.config/*
 !/.config/nvim
 !/.config/nvim/rplugin/python3
+!/.config/kitty
+/.config/kitty/*
 !/.config/kitty/kitty.conf
 
 !/.virtualenvs
