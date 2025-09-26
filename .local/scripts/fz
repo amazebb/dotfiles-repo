@@ -28,10 +28,10 @@ PRE_RG="--pre ~/.local/scripts/pre-rg.sh --pre-glob '*.{pdf}'"
 # Parse optional arguments with getopts
 while getopts "hvr:" opt; do
   case "$opt" in
-    h) usage ;;
-    v) version ;;
-    r) PRE_RG="$PRE_RG $OPTARG" ;;
-    ?) usage ;;
+  h) usage ;;
+  v) version ;;
+  r) PRE_RG="$PRE_RG $OPTARG" ;;
+  ?) usage ;;
   esac
 done
 # Shift past the options
@@ -45,7 +45,7 @@ shift $((OPTIND - 1))
 
 PATTERN=$1
 
-dotgit="$HOME/.local/scripts/git-wrapper.sh"
+dotgit="$HOME/.local/scripts/git-wrapper"
 # Check if in dotfiles bare repo by inspecting git git-cmd output
 if "$dotgit" git-cmd 2>/dev/null | grep -q "bin/git$"; then
   # Not in dotfiles repo, use standard ripgrep behavior

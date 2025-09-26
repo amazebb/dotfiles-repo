@@ -59,7 +59,7 @@ return {
                                     ```diff
                                     %s
                                     ```]],
-                                    vim.fn.system("~/.local/scripts/git-wrapper.sh --no-pager diff --no-ext-diff -U0")
+                                    vim.fn.system("~/.local/scripts/git-wrapper --no-pager diff --no-ext-diff -U0")
                                 )
                             end,
                             opts = {

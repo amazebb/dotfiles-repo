@@ -54,7 +54,7 @@ setup_prompt() {
     betz_content_vcs=""
 
     # Get git command using git-wrapper.sh
-    local git_cmd=$($HOME/.local/scripts/git-wrapper.sh git-cmd)
+    local git_cmd=$($HOME/.local/scripts/git-wrapper git-cmd)
     if [[ -z $git_cmd ]]; then
       return
     fi
