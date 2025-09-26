@@ -28,17 +28,12 @@ alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-
 # Define Homebrew management aliases
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 
-# Define git wrapper aliases
+# Define git wrapper alias
 alias dg='git-wrapper'
 
 # Define editor and tool aliases
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 alias brewlist="brew leaves -r | xargs brew desc | sed 's/^\([^:]*\):/\1\t/' | column -t -s $'\t' | fzf"
-
-# Set zsh prompt
-# Source and initialize custom prompt configuration
-source "$HOME"/.zsh_prompt.zsh
-setup_prompt
 
 ## Environment variables
 # Tell MATLAB to use the MacOS Accelerate framework
@@ -76,10 +71,15 @@ source <(fzf --zsh)
 
 # Source fzf-man-widget script
 # shellcheck disable=SC1090
-source ~/.local/scripts/fzf-man.zsh
+source ~/.local/scripts/fzf-man
 
 # Bind Ctrl-H to launch the fzf-man widget
 bindkey '^h' fzf-man
+
+# Set zsh prompt
+# Source and initialize custom prompt configuration
+source "$HOME"/.zsh_prompt.zsh
+setup_prompt
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
