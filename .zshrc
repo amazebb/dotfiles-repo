@@ -93,18 +93,6 @@ alias fzfman='fzf-man'
 # CTRL-R - Paste the selected command from history onto the command-line
 # ALT-C  - cd into the selected directory
 
-# # Create aliases without .sh for ~/.local/scripts/*.sh files
-# # TODO Create alias free version in the future so it can be used in non-interactive shells, but this will do for now
-# # Define function to automatically create aliases for scripts in ~/.local/scripts/
-# create_aliases() {
-#   for script in ~/.local/scripts/*.sh; do
-#     base_name=$(basename "$script" .sh)
-#     # shellcheck disable=SC2139
-#     alias "$base_name"="$script"
-#   done
-# }
-# create_aliases
-
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
 export SDKMAN_DIR="$HOME/.sdkman"
