@@ -87,8 +87,6 @@ source ~/.local/scripts/fzf-man.zsh
 # Bind Ctrl-H to launch the fzf-man widget
 bindkey '^h' fzf-man
 
-# Alias to run fzf-man-widget function
-alias fzfman='fzf-man'
 # CTRL-T - Paste the selected files and directories onto the command-line
 # CTRL-R - Paste the selected command from history onto the command-line
 # ALT-C  - cd into the selected directory
