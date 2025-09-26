@@ -1,11 +1,8 @@
 ## Setup the history
-# Configure history storage and size parameters
-HISTFILE=~/.zsh_history
-# Set maximum number of commands stored in memory for current session
-HISTSIZE=100000
-# Set maximum number of commands saved to history file on disk
+HISTFILE=~/.zsh_history # Configure history storage and size parameters
+HISTSIZE=100000         # Set maximum number of commands stored in memory for current session
 # shellcheck disable=SC2034
-SAVEHIST=100000
+SAVEHIST=100000 # Set maximum number of commands saved to history file on disk
 
 # Configure history behavior options
 setopt APPEND_HISTORY         # Append history to file instead of overwriting
@@ -30,7 +27,7 @@ bindkey "^[[B" history-beginning-search-forward
 ## Aliases
 # Define file listing aliases using eza
 alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
-# Show only dot files and folders, add -D for folders only and -f for files only
+# Show only dot files and folders, add -D for folders only, and -f for files only
 alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 
 # Define Homebrew management aliases
@@ -38,7 +35,6 @@ alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --ver
 
 # Define git wrapper aliases
 alias dg='git-wrapper'
-alias gcv="git-wrapper commit -va"
 
 # Define editor and tool aliases
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
@@ -79,6 +75,9 @@ eval "$(zoxide init zsh)"
 # Set up fzf key bindings and fuzzy completion
 # shellcheck disable=SC1090
 source <(fzf --zsh)
+# CTRL-T - Paste the selected files and directories onto the command-line
+# CTRL-R - Paste the selected command from history onto the command-line
+# ALT-C  - cd into the selected directory
 
 # Source fzf-man-widget script
 # shellcheck disable=SC1090
@@ -86,10 +85,6 @@ source ~/.local/scripts/fzf-man.zsh
 
 # Bind Ctrl-H to launch the fzf-man widget
 bindkey '^h' fzf-man
-
-# CTRL-T - Paste the selected files and directories onto the command-line
-# CTRL-R - Paste the selected command from history onto the command-line
-# ALT-C  - cd into the selected directory
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
