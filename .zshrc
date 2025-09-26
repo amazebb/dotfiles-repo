@@ -25,10 +25,10 @@ alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos
 # Show only dot files and folders, add -D for folders only, and -f for files only
 alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 
-# Define Homebrew management aliases
+# Define Homebrew management
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
 
-# Define git wrapper alias
+# Define dotgit wrapper
 alias dg='git-wrapper'
 
 # Define editor and tool aliases
@@ -44,6 +44,7 @@ export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
 # 3. Start MATLAB from terminal: /Applications/MATLAB_R2024b.app/bin/matlab
 # 4. Run jenv(getenv('MATLAB_JAVA')), close MATLAB and now can restart normally without terminal
 export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
+
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="/opt/homebrew/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
@@ -72,9 +73,6 @@ source <(fzf --zsh)
 # Source fzf-man-widget script
 # shellcheck disable=SC1090
 source ~/.local/scripts/fzf-man
-
-# Bind Ctrl-H to launch the fzf-man widget
-bindkey '^h' fzf-man
 
 # Set zsh prompt
 # Source and initialize custom prompt configuration

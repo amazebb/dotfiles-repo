@@ -33,3 +33,6 @@ fzf-man() {
 
 # Register the widget
 zle -N fzf-man
+
+# Bind Ctrl-H to launch the fzf-man widget
+bindkey '^h' fzf-man
