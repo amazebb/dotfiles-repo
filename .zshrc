@@ -1,8 +1,9 @@
 ## Setup the history
+# shellcheck disable=SC2034
 HISTFILE=~/.zsh_history # Configure history storage and size parameters
 HISTSIZE=100000         # Set maximum number of commands stored in memory for current session
-# shellcheck disable=SC2034
-SAVEHIST=100000 # Set maximum number of commands saved to history file on disk
+SAVEHIST=100000         # Set maximum number of commands saved to history file on disk
+export LESSHISTFILE=-   # Prevent 'less' from saving command history (e.g., when viewing man pages)
 
 # Configure history behavior options
 setopt APPEND_HISTORY         # Append history to file instead of overwriting
@@ -13,12 +14,6 @@ setopt SHARE_HISTORY          # Share history across sessions
 unsetopt HIST_IGNORE_ALL_DUPS # Allow consecutive duplicates in history
 unsetopt HIST_IGNORE_SPACE    # Add commands starting with space to history
 
-# Prevent 'less' from saving command history
-# no trace of less interactions (e.g., when viewing man pages)
-export LESSHISTFILE=-
-
-# Setup history search using the up/down keys
-# Matches the characters from the beginning of the line
 # Bind Up arrow key (ANSI escape sequence) to search history backward for commands starting with current line prefix
 bindkey "^[[A" history-beginning-search-backward
 # Bind Down arrow key (ANSI escape sequence) to search history forward for commands starting with current line prefix
