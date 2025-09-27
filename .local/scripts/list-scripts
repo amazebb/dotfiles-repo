@@ -4,8 +4,8 @@
 # Directory to search for script
 DIR=${1:-~/.local/scripts}
 
-# Find all .sh files and process them
-find "$DIR" -type f -depth 1 -name "*.sh" | sort -k1 | while read -r script; do
+# Find all shell script files and process them
+find "$DIR" -type f -depth 1 | sort -k1 | while read -r script; do
   # Get the script name (basename removes the path)
   name=$(basename "$script")
 

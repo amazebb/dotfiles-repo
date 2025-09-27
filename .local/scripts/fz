@@ -23,7 +23,7 @@ version() {
   exit 0
 }
 
-PRE_RG="--pre ~/.local/scripts/pre-rg.sh --pre-glob '*.{pdf}'"
+PRE_RG="--pre ~/.local/scripts/pre-rg --pre-glob '*.{pdf}'"
 
 # Parse optional arguments with getopts
 while getopts "hvr:" opt; do
@@ -64,7 +64,7 @@ OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
 # shellcheck disable=SC2034
 BAT_OPTS="--theme=TwoDark --style=full --wrap=character --color=always --highlight-line {2}"
 # shellcheck disable=SC2016
-PREVIEW='case {1} in *.pdf) ~/.local/scripts/pre-rg.sh {1} | nl -ba -w1 -s" " | bat $BAT_OPTS ;; *) bat $BAT_OPTS {1} ;; esac'
+PREVIEW='case {1} in *.pdf) ~/.local/scripts/pre-rg {1} | nl -ba -w1 -s" " | bat $BAT_OPTS ;; *) bat $BAT_OPTS {1} ;; esac'
 
 # shellcheck disable=SC2016
 fzf --disabled --ansi --multi \

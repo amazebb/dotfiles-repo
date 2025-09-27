@@ -53,7 +53,7 @@ setup_prompt() {
     # Reset VCS content
     betz_content_vcs=""
 
-    # Get git command using git-wrapper.sh
+    # Get git command using git-wrapper
     local git_cmd=$($HOME/.local/scripts/git-wrapper git-cmd)
     if [[ -z $git_cmd ]]; then
       return

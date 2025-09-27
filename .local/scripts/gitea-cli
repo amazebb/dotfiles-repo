@@ -3,7 +3,7 @@
 
 # Help message
 show_help() {
-  script_name=$(basename "$0" .sh)
+  script_name=$(basename "$0")
   echo "Usage: $script_name [OPTION]"
   echo "Manage Gitea server operations."
   echo
@@ -62,24 +62,24 @@ fi
 
 # Process arguments
 case "$1" in
-  start)
-    start_gitea
-    ;;
-  stop)
-    stop_gitea
-    ;;
-  status)
-    status_gitea
-    ;;
-  log)
-    show_logs
-    ;;
-  -h | --help | -help)
-    show_help
-    ;;
-  *)
-    echo "Error: Unknown option '$1'"
-    show_help
-    exit 1
-    ;;
+start)
+  start_gitea
+  ;;
+stop)
+  stop_gitea
+  ;;
+status)
+  status_gitea
+  ;;
+log)
+  show_logs
+  ;;
+-h | --help | -help)
+  show_help
+  ;;
+*)
+  echo "Error: Unknown option '$1'"
+  show_help
+  exit 1
+  ;;
 esac

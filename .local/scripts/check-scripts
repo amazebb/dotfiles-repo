@@ -5,7 +5,7 @@
 usage() {
   echo "Usage: $(basename "$0") [directory] [options]"
   echo "Arguments:"
-  echo "  directory  Directory to search for .sh scripts (default: ~/.local/scripts)"
+  echo "  directory  Directory to search for shell scripts (default: ~/.local/scripts)"
   echo "Options:"
   echo "  -h    Display this help message"
   echo "  -v    Verbose mode, show full shellcheck output"
@@ -20,10 +20,10 @@ VERBOSE=false
 # Parse options with getopts
 while getopts "hvd:" opt; do
   case "$opt" in
-    d) MAXDEPTH="$OPTARG" ;;
-    v) VERBOSE=true ;;
-    h) usage ;;
-    ?) usage ;;
+  d) MAXDEPTH="$OPTARG" ;;
+  v) VERBOSE=true ;;
+  h) usage ;;
+  ?) usage ;;
   esac
 done
 
@@ -66,7 +66,7 @@ while IFS= read -r -d '' file; do
   if [ "$basename_length" -gt "$max_basename_length" ]; then
     max_basename_length=$basename_length
   fi
-done < <(find "$DIR" -type f -name "*.sh" ${MAXDEPTH:+-maxdepth "$MAXDEPTH"} -print0)
+done < <(find "$DIR" -type f ${MAXDEPTH:+-maxdepth "$MAXDEPTH"} -print0)
 
 # Add some padding for safety (e.g., +2 for extra space)
 pad=$((max_basename_length + 2))

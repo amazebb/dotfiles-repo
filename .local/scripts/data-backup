@@ -36,11 +36,11 @@ FOLDERS=()
 # Parse options with getopts
 while getopts "hvs:m:" opt; do
   case "$opt" in
-    h) usage ;;
-    v) version ;;
-    s) SPARSE_BUNDLE="$OPTARG" ;;
-    m) MOUNT_POINT="$OPTARG" ;;
-    ?) usage ;;
+  h) usage ;;
+  v) version ;;
+  s) SPARSE_BUNDLE="$OPTARG" ;;
+  m) MOUNT_POINT="$OPTARG" ;;
+  ?) usage ;;
   esac
 done
 
@@ -96,7 +96,7 @@ else
   fi
 fi
 
-if ! ~/.local/scripts/gitea-cli.sh stop; then
+if ! ~/.local/scripts/gitea-cli stop; then
   echo "Error: Failed to stop Gitea"
   hdiutil detach "$MOUNT_POINT"
   exit 1
@@ -140,7 +140,7 @@ if ! hdiutil detach "$MOUNT_POINT"; then
   exit 1
 fi
 
-if ! ~/.local/scripts/gitea-cli.sh start; then
+if ! ~/.local/scripts/gitea-cli start; then
   echo "Error: Backup succesfull but failed to start Gitea"
   exit 1
 fi

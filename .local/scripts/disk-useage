@@ -13,7 +13,7 @@ recurse=0                      # Default: no recursive adjustment
 
 # Help function
 show_help() {
-  script_name=$(basename "$0" .sh)
+  script_name=$(basename "$0")
   echo "Usage: $script_name [path1 path2 ...] [-e exclude1 exclude2 ...] [-d display_depth] [-D depth] [-a] [-v] [-h]"
   echo "Summarizes disk usage for directories with configurable options"
   echo "Options:"
@@ -44,41 +44,41 @@ done
 # Parse options
 while [ $# -gt 0 ]; do
   case "$1" in
-    -e)
+  -e)
+    shift
+    excludes=""
+    while [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; do
+      excludes="$excludes --exclude=$1"
       shift
-      excludes=""
-      while [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; do
-        excludes="$excludes --exclude=$1"
-        shift
-      done
-      ;;
-    -d)
-      display_depth="$2"
-      shift 2
-      ;;
-    -D)
-      depth="$2"
-      shift 2
-      ;;
-    -a)
-      apparent_size="--apparent-size"
-      shift
-      ;;
-    -v)
-      verbose=1
-      shift
-      ;;
-    -r)
-      recurse=1
-      shift
-      ;;
-    -h | -help | --help)
-      show_help
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
+    done
+    ;;
+  -d)
+    display_depth="$2"
+    shift 2
+    ;;
+  -D)
+    depth="$2"
+    shift 2
+    ;;
+  -a)
+    apparent_size="--apparent-size"
+    shift
+    ;;
+  -v)
+    verbose=1
+    shift
+    ;;
+  -r)
+    recurse=1
+    shift
+    ;;
+  -h | -help | --help)
+    show_help
+    ;;
+  *)
+    echo "Unknown option: $1"
+    exit 1
+    ;;
   esac
 done
 
