@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Backup to SPARSE image in iCloud.
 
 # Version

@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/usr/bin/env dash
 # List scripts with descriptions in ~/.local/scripts.
 
 # Directory to search for script

@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/usr/bin/env dash
 # Analyze disk usage by folder size.
 # Usage: disk-usage [path1 path2 ...] [-e exclude1 exclude2 ...] [-d display_depth] [-D depth] [-a] [-v] [-r] [-h]
 

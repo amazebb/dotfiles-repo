@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Show all 256 ANSI terminal colors.
 
 # Get terminal dimensions

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Interactive man page/tldr searcher with fzf, bat, and key bindings
 
 fzf-man() {

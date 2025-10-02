@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Get MANPATH entries as array.
 manpath_entries=($(manpath | tr ':' '\n'))
 

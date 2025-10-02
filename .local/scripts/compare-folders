@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Compare folders using diff command.
 
 if [ $# -lt 2 ]; then
@@ -22,21 +22,21 @@ COLOR_DIFF=false
 shift 2
 while getopts "f:wsuc" opt; do
   case $opt in
-    f) FILTER="$OPTARG" ;;
-    w) IGNORE_WHITESPACE=true ;;
-    s)
-      SHOW_DIFF=true
-      DIFF_FORMAT="-y"
-      ;;
-    u)
-      SHOW_DIFF=true
-      DIFF_FORMAT="-u"
-      ;;
-    c) COLOR_DIFF=true ;;
-    ?)
-      echo "Invalid option"
-      exit 1
-      ;;
+  f) FILTER="$OPTARG" ;;
+  w) IGNORE_WHITESPACE=true ;;
+  s)
+    SHOW_DIFF=true
+    DIFF_FORMAT="-y"
+    ;;
+  u)
+    SHOW_DIFF=true
+    DIFF_FORMAT="-u"
+    ;;
+  c) COLOR_DIFF=true ;;
+  ?)
+    echo "Invalid option"
+    exit 1
+    ;;
   esac
 done
 
