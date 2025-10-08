@@ -49,8 +49,8 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="/opt/homebrew/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
-# Allow Ctrl-R/history multi select using fzf
-export FZF_CTRL_R_OPTS="--multi"
+# Bind ? key for toggling the preview window, useful for long commands that dont fit on screen
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 
 # Configure PATH environment variable
 # Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
