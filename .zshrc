@@ -35,6 +35,10 @@ alias dg='git-wrapper'
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 alias brewlist="brew leaves -r | xargs brew desc | sed 's/^\([^:]*\):/\1\t/' | column -t -s $'\t' | fzf"
 
+# Copies Apple Notes while retaining newline which would otherwise be copied over as <2028>
+# (U+2028) is the Unicode Line Separator
+alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
+
 ## Environment variables
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
@@ -50,7 +54,7 @@ export EDITOR="/opt/homebrew/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
 # Bind ? key for toggling the preview window, useful for long commands that dont fit on screen
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
 
 # Configure PATH environment variable
 # Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
