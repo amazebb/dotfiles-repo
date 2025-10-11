@@ -6,6 +6,7 @@ SAVEHIST=100000         # Set maximum number of commands saved to history file o
 export LESSHISTFILE=-   # Prevent 'less' from saving command history (e.g., when viewing man pages)
 
 # Configure history behavior options
+setopt EXTENDED_HISTORY       # Log with Unix timestamps
 setopt APPEND_HISTORY         # Append history to file instead of overwriting
 setopt HIST_EXPIRE_DUPS_FIRST # Remove duplicates from history first when trimming
 setopt HIST_IGNORE_DUPS       # Don't add duplicate commands to history
