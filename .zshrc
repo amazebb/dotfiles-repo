@@ -28,13 +28,13 @@ alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-
 
 # Define Homebrew management
 alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
+alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 
 # Define dotfiles git wrapper
 alias dg='git-wrapper'
 
 # Define editor and tool aliases
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
-alias brewlist="brew leaves -r | xargs brew desc | sed 's/^\([^:]*\):/\1\t/' | column -t -s $'\t' | fzf"
 
 # Copies Apple Notes while retaining newline which would otherwise be copied over as <2028>
 # (U+2028) is the Unicode Line Separator
