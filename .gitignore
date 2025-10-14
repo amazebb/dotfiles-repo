@@ -10,6 +10,7 @@
 !/.config/kitty
 /.config/kitty/*
 !/.config/kitty/kitty.conf
+!/.config/homebrew
 
 !/.virtualenvs
 
