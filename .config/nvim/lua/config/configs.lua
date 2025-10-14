@@ -12,6 +12,7 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.updatetime = 500
 vim.o.signcolumn = "auto"
+vim.o.undofile = true
 
 vim.filetype.add({
     extension = {
