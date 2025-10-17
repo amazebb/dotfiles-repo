@@ -44,7 +44,7 @@ return {
                 log_level = "DEBUG",
             },
             prompt_library = {
-                ["commit message"] = {
+                ["Create Commit Message - also works with dotfiles"] = {
                     strategy = "chat",
                     description = "Generate a commit message based on the current git diff",
                     opts = {
