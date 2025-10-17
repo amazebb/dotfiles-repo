@@ -28,12 +28,15 @@ return {
             strategies = {
                 chat = {
                     adapter = "xai",
+                    model = "grok-4-fast-reasoning",
                 },
                 inline = {
                     adapter = "xai",
+                    model = "grok-4-fast-non-reasoning",
                 },
                 cmd = {
                     adapter = "xai",
+                    model = "grok-code-fast-1",
                 },
             },
             opts = {
@@ -109,9 +112,6 @@ return {
                                         "grok-code-fast-1",
                                         "grok-4-fast-reasoning",
                                         "grok-4-fast-non-reasoning",
-                                        "grok-3-mini",
-                                        "grok-3",
-                                        "grok-3-mini",
                                     },
                                 },
                             },
