@@ -55,7 +55,9 @@ return {
         },
         opts_extend = { "sources.default" },
     },
-
+    {
+        "junegunn/fzf.vim",
+    },
     {
         "ibhagwan/fzf-lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },

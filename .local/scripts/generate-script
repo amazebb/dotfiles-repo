@@ -9,11 +9,14 @@ escape_shell_string() {
   echo "$s"
 }
 
+RED=$'\033[31m'
+CL=$'\033[0m\n'
+
 # Function to validate argument names (restrict to single char, not 'h')
 validate_arg_name() {
   local arg_name="$1"
   if [[ ! $arg_name =~ ^[a-gi-z]$ ]]; then
-    echo "Error: Optional argument name '$arg_name' must be a single letter (not 'h')."
+    printf "%sError: Optional argument name '%s' must be a single letter (not 'h').%s" "$RED" "$arg_name" "$CL" 2>&1
     exit 1
   fi
 }
@@ -23,7 +26,7 @@ check_duplicate() {
   local arg="$1" type="$2" array=("${@:3}")
   for existing in "${array[@]}"; do
     if [[ $existing == "$arg" ]]; then
-      echo "Error: $type argument '$arg' already used."
+      printf "%sError: %s argument '%s' already used.%s" "$RED" "$type" "$arg" "$CL" 2>&1
       exit 1
     fi
   done
@@ -64,7 +67,7 @@ while [[ $# -gt 0 ]]; do
   -h) usage ;;
   -s)
     if [[ $# -lt 2 ]]; then
-      echo "Error: -s requires an argument"
+      printf "%sError: -s requires and argumen.%s" "$RED" "$CL" 2>&1
       usage
     fi
     shell="$2"
@@ -72,7 +75,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -d)
     if [[ $# -lt 2 ]]; then
-      echo "Error: -d requires an argument"
+      printf "%sError: -d requires and argumen.%s" "$RED" "$CL" 2>&1
       usage
     fi
     script_desc="$2"
@@ -80,7 +83,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -r)
     if [[ $# -lt 2 ]]; then
-      echo "Error: -r requires an argument"
+      printf "%sError: -r requires and argumen.%s" "$RED" "$CL" 2>&1
       usage
     fi
     IFS='|' read -r arg desc <<<"$2"
@@ -91,7 +94,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -o)
     if [[ $# -lt 2 ]]; then
-      echo "Error: -o requires an argument"
+      printf "%sError: -o requires and argumen.%s" "$RED" "$CL" 2>&1
       usage
     fi
     IFS='|' read -r arg internal desc default <<<"$2"
@@ -106,28 +109,28 @@ while [[ $# -gt 0 ]]; do
     ;;
   -p)
     if [[ $# -lt 2 ]]; then
-      echo "Error: -p requires an argument"
+      printf "%sError: -p requires and argumen.%s" "$RED" "$CL" 2>&1
       usage
     fi
     if [[ -n $pos_name ]]; then
-      echo "Error: Only one -p allowed."
+      printf "%sError: Only one -p allowed.%s" "$RED" "$CL" 2>&1
       exit 1
     fi
     IFS='|' read -r pos_name pos_desc pos_min_temp <<<"$2"
     pos_min=${pos_min_temp:-0}
     if ! [[ $pos_min =~ ^[0-9]+$ ]]; then
-      echo "Error: min for -p must be integer >=0."
+      printf "%sError: min for -p must be integer >=0.%s" "$RED" "$CL" 2>&1
       exit 1
     fi
     shift
     ;;
   -*)
-    echo "Error: Invalid option $1"
+    printf "%sError: Invalid option %s.%s" "$RED" "$1" "$CL" 2>&1
     usage
     ;;
   *)
     if [[ -n $script_name ]]; then
-      echo "Error: Multiple script names provided"
+      printf "%sError: Multiple script names provided.%s" "$RED" "$CL" 2>&1
       usage
     fi
     script_name="$1"
@@ -139,14 +142,14 @@ done
 # Validate script name
 validate_script_info() {
   if [[ -z $script_name ]]; then
-    echo "Error: Script name is required."
+    printf "%sError: Script name is required.%s" "$RED" "$CL" 2>&1
     usage
   fi
   if [[ ! $script_name =~ \.sh$ ]]; then
     script_name="$script_name.sh"
   fi
   if [[ -f $script_name ]]; then
-    echo "Error: File '$script_name' already exists."
+    printf "%sError: File '%s' already exists.%s" "$RED" "$script_name" "$CL" 2>&1
     exit 1
   fi
 }
