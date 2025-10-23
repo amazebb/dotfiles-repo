@@ -40,6 +40,8 @@ alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 # (U+2028) is the Unicode Line Separator
 alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
 
+alias vv='NVIM_APPNAME=nvim-new $HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim'
+
 ## Environment variables
 # Tell MATLAB to use the MacOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
