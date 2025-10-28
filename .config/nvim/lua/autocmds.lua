@@ -1,16 +1,19 @@
-vim.api.nvim_create_autocmd("CmdlineEnter", {
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
+
+autocmd("CmdlineEnter", {
     callback = function()
         vim.o.cmdheight = 1
     end,
 })
 
-vim.api.nvim_create_autocmd("CmdlineLeave", {
+autocmd("CmdlineLeave", {
     callback = function()
         vim.o.cmdheight = 0
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+autocmd({ "BufWritePost" }, {
     pattern = { "*.lua" },
     callback = function()
         -- more commands if needed
@@ -18,7 +21,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd("BufDelete", {
+autocmd("BufDelete", {
     pattern = "*",
     callback = function(args)
         local buf = args.buf
@@ -43,7 +46,7 @@ vim.api.nvim_create_autocmd("BufDelete", {
     end,
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
+autocmd("LspAttach", {
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
         -- Enable auto-completion
@@ -53,40 +56,25 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         -- Enable auto-formatting on save
         if client and client:supports_method("textDocument/formatting") then
-            vim.api.nvim_create_autocmd("BufWritePre", {
+            autocmd("BufWritePre", {
                 buffer = ev.buf,
                 callback = function()
                     vim.lsp.buf.format({ async = false })
                 end,
             })
         end
-
-        -- if client.supports_method('textDocument/hover') then
-        --   vim.api.nvim_create_autocmd("CursorHold", {
-        --     buffer = ev.buf,
-        --     callback = function()
-        --       vim.lsp.buf.hover()
-        --     end,
-        --   })
-        -- end
     end,
 })
-
--- prevent from automatically selecting the first completion item in the popup menu
-vim.opt.completeopt:append("noselect")
 
 -- Help in a floating window
 local function show_help_popup(topic)
     vim.print(topic)
+    -- Clear jumplist to start fresh for help buffer
     vim.cmd("help " .. (topic or ""))
     local help_buf = vim.api.nvim_get_current_buf()
     -- Close original help window
     vim.cmd("wincmd c")
-    -- Clear jumplist for help buffer, this way C-o works correctly when jumping back
-    vim.api.nvim_buf_call(help_buf, function()
-        vim.cmd("clearjumps")
-    end)
-    vim.api.nvim_open_win(help_buf, true, {
+    local win_id = vim.api.nvim_open_win(help_buf, true, {
         relative = "win",
         width = math.floor(0.8 * vim.o.columns),
         height = math.floor(0.8 * vim.o.lines),
@@ -94,9 +82,37 @@ local function show_help_popup(topic)
         col = math.floor(0.1 * vim.o.columns),
         border = "rounded",
     })
+    -- Set help-specific buffer options
+    vim.bo[help_buf].filetype = "help"
+    vim.bo[help_buf].buftype = "help"
+    vim.bo[help_buf].readonly = true
+    vim.bo[help_buf].modifiable = false
     vim.bo[help_buf].bufhidden = "wipe"
-    vim.api.nvim_buf_set_keymap(help_buf, "n", "q", ":q<cr>", { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(help_buf, "n", "<Esc>", ":q<cr>", { noremap = true, silent = true })
+
+    -- Set window-specific options to mimic help window
+    vim.wo[win_id].number = false
+    vim.wo[win_id].relativenumber = false
+    vim.wo[win_id].cursorline = false
+    vim.wo[win_id].signcolumn = "no"
+    vim.wo[win_id].wrap = true
+    vim.wo[win_id].conceallevel = 2
+    vim.wo[win_id].colorcolumn = ""
+
+    -- Set keymaps
+    local function set_keymaps()
+        local keymap = vim.api.nvim_buf_set_keymap
+        local opt = { noremap = true, silent = true }
+        keymap(help_buf, "n", "q", ":q<CR>", opt)
+        keymap(help_buf, "n", "<Esc>", ":q<CR>", opt)
+    end
+    set_keymaps() -- Initial keymap setup
+    -- Reapply keymaps on BufEnter for this buffer
+    vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+        buffer = help_buf,
+        callback = set_keymaps,
+        desc = "Reapply help popup keymaps",
+    })
+    vim.cmd("clearjumps")
 end
 
 vim.api.nvim_create_user_command("HelpPopup", function(args)
@@ -135,7 +151,7 @@ vim.api.nvim_create_user_command("TogglePythonWarnings", function(args)
     toggle_unknown_types(args.args)
 end, { nargs = "?", desc = "Toggle basedpyright Warnings", complete = completion_list })
 
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
     pattern = { "markdown", "quatro", "codecompanion", "applescript" },
     callback = function(args)
         -- render-markdown
@@ -219,7 +235,7 @@ function ResizeThreeBufferLayout()
 end
 
 -- Autocommand for resize
-vim.api.nvim_create_autocmd("VimResized", {
+autocmd("VimResized", {
     callback = ResizeThreeBufferLayout,
 })
 
@@ -268,7 +284,7 @@ local function create_floating_terminal()
     end
 
     -- Open selected file in new buffer when nnn exits
-    vim.api.nvim_create_autocmd("TermClose", {
+    autocmd("TermClose", {
         buffer = buf,
         callback = function()
             local output = vim.fn.getbufline(buf, 1, "$")
@@ -286,10 +302,10 @@ local function create_floating_terminal()
 end
 
 -- Autocommand group
-local augroup = vim.api.nvim_create_augroup("Nnn", { clear = true })
-vim.api.nvim_create_autocmd("User", {
+local augroupNnn = vim.api.nvim_create_augroup("Nnn", { clear = true })
+autocmd("User", {
     pattern = "Nnn",
-    group = augroup,
+    group = augroupNnn,
     callback = create_floating_terminal,
     desc = "Nnn file picker",
 })
@@ -333,3 +349,13 @@ vim.api.nvim_create_user_command("FormatAppleScript", function()
         print("Error formatting AppleScript: " .. err)
     end
 end, { desc = "Format AppleScript using osadecompile" })
+
+-- Highlight yanked text
+local highlight_group = augroup("YankHighlight", { clear = true })
+autocmd("TextYankPost", {
+    pattern = "*",
+    callback = function()
+        vim.highlight.on_yank({ timeout = 170 })
+    end,
+    group = highlight_group,
+})

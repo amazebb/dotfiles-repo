@@ -1,22 +1,5 @@
-require("config.configs")
-require("config.keymaps")
-require("config.autocmds")
-require("custom.llm_chat")
-require("config.lazy")
-
-vim.lsp.enable({
-    "lua_ls",
-    "bashls",
-    "basedpyright",
-    "gopls",
-    "ruff",
-    "yamlls",
-    "sourcekit",
-    "html",
-    "ts_ls",
-    "awk_ls",
-    "cssls",
-    "jdtls",
-    "jsonls",
-    "julials",
-})
+require("configs")
+require("keymaps")
+require("autocmds")
+require("plugins")
+require("lsp")
