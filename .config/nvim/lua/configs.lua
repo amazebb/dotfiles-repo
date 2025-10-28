@@ -38,7 +38,7 @@ vim.g.lsp_enable_list = {
     "yamlls",
 }
 vim.g.lsp_repo = "~/Code/GitHub/nvim-lspconfig"
-vim.g.lsp_config = "~/.config/nvim-new/lsp"
+vim.g.lsp_config = "~/.config/nvim/lsp"
 
 vim.filetype.add({
     extension = {

@@ -34,9 +34,9 @@ function M.create_popup(lines, highlights)
     local ns_id = vim.api.nvim_create_namespace("popup_highlights") -- Create namespace
     if highlights then
         for i, hl in ipairs(highlights) do
-            -- TODO we are only coloring the forst column because we know atm
+            -- TODO we are only coloring the first column because we know atm
             -- that we are using a single tick/x to highlight success/error
-            -- make this better for improved handling of highlights
+            -- Make this better for improved handling of highlights
             vim.hl.range(buf, ns_id, hl, { i - 1, 0 }, { i - 1, 1 }, {})
         end
     end
@@ -46,7 +46,7 @@ function M.create_popup(lines, highlights)
     vim.bo[buf].modifiable = false
 
     local width = math.max(unpack(vim.tbl_map(string.len, lines))) + 2
-    local height = #lines + 2
+    local height = #lines
     local win_id = vim.api.nvim_open_win(buf, true, {
         relative = "editor",
         width = math.min(width, math.floor(vim.o.columns * 0.8)),
@@ -55,6 +55,7 @@ function M.create_popup(lines, highlights)
         col = math.floor((vim.o.columns - width) / 2),
         style = "minimal",
         border = "rounded",
+        title = "LSP Config Sync",
     })
     vim.wo[win_id].number = false
     vim.wo[win_id].relativenumber = false

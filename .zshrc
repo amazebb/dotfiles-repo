@@ -1,9 +1,9 @@
 ## Setup the history
 # shellcheck disable=SC2034
-HISTFILE=~/.zsh_history # Configure history storage and size parameters
-HISTSIZE=100000         # Set maximum number of commands stored in memory for current session
-SAVEHIST=100000         # Set maximum number of commands saved to history file on disk
-export LESSHISTFILE=-   # Prevent 'less' from saving command history (e.g., when viewing man pages)
+HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
+HISTSIZE=100000             # Set maximum number of commands stored in memory for current session
+SAVEHIST=100000             # Set maximum number of commands saved to history file on disk
+export LESSHISTFILE=-       # Prevent 'less' from saving command history (e.g., when viewing man pages)
 
 # Configure history behavior options
 setopt EXTENDED_HISTORY       # Log with Unix timestamps
@@ -20,8 +20,19 @@ bindkey "^[[A" history-beginning-search-backward
 # Bind Down arrow key (ANSI escape sequence) to search history forward for commands starting with current line prefix
 bindkey "^[[B" history-beginning-search-forward
 
+# Configure PATH environment variable
+# Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
+export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$HOME/.juliaup/bin"
+export PATH="$PATH:$HOME/.local/scripts"
+export PATH="$PATH:$HOME/.nvim-nightly/nvim-macos-arm64/bin"
+
 ## Aliases
-# Define file listing aliases using eza
+# Define file listing alias using eza
 alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
 # Show only dot files and folders, add -D for folders only, and -f for files only
 alias ls-dot="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
@@ -33,8 +44,8 @@ alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/
 # Define dotfiles git wrapper
 alias dg='git-wrapper'
 
-# Define editor and tool aliases
-alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
+# Define nn for nvim nightly our default editor
+alias nn="\$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
 # Copies Apple Notes while retaining newline which would otherwise be copied
 # over as <2028>, (U+2028) is the Unicode Line Separator
@@ -52,21 +63,11 @@ export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 # After this step matlab can be started as a regualr applicatio
 
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-export EDITOR="/opt/homebrew/bin/nvim"
+export EDITOR="$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
 # Bind ? key for toggling the preview window, useful for long commands that dont fit on screen
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
-
-# Configure PATH environment variable
-# Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
-export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:$HOME/.juliaup/bin"
-export PATH="$PATH:$HOME/.local/scripts"
 
 # Setup for zoxide smarter 'cd'
 # Initialize zoxide directory navigation tool for zsh
@@ -81,11 +82,11 @@ source <(fzf --zsh)
 
 # Source fzf-man widget script to enable ^h binding for man pages
 # shellcheck disable=SC1090
-source ~/.local/scripts/fzf-man
+source "$HOME/.local/scripts/fzf-man"
 
 # Set zsh prompt
 # Source and initialize custom prompt configuration
-source "$HOME"/.zsh_prompt.zsh
+source "$HOME/.zsh_prompt.zsh"
 setup_prompt
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
