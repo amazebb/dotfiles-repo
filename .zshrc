@@ -36,11 +36,10 @@ alias dg='git-wrapper'
 # Define editor and tool aliases
 alias nn="~/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
-# Copies Apple Notes while retaining newline which would otherwise be copied over as <2028>
-# (U+2028) is the Unicode Line Separator
+# Copies Apple Notes while retaining newline which would otherwise be copied
+# over as <2028>, (U+2028) is the Unicode Line Separator
+# To use copy selection in Apple Notes, then run cpnotes in the terminal
 alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
-
-alias vv='NVIM_APPNAME=nvim-new $HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim'
 
 ## Environment variables
 # Tell MATLAB to use the MacOS Accelerate framework

@@ -10,7 +10,7 @@
 	helper = osxkeychain
 [core]
 	excludesfile = ~/.gitignore_global
-	editor = nvim
+	editor = ~/.nvim-nightly/nvim-macos-arm64/bin/nvim
 	pager = bat
 [user]
 	name = x626f
