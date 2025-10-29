@@ -1,7 +1,6 @@
 local opt = vim.opt
 
 opt.cmdheight = 0
--- opt.colorcolumn = "80"
 opt.completeopt = { "menuone", "popup", "noinsert" }
 opt.cursorline = true
 opt.expandtab = true
