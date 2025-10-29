@@ -1,5 +1,24 @@
--- All overrides of default nvim-lspconfig go here
-vim.lsp.config.bashls = {
+-- LSP related settings
+vim.g.lsp_enable_list = {
+    "awk_ls",
+    "basedpyright",
+    "bashls",
+    "cssls",
+    "gopls",
+    "html",
+    "jdtls",
+    "jsonls",
+    "julials",
+    "lua_ls",
+    "ruff",
+    "ts_ls",
+    "yamlls",
+}
+vim.g.lsp_repo = "~/Code/GitHub/nvim-lspconfig"
+vim.g.lsp_config = "~/.config/nvim/lsp"
+
+-- All overrides of default nvim-lspconfig go after here
+vim.lsp.config("bashls", {
     filetypes = { "bash", "sh", "zsh" },
     root_markers = { ".git", ".dotfiles" },
     settings = {
@@ -7,9 +26,9 @@ vim.lsp.config.bashls = {
             globPattern = "*@(.sh|.inc|.bash|.command|.zsh)",
         },
     },
-}
+})
 
-vim.lsp.config.ruff = {
+vim.lsp.config("ruff", {
     capabilities = {
         general = {
             -- get rid of pesky encode warning when running :checkhealth lsp
@@ -20,9 +39,9 @@ vim.lsp.config.ruff = {
         client.server_capabilities.hoverProvider = false
         client.server_capabilities.completionProvider = false
     end,
-}
+})
 
-vim.lsp.config.basedpyright = {
+vim.lsp.config("basedpyright", {
     settings = {
         basedpyright = {
             analysis = {
@@ -34,9 +53,9 @@ vim.lsp.config.basedpyright = {
             disableOrganizeImports = true,
         },
     },
-}
+})
 
-vim.lsp.config.lua_ls = {
+vim.lsp.config("lua_ls", {
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name
@@ -63,13 +82,13 @@ vim.lsp.config.lua_ls = {
             -- Make the server aware of Neovim runtime files
             workspace = {
                 checkThirdParty = false,
-                library = {
-                    vim.env.VIMRUNTIME,
-                    -- Depending on the usage, you might want to add additional paths
-                    -- here.
-                    -- '${3rd}/luv/library'
-                    -- '${3rd}/busted/library'
-                },
+                -- library = {
+                --     vim.env.VIMRUNTIME,
+                --     -- Depending on the usage, you might want to add additional paths
+                --     -- here.
+                --     -- '${3rd}/luv/library'
+                --     -- '${3rd}/busted/library'
+                -- },
                 -- Or pull in all of 'runtimepath'.
                 -- NOTE: this is a lot slower and will cause issues when working on
                 -- your own configuration.
@@ -77,13 +96,17 @@ vim.lsp.config.lua_ls = {
                 -- library = {
                 --   vim.api.nvim_get_runtime_file('', true),
                 -- }
+                -- The below library adds all plugins and de-dupes ~/.config files per the above GitHub
+                library = vim.tbl_filter(function(d)
+                    return not d:match(vim.fn.stdpath("config") .. "/?a?f?t?e?r?")
+                end, vim.api.nvim_get_runtime_file("", true)),
             },
         })
     end,
     settings = {
         Lua = {},
     },
-}
+})
 
 vim.lsp.enable(vim.g.lsp_enable_list)
 vim.diagnostic.config({ virtual_text = true })
