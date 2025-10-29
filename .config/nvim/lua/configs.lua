@@ -20,25 +20,6 @@ opt.winborder = "rounded"
 vim.cmd.filetype("plugin indent on")
 vim.g.python3_host_prog = "$HOME/.virtualenvs/py-nvim/.venv/bin/python3"
 
--- -- LSP related settings
--- vim.g.lsp_enable_list = {
---     "awk_ls",
---     "basedpyright",
---     "bashls",
---     "cssls",
---     "gopls",
---     "html",
---     "jdtls",
---     "jsonls",
---     "julials",
---     "lua_ls",
---     "ruff",
---     "ts_ls",
---     "yamlls",
--- }
--- vim.g.lsp_repo = "~/Code/GitHub/nvim-lspconfig"
--- vim.g.lsp_config = "~/.config/nvim/lsp"
-
 vim.filetype.add({
     extension = {
         scpt = "applescript",
