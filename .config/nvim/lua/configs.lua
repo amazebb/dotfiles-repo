@@ -1,21 +1,21 @@
 local opt = vim.opt
 
-opt.swapfile = false
-opt.shiftwidth = 4
-opt.softtabstop = 4
-opt.shiftround = true
-opt.expandtab = true
 opt.cmdheight = 0
-opt.winborder = "rounded"
 opt.colorcolumn = "80"
-opt.number = true
-opt.relativenumber = true
-opt.numberwidth = 2
-opt.cursorline = true
-opt.scrolloff = 8
-opt.updatetime = 500
-opt.signcolumn = "yes:1"
 opt.completeopt = { "menuone", "popup", "noinsert" }
+opt.cursorline = true
+opt.expandtab = true
+opt.number = true
+opt.numberwidth = 2
+opt.relativenumber = true
+opt.scrolloff = 8
+opt.shiftround = true
+opt.shiftwidth = 4
+opt.signcolumn = "yes:1"
+opt.softtabstop = 4
+opt.swapfile = false
+opt.updatetime = 500
+opt.winborder = "rounded"
 
 vim.cmd.filetype("plugin indent on")
 vim.g.python3_host_prog = "$HOME/.virtualenvs/py-nvim/.venv/bin/python3"
@@ -33,7 +33,6 @@ vim.g.lsp_enable_list = {
     "julials",
     "lua_ls",
     "ruff",
-    -- "sourcekit",
     "ts_ls",
     "yamlls",
 }

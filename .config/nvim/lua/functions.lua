@@ -19,10 +19,8 @@ function M.update_lspconfigs()
             error = vim.v.shell_error ~= 0 and result or nil,
         }
         table.insert(lines, results[i].success and "✔ " .. file or "✘ " .. file)
-        table.insert(highlights, results[i].success and "SuccessMsg" or "ErrorMsg")
+        table.insert(highlights, results[i].success and "OkMsg" or "ErrorMsg")
     end
-    vim.api.nvim_set_hl(0, "ErrorMsg", { fg = "#FF0000" })
-    vim.api.nvim_set_hl(0, "SuccessMsg", { fg = "#00FF00" })
     M.create_popup(lines, highlights)
     vim.fn.execute("cd " .. pwd)
 end
