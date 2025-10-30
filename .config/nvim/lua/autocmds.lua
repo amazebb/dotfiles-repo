@@ -131,7 +131,7 @@ local function toggle_unknown_types(value)
     local settings = client.config.settings
     if settings ~= nil then
         settings.basedpyright.analysis.typeCheckingMode = value == ""
-                and (settings.basedpyright.analysis.typeCheckingMode == "standard" and "recommended" or "standard")
+            and (settings.basedpyright.analysis.typeCheckingMode == "standard" and "recommended" or "standard")
             or value
     end
 
