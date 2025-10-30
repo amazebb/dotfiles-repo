@@ -1,7 +1,7 @@
 local opt = vim.opt
 
 opt.cmdheight = 0
-opt.completeopt = { "menuone", "popup", "noinsert" }
+opt.completeopt = { "menuone", "popup", "noinsert", "preview" }
 opt.cursorline = true
 opt.expandtab = true
 opt.number = true
