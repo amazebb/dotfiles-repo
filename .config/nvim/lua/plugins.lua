@@ -6,7 +6,6 @@ vim.pack.add({ {
 } })
 vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
 vim.pack.add({ "https://github.com/MeanderingProgrammer/render-markdown.nvim" })
-vim.pack.add({ "https://github.com/williamboman/mason.nvim" })
 vim.pack.add({
     { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 })
@@ -46,17 +45,6 @@ require("nvim-treesitter.configs").setup({
 require("render-markdown").setup({
     completions = { lsp = { enabled = true } },
     code = { sign = false },
-})
-
-require("mason").setup({
-    ui = {
-        icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗",
-        },
-        border = "rounded",
-    },
 })
 
 require("blink.cmp").setup({
