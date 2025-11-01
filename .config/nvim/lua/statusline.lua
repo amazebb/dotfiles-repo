@@ -1,11 +1,11 @@
 Statusline = {}
 
-vim.api.nvim_set_hl(0, 'User1', { fg = '#272729' })
-vim.api.nvim_set_hl(0, 'User2', { fg = '#00aa00' })
+-- vim.api.nvim_set_hl(0, 'User1', { fg = '#272729' })
+-- vim.api.nvim_set_hl(0, 'User2', { fg = '#272729' })
 vim.api.nvim_set_hl(0, 'User3', { fg = '#e9c994' })
 vim.api.nvim_set_hl(0, 'User4', { fg = '#d8a5c1' })
-vim.api.nvim_set_hl(0, 'User5', { fg = '#90dced' })
-vim.api.nvim_set_hl(0, 'User6', { fg = '#dd0000' })
+vim.api.nvim_set_hl(0, 'User5', { fg = '#0000ff' })
+vim.api.nvim_set_hl(0, 'User6', { fg = '#ff0000' })
 vim.api.nvim_set_hl(0, 'User7', { fg = '#ffff00' })
 
 -- Mode map: short → full name
@@ -51,17 +51,13 @@ local mode_map = {
 
 function Statusline.active(branch)
     local mode = vim.fn.mode()
-    local mode_name = mode_map[mode][1] or mode
+    local mode_name = "[" .. (mode_map[mode][1] or mode) .. "]"
     local hlUser = "%" .. (mode_map[mode][2] or "") .. "*"
     if mode == "t" then
-        return hlUser .. "[" .. mode_name .. "]%*"
+        return hlUser .. mode_name .. "%*"
     else
-        return hlUser .. " " .. mode_name .. "%* │" .. branch .. " │ %F %6*%m%* %=%y [%P %l:%c]"
+        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%y [%P %l:%c]"
     end
-end
-
-function Statusline.inactive()
-    return " %t"
 end
 
 local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
@@ -78,7 +74,9 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         local file_dir = vim.fn.expand("%:p:h")
         local branch =
             vim.fn.system("git-wrapper -C " .. file_dir .. " rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("\n", "")
-        if branch and branch ~= "" then branch = " " .. branch end
+        -- Enter UTF-8 symbols that are 5-digit hex code in Insert mode using: <C-r>=nr2char(0xf062c)
+        -- For regular 4-code such as e0a0, in insert mode use <C-v> u e0a0
+        if branch and branch ~= "" then branch = "[󰘬 " .. branch .. "]" end
         vim.opt_local.statusline = '%!v:lua.Statusline.active("' .. branch .. '")'
     end,
 })
@@ -87,6 +85,6 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = group,
     desc = "Deactivate statusline when unfocused",
     callback = function()
-        vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
+        vim.opt_local.statusline = "%t"
     end,
 })
