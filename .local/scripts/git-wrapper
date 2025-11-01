@@ -2,81 +2,117 @@
 # Manage dotfiles with Git bare repo.
 
 GIT_BINARY=$(command -v git) || {
-  echo "Error: Git not found" >&2
-  exit 1
+    echo "Error: Git not found" >&2
+    exit 1
 }
 
 if ! tracked_folders=$("$GIT_BINARY" config --global --get dotfiles.tracked-folders 2>/dev/null); then
-  echo "Failed getting dotfiles.tracked-folders from .gitconfig" >&2
-  DOTFILES_TRACKED_FOLDERS=()
+    echo "Failed getting dotfiles.tracked-folders from .gitconfig" >&2
+    DOTFILES_TRACKED_FOLDERS=()
 else
-  IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$tracked_folders"
+    IFS=',' read -r -a DOTFILES_TRACKED_FOLDERS <<<"$tracked_folders"
 fi
 
 # Pre-resolve tracked folder paths with readlink -f
 resolved_folders=()
 for folder in "${DOTFILES_TRACKED_FOLDERS[@]}"; do
-  folder="${folder/#\~/$HOME}"
-  resolved_path=$(readlink -f "$folder" 2>/dev/null || echo "$folder")
-  if [[ -z "$resolved_path" ]]; then
-    echo "Warning: Failed to resolve path for $folder" >&2
-    continue
-  fi
-  if [[ ! -d "$resolved_path" ]]; then
-    echo "Warning: $resolved_path is not a directory" >&2
-    continue
-  fi
-  resolved_folders+=("$resolved_path")
+    folder="${folder/#\~/$HOME}"
+    resolved_path=$(readlink -f "$folder" 2>/dev/null || echo "$folder")
+    if [[ -z "$resolved_path" ]]; then
+        echo "Warning: Failed to resolve path for $folder" >&2
+        continue
+    fi
+    if [[ ! -d "$resolved_path" ]]; then
+        echo "Warning: $resolved_path is not a directory" >&2
+        continue
+    fi
+    resolved_folders+=("$resolved_path")
 done
 
 # Check if PWD is HOME or within DOTFILES_TRACKED_FOLDERS
 pwd_resolved=$(readlink -f "$PWD" 2>/dev/null || echo "$PWD")
 if [[ $pwd_resolved == "$HOME" ]]; then
-  is_tracked=1
+    is_tracked=1
 else
-  is_tracked=0
-  for folder in "${resolved_folders[@]}"; do
-    if [[ $pwd_resolved == $folder* ]]; then
-      is_tracked=1
-      break
-    fi
-  done
+    is_tracked=0
+    for folder in "${resolved_folders[@]}"; do
+        if [[ $pwd_resolved == $folder* ]]; then
+            is_tracked=1
+            break
+        fi
+    done
 fi
 
 # Return whether git-wrapper or git binary is being used
 if [[ $1 == "git-cmd" ]]; then
-  if [[ $is_tracked -eq 1 ]]; then
-    echo "$HOME/.local/scripts/git-wrapper"
-  elif [[ $("$GIT_BINARY" rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
-    echo "$GIT_BINARY"
-  else
-    echo ""
-  fi
-  exit 0
+    if [[ $is_tracked -eq 1 ]]; then
+        echo "$HOME/.local/scripts/git-wrapper"
+    elif [[ $("$GIT_BINARY" rev-parse --is-inside-work-tree 2>/dev/null) == "true" ]]; then
+        echo "$GIT_BINARY"
+    else
+        echo ""
+    fi
+    exit 0
+fi
+
+if [[ $1 == "stline" ]]; then
+    if [[ $is_tracked -eq 1 ]]; then
+        GIT_CMD="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
+    else
+        GIT_CMD="$GIT_BINARY"
+    fi
+
+    # Get branch name
+    branch=$($GIT_CMD rev-parse --abbrev-ref HEAD 2>/dev/null)
+    if [[ $branch = "" ]]; then
+        exit 1
+    fi
+    # Check git status for changes
+    porcelain=$($GIT_CMD status --porcelain 2>/dev/null)
+
+    staged=0
+    untracked=0
+    unstaged=0
+    if [[ -n $porcelain ]]; then
+        staged=$(echo "$porcelain" | grep -c "^[MTADRC]")
+        unstaged=$(echo "$porcelain" | grep -c "^.[MTDRC]")
+        untracked=$(echo "$porcelain" | grep -c "^??")
+    fi
+    dirty=$((unstaged + staged + untracked))
+
+    # Build VCS string similar to p10k
+    statusline="$branch"
+    if [[ $dirty -gt 0 ]]; then
+        [[ $staged -gt 0 ]] && statusline="${statusline} +$staged"
+        [[ $unstaged -gt 0 ]] && statusline="${statusline} ~$unstaged"
+        [[ $untracked -gt 0 ]] && statusline="${statusline} ?$untracked"
+    fi
+    echo "$statusline"
+    exit 0
 fi
 
 if [[ $is_tracked -eq 1 ]]; then
-  DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
-  if [[ $1 == "status" ]]; then
-    if [[ $2 == "--porcelain" ]]; then
-      $DOTFILES_GIT status --porcelain
-      $DOTFILES_GIT ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}" | sed 's/^/?? /'
+    DOTFILES_GIT="$GIT_BINARY --git-dir=$HOME/.dotfiles --work-tree=$HOME"
+    if [[ $1 == "status" ]]; then
+        if [[ $2 == "--porcelain" ]]; then
+            $DOTFILES_GIT status --porcelain
+            # $DOTFILES_GIT ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}" | sed 's/^/?? /'
+        else
+            $DOTFILES_GIT "$@"
+            untracked=$($DOTFILES_GIT ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}")
+            if [[ -n "$untracked" ]]; then
+                printf "\n%s\n%s\n" "Untracked files in tracked folders:" '(use "git add <file>..." to include in what will be committed)'
+                echo -e "\033[31m"
+                # shellcheck disable=SC2001
+                echo "$untracked" | sed 's/^/\t/'
+                echo -e "\033[0m"
+            fi
+        fi
+    elif [[ $1 == "clean" ]]; then
+        $DOTFILES_GIT clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
     else
-      $DOTFILES_GIT "$@"
-      untracked=$($DOTFILES_GIT ls-files --others --exclude-standard "${DOTFILES_TRACKED_FOLDERS[@]}")
-      if [[ -n "$untracked" ]]; then
-        printf "\n%s\n%s\n" "Untracked files in tracked folders:" '(use "git add <file>..." to include in what will be committed)'
-        echo -e "\033[31m"
-        # shellcheck disable=SC2001
-        echo "$untracked" | sed 's/^/\t/'
-        echo -e "\033[0m"
-      fi
+        $DOTFILES_GIT "$@"
     fi
-  elif [[ $1 == "clean" ]]; then
-    $DOTFILES_GIT clean "$@" "${DOTFILES_TRACKED_FOLDERS[@]}"
-  else
-    $DOTFILES_GIT "$@"
-  fi
 else
-  $GIT_BINARY "$@"
+    $GIT_BINARY "$@"
 fi
