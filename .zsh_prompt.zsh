@@ -76,7 +76,7 @@ setup_prompt() {
             g=$'\uE606' #   Hack Nerd Font Propo Regular
         else
             n=''
-            g=$'\uF3E2' #   Kitty we use Font Awesome
+            g=$'\uE73C' #   Kitty we use Font Awesome
         fi
         if [[ -n "$VIRTUAL_ENV" ]]; then
             venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
