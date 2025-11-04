@@ -1,18 +1,16 @@
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
-vim.pack.add({ "https://github.com/nvim-tree/nvim-web-devicons" })
 vim.pack.add({ {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "master",
 } })
 vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
-vim.pack.add({ "https://github.com/MeanderingProgrammer/render-markdown.nvim" })
 vim.pack.add({
     { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 })
 
 -- Sort buffers alphabetically
 require("fzf-lua").setup({ buffers = { sort_lastused = false } })
-
+---@diagnostic disable: missing-field
 require("nvim-treesitter.configs").setup({
     ensure_installed = {
         "awk",
@@ -41,11 +39,7 @@ require("nvim-treesitter.configs").setup({
     },
     incremental_selection = { enable = true },
 })
-
-require("render-markdown").setup({
-    completions = { lsp = { enabled = true } },
-    code = { sign = false },
-})
+---@diagnostic enable: missing-field
 
 require("blink.cmp").setup({
     fuzzy = { implementation = "prefer_rust_with_warning" },
