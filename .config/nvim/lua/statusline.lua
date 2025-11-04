@@ -1,12 +1,10 @@
 Statusline = {}
 
--- vim.api.nvim_set_hl(0, 'User1', { fg = '#272729' })
--- vim.api.nvim_set_hl(0, 'User2', { fg = '#272729' })
 vim.api.nvim_set_hl(0, 'User3', { fg = '#e9c994' })
 vim.api.nvim_set_hl(0, 'User4', { fg = '#d8a5c1' })
-vim.api.nvim_set_hl(0, 'User5', { fg = '#0000ff' })
-vim.api.nvim_set_hl(0, 'User6', { fg = '#ff0000' })
-vim.api.nvim_set_hl(0, 'User7', { fg = '#ffff00' })
+vim.api.nvim_set_hl(0, 'User5', { fg = '#4673d0' })
+vim.api.nvim_set_hl(0, 'User6', { fg = '#db9172' })
+vim.api.nvim_set_hl(0, 'User7', { fg = '#db9172' })
 
 -- Mode map: short → full name
 local mode_map = {
@@ -76,7 +74,19 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
             vim.fn.system("git-wrapper -C " .. file_dir .. " rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("\n", "")
         -- Enter UTF-8 symbols that are 5-digit hex code in Insert mode using: <C-r>=nr2char(0xf062c)
         -- For regular 4-code such as e0a0, in insert mode use <C-v> u e0a0
-        if branch and branch ~= "" then branch = "[󰘬 " .. branch .. "]" end
+        if branch ~= "" then
+            local git_folder = "[ " ..
+                vim.trim(vim.fn.system("git-wrapper rev-parse --git-dir | sed \"s|^$HOME|~|\"")) .. "]"
+            branch = git_folder .. "[󰘬 " .. branch
+            local is_tracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
+                vim.fn.expand("%:p") .. " 2>/dev/null")
+            if is_tracked ~= "" then
+                branch = branch .. "] "
+            else
+                branch = branch .. "]%#CurSearch#󰡯 "
+            end
+        end
+
         vim.opt_local.statusline = '%!v:lua.Statusline.active("' .. branch .. '")'
     end,
 })
