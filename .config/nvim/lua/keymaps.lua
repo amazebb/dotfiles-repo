@@ -100,3 +100,9 @@ keymap("n", "<Leader>w", ":TogglePythonWarnings<CR>", { desc = "Toggle basedpyri
 -- Splitting windows
 keymap("n", "<Leader>_", "<cmd>vsplit<CR>", { silent = true })
 keymap("n", "<Leader>-", "<cmd>split<CR>", { silent = true })
+
+-- Launch Quicklook preview for current file, useful for previewing markdown
+vim.keymap.set('n', '<leader>m', function()
+    local file = vim.fn.expand('%:p')
+    vim.fn.system(string.format('qlmanage -p %s 2>/dev/null', vim.fn.shellescape(file)))
+end, { desc = 'QuickLook file preview)' })
