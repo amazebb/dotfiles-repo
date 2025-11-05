@@ -10,6 +10,7 @@ vim.pack.add({
 
 -- Sort buffers alphabetically
 require("fzf-lua").setup({ buffers = { sort_lastused = false } })
+
 ---@diagnostic disable: missing-field
 require("nvim-treesitter.configs").setup({
     ensure_installed = {
