@@ -18,16 +18,9 @@ keymap("n", "<Leader>p", vim.pack.update, { desc = "Check for Plugins" })
 local fun = require("functions")
 keymap("n", "<Leader>s", fun.update_lspconfigs, { desc = "Update LSP configs" })
 
--- Switch buffers
-keymap("n", "<C-n>", ":bnext<CR>", { desc = "Next Buffer" })
-keymap("n", "<C-p>", ":bprev<CR>", { desc = "Previous Buffer" })
-
 -- FzfLua
 keymap("n", "<Leader>b", ":FzfLua buffers<CR>", { desc = "Open buffers list using FzfLua", silent = true })
 keymap("n", "<Leader>f", ":FzfLua<CR>", { desc = "Open FzfLua", silent = true })
-
--- Codecompanion AI
-keymap("n", "<Leader>c", ":CodeCompanionChat Toggle<CR>", { desc = "CodeCompanionChat Toggle", silent = true })
 
 -- Enable Copy/Paste and Select All
 keymap({ "n", "v" }, "<C-c>", '"+y', { desc = "Copy to system clipboard", noremap = true, silent = true })
