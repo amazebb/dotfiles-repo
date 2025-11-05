@@ -36,7 +36,7 @@ end, { desc = "Terminal below right" })
 
 -- Commenting
 keymap({ "n", "v" }, "<Leader>/", "gc", { desc = "Toggle comment block", remap = true })
-keymap("n", "<Leader>jj", "gcc", { desc = "Toggle comment lines", remap = true })
+keymap("n", "<Leader>'", "gcc", { desc = "Toggle comment lines", remap = true })
 
 -- Close window
 keymap("n", "<C-q>", function()
