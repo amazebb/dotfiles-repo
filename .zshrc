@@ -47,6 +47,9 @@ alias dg='git-wrapper'
 # Define nn for nvim nightly our default editor
 alias nn="\$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 
+# Define n for our nnn script that starts in preview mode
+alias n='source ~/.local/scripts/nnn-split'
+
 # Copies Apple Notes while retaining newline which would otherwise be copied
 # over as <2028>, (U+2028) is the Unicode Line Separator
 # To use copy selection in Apple Notes, then run cpnotes in the terminal
