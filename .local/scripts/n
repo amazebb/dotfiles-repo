@@ -3,8 +3,8 @@
 
 # Block nesting of nnn in subshells
 [ "${NNNLVL:-0}" -eq 0 ] || {
-  echo "nnn is already running"
-  return
+    echo "nnn is already running"
+    return
 }
 
 # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
@@ -17,26 +17,26 @@ export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 NNN_FIFO="$(mktemp -t nnn.XXXXXX -u)"
 export NNN_FIFO
 (
-  umask 077
-  mkfifo "$NNN_FIFO"
+    umask 077
+    mkfifo "$NNN_FIFO"
 )
 
 export NNN_PLUG='p:preview-tui'
 
 # Use `tmux` split as preview
 if [ -e "${TMUX%%,*}" ]; then
-  # Preview command
-  preview_cmd="$HOME/.local/scripts/preview_cmd"
+    # Preview command
+    preview_cmd="$HOME/.local/scripts/nnn_preview_cmd"
 
-  tmux split-window -e "NNN_FIFO=$NNN_FIFO" -dh "$preview_cmd"
+    tmux split-window -e "NNN_FIFO=$NNN_FIFO" -dh "$preview_cmd"
 fi
 
 nnn -G -a -Pp "$@"
 
 # shellcheck source=/dev/null
 [ ! -f "$NNN_TMPFILE" ] || {
-  . "$NNN_TMPFILE"
-  rm -f -- "$NNN_TMPFILE" >/dev/null
+    . "$NNN_TMPFILE"
+    rm -f -- "$NNN_TMPFILE" >/dev/null
 }
 
 rm -f "$NNN_FIFO"
