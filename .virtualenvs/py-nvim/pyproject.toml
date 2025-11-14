@@ -7,5 +7,4 @@ requires-python = ">=3.13"
 dependencies = [
     "debugpy>=1.8.14",
     "neovim>=0.3.1",
-    "pylatexenc>=2.10",
 ]
