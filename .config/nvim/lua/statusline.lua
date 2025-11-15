@@ -49,12 +49,12 @@ local mode_map = {
 
 function Statusline.active(branch)
     local mode = vim.fn.mode()
-    local mode_name = "[" .. (mode_map[mode][1] or mode) .. "]"
+    local mode_name = " " .. (mode_map[mode][1] or mode) .. "│"
     local hlUser = "%" .. (mode_map[mode][2] or "") .. "*"
     if mode == "t" then
         return hlUser .. mode_name .. "%*"
     else
-        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%y [%P %l:%c]"
+        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%Y│%P %l:%c "
     end
 end
 
@@ -73,18 +73,18 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
         -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
         if branch ~= "" then
-            local git_folder = "[ " ..
-                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\"")) .. "]"
-            branch = git_folder .. "[󰘬 " .. branch
+            local git_folder = " " ..
+                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\"")) .. "│"
+            branch = git_folder .. "󰘬 " .. branch
 
             local empty = vim.fn.empty(vim.fn.bufname('%')) == 1
             if not empty then
                 local is_tracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
                     vim.fn.expand("%:p") .. " 2>/dev/null")
                 if is_tracked ~= "" then
-                    branch = branch .. "] "
+                    branch = branch .. "│ "
                 else
-                    branch = branch .. "]%#CurSearch#󰡯 "
+                    branch = branch .. "│%#CurSearch#󰡯 "
                 end
             else
                 branch = branch .. "]"
