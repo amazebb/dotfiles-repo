@@ -75,19 +75,16 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         if branch ~= "" then
             local git_folder = " " ..
                 vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\"")) .. "│"
-            branch = git_folder .. "󰘬 " .. branch
+            branch = git_folder .. "󰘬 " .. branch .. "│"
 
-            local empty = vim.fn.empty(vim.fn.bufname('%')) == 1
-            if not empty then
+            if not (vim.fn.empty(vim.fn.bufname('%')) == 1) then
                 local is_tracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
                     vim.fn.expand("%:p") .. " 2>/dev/null")
                 if is_tracked ~= "" then
-                    branch = branch .. "│ "
+                    branch = branch .. " "
                 else
-                    branch = branch .. "│%#CurSearch#󰡯 "
+                    branch = branch .. "%#CurSearch#󰡯 "
                 end
-            else
-                branch = branch .. "]"
             end
         end
         vim.opt_local.statusline = '%!v:lua.Statusline.active("' .. branch .. '")'
