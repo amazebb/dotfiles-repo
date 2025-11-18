@@ -1,97 +1,88 @@
-# shellcheck disable=SC2329
+# shellcheck disable=SC2329,SC2034
 # Function to set up custom zsh prompt with git status
 setup_prompt() {
     # Enable command substitution in prompt
     setopt PROMPT_SUBST
-    vcs_stline=""
+    GIT_STLINE=""
 
     prompt_segment() {
-        # We need to wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
-        # If we don't it will counted towards the character length of the prompt,
-        # thus messing up the internal logic of zsh and not padding the RPS1 flush
-        # to the right hand side of the terminal
-        # shellcheck disable=SC2329
-        k='%{%K{blue}%}'
-        echo -n "$k%60<..<%~"
+        # Wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
+        echo -n "%{%K{blue}%}%60<..<%~"
     }
 
     prompt_segment_tail() {
-        ra='\uE0B0' # 
-        g='\uE0A0'  # 
-        s='%{%F{blue}%}'$ra'%f'
+        RIGHT_ARROW='\uE0B0'
+        GIT_BRANCH_SYMBOL='\uE0A0'
+        COLORED_RIGHT_ARROW='%{%F{blue}%}'$RIGHT_ARROW'%f'
         # Prevent Mac Terminal.app brightening font color with no background
         # https://apple.stackexchange.com/questions/282911/
         # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
         # Setting background to an out of range value works, %k and %K{256} do not work
         # Not needed for Kitty
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            n='%{\e[48;5;256m%}'
+            RESET_BACKGROUND='%{\e[48;5;256m%}'
         else
-            n='%k'
+            RESET_BACKGROUND='%k'
         fi
-        if [[ -n ${vcs_stline} ]]; then
-            local branch="${vcs_stline%% *}"
-            local modifiers="${vcs_stline#$branch}"
-            if [[ ${modifiers} =~ "[+~?]" ]]; then
-                b='%{%K{yellow}%}'
-                f='%{%F{yellow}%}'
+        if [[ -n ${GIT_STLINE} ]]; then
+            if [[ ${GIT_STLINE} =~ [+~?] ]]; then
+                BG_COLOR='%{%K{yellow}%}'
+                FG_COLOR='%{%F{yellow}%}'
             else
-                b='%{%K{green}%}'
-                f='%{%F{green}%}'
+                BG_COLOR='%{%K{green}%}'
+                FG_COLOR='%{%F{green}%}'
             fi
-            echo -n "$b$s $g ${vcs_stline}$f $n$ra%f%k"
+            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BACKGROUND$RIGHT_ARROW%f "
         else
-            echo -n "$n$s%f%k"
+            echo -n "$RESET_BACKGROUND$COLORED_RIGHT_ARROW "
         fi
     }
 
     # Prompt segment for user@host without triangle
     user_host_segment() {
-        echo -n "%n@%m"
+        ENABLE_USER_HOST=0
+        if [[ ${ENABLE_USER_HOST} -eq 1 ]]; then
+            echo -n "%n@%m"
+        else
+            echo ""
+        fi
     }
 
     # Update Git status before each prompt
     precmd() {
         # Update the Git status line
-        vcs_stline=$(git-wrapper stline)
+        GIT_STLINE=$(git-wrapper stline)
     }
 
     # Build left prompt dynamically to include git status
     precmd_prompt() {
-        ENABLE_USER_HOST=0
-        local left_prompt=""
-        if [[ ${ENABLE_USER_HOST} -eq 1 ]]; then
-            left_prompt+=$(user_host_segment)
-        fi
+        left_prompt=$(user_host_segment)
         left_prompt+=$(prompt_segment)
         left_prompt+=$(prompt_segment_tail)
-        left_prompt+="%f "
         PS1="${left_prompt}"
     }
 
     # Update right prompt dynamically
     rprompt_segment_dynamic() {
-        t=$'\uE0B2' # 
-        v=""
+        LEFT_ARROW=$'\uE0B2'
+        PYTHON_SYMBOL=$'\uE606'
+        PYTHON_VENV_STATUS=""
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            n=$'%{\e[48;5;256m%}'
-            g=$'\uE606' #   Hack Nerd Font Propo Regular
+            RESET_BACKGROUND=$'%{\e[48;5;256m%}'
         else
-            n=''
-            g=$'\uE73C' #   Kitty we use Font Awesome
+            RESET_BACKGROUND=''
         fi
         if [[ -n "$VIRTUAL_ENV" ]]; then
-            venv_parent="${VIRTUAL_ENV%/*}" # Strip last folder (e.g., .venv)
+            venv_parent="${VIRTUAL_ENV%/*}"
             if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
-                v="%{%F{blue}%}$t%f%{%K{blue}%}$g"
+                PYTHON_VENV_STATUS="%{%F{blue}%}$LEFT_ARROW%f%{%K{blue}%}$PYTHON_SYMBOL"
             else
-                v="%{%F{magenta}%}$t%f%{%K{magenta}%}$g"
+                PYTHON_VENV_STATUS="%{%F{magenta}%}$LEFT_ARROW%f%{%K{magenta}%}$PYTHON_SYMBOL"
             fi
         fi
-        RPS1="${n}${v} %(?.%{%F{green}%}.%{%F{red}%})${t}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
-
+        # See Chapter 13: Prompt Expansion in Z Shell Manual for more info
+        RPS1="${RESET_BACKGROUND}${PYTHON_VENV_STATUS} %(?.%{%F{green}%}.%{%F{red}%})${LEFT_ARROW}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
         # %(?.X.Y)    : Conditional: X if last command succeeded (exit code 0), Y if failed
-        # %*          : Time in 24-hour HH:MM:SS format, reset colors
     }
 
     # Hook precmd to update prompt
