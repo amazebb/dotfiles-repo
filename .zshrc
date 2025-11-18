@@ -89,7 +89,7 @@ source "$HOME/.local/scripts/fzf-man"
 
 # Set zsh prompt
 # Source and initialize custom prompt configuration
-source "$HOME/.zsh_prompt.zsh"
+source "$HOME/.zsh_prompt"
 setup_prompt
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!

@@ -21,11 +21,6 @@ vim.g.lsp_config = "~/.config/nvim/lsp"
 vim.lsp.config("bashls", {
     filetypes = { "bash", "sh", "zsh" },
     root_markers = { ".git", ".dotfiles" },
-    settings = {
-        bashIde = {
-            globPattern = "*@(.sh|.inc|.bash|.command|.zsh)",
-        },
-    },
 })
 
 vim.lsp.config("ruff", {

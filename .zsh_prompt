@@ -1,4 +1,5 @@
-# Function to set up custom zsh prompt with p10k-like style and git status
+# shellcheck disable=SC2329
+# Function to set up custom zsh prompt with git status
 setup_prompt() {
     # Enable command substitution in prompt
     setopt PROMPT_SUBST
@@ -9,6 +10,7 @@ setup_prompt() {
         # If we don't it will counted towards the character length of the prompt,
         # thus messing up the internal logic of zsh and not padding the RPS1 flush
         # to the right hand side of the terminal
+        # shellcheck disable=SC2329
         k='%{%K{blue}%}'
         echo -n "$k%60<..<%~"
     }
