@@ -63,7 +63,7 @@ setup_prompt() {
     }
 
     # Update right prompt dynamically
-    rprompt_segment_dynamic() {
+    rprompt_segment() {
         LEFT_ARROW=$'\uE0B2'
         PYTHON_SYMBOL=$'\uE606'
         PYTHON_VENV_STATUS=""
@@ -86,5 +86,5 @@ setup_prompt() {
     }
 
     # Hook precmd to update prompt
-    precmd_functions+=(precmd_prompt rprompt_segment_dynamic)
+    precmd_functions+=(precmd_prompt rprompt_segment)
 }
