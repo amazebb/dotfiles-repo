@@ -6,8 +6,6 @@
 [init]
 	defaultBranch = master
 	defaultObjectFormat = sha1
-[credential]
-	helper = osxkeychain
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = ~/.nvim-nightly/nvim-macos-arm64/bin/nvim
@@ -29,5 +27,7 @@
 	s = status
 [difftool]
 	prompt = false
-[github]
-	user = x626f
+[credential "https://github.com"]
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !gh auth git-credential
