@@ -15,6 +15,7 @@ autocmd("CmdlineLeave", {
 
 autocmd("BufDelete", {
     pattern = "*",
+    desc = "Stop LSP client if not attached to any buffers",
     callback = function(args)
         local buf = args.buf
         local clients = vim.lsp.get_clients({ bufnr = buf })
@@ -39,13 +40,10 @@ autocmd("BufDelete", {
 })
 
 autocmd("LspAttach", {
+    desc = "Enable LSP completion and auto-formatting on buffer write",
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
         if not client then return end
-
-        if client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-        end
 
         if client:supports_method("textDocument/formatting") then
             autocmd("BufWritePre", {
@@ -57,7 +55,6 @@ autocmd("LspAttach", {
         end
     end,
 })
-
 
 -- Toggle basedpyright warnings function
 local function toggle_unknown_types(value)
