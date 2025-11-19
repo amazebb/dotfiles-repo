@@ -13,14 +13,6 @@ autocmd("CmdlineLeave", {
     end,
 })
 
-autocmd({ "BufWritePost" }, {
-    pattern = { "*.lua" },
-    callback = function()
-        -- more commands if needed
-        vim.cmd([[silent! !stylua %]])
-    end,
-})
-
 autocmd("BufDelete", {
     pattern = "*",
     callback = function(args)
@@ -49,13 +41,13 @@ autocmd("BufDelete", {
 autocmd("LspAttach", {
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        -- Enable auto-completion
-        if client and client:supports_method("textDocument/completion") then
+        if not client then return end
+
+        if client:supports_method("textDocument/completion") then
             vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
         end
 
-        -- Enable auto-formatting on save
-        if client and client:supports_method("textDocument/formatting") then
+        if client:supports_method("textDocument/formatting") then
             autocmd("BufWritePre", {
                 buffer = ev.buf,
                 callback = function()
@@ -65,6 +57,7 @@ autocmd("LspAttach", {
         end
     end,
 })
+
 
 -- Toggle basedpyright warnings function
 local function toggle_unknown_types(value)
@@ -90,13 +83,15 @@ local function toggle_unknown_types(value)
 end
 
 -- Custom completion function
-local function completion_list(_, _, _)
+local function basedpy_completion_list(_, _, _)
     return { "off", "basic", "standard", "recommended", "strict", "all" }
 end
 
 vim.api.nvim_create_user_command("TogglePythonWarnings", function(args)
-    toggle_unknown_types(args.args)
-end, { nargs = "?", desc = "Toggle basedpyright Warnings", complete = completion_list })
+        toggle_unknown_types(args.args)
+    end,
+    { nargs = "?", desc = "Toggle basedpyright Warnings", complete = basedpy_completion_list }
+)
 
 autocmd("FileType", {
     pattern = { "applescript" },
@@ -104,10 +99,6 @@ autocmd("FileType", {
         vim.bo.commentstring = "-- %s"
     end,
 })
-
-vim.api.nvim_create_user_command("GitDiffFileMerge", function()
-    vim.fn.jobstart("git difftool --cached", { detach = true })
-end, { desc = "Launch Git difftool" })
 
 -- Create floating terminal buffer
 local function create_floating_terminal()

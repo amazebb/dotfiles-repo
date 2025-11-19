@@ -95,7 +95,7 @@ keymap("n", "<Leader>_", "<cmd>vsplit<CR>", { silent = true })
 keymap("n", "<Leader>-", "<cmd>split<CR>", { silent = true })
 
 -- Launch Quicklook preview for current file, useful for previewing markdown
-vim.keymap.set('n', '<Leader><Leader>', function()
+keymap('n', '<Leader><Leader>', function()
     local file = vim.fn.expand('%:p')
     vim.fn.system(string.format('qlmanage -p %s 2>/dev/null', vim.fn.shellescape(file)))
-end, { desc = 'QuickLook file preview)' })
+end, { desc = 'QuickLook file preview of current buffer' })
