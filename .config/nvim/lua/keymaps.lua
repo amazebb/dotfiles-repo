@@ -8,8 +8,8 @@ keymap("n", "H", function()
     if not ok then
         word = vim.fn.expand("<cword>")
     end
-    vim.cmd("HelpPopup " .. word)
-end, { desc = "Show Help in a floating window" })
+    vim.cmd.help(word)
+end, { desc = "Show Help for word under cursor" })
 
 -- Check for plugins
 keymap("n", "<Leader>p", vim.pack.update, { desc = "Check for Plugins" })

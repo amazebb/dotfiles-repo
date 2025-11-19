@@ -66,59 +66,6 @@ autocmd("LspAttach", {
     end,
 })
 
--- Help in a floating window
-local function show_help_popup(topic)
-    vim.print(topic)
-    -- Clear jumplist to start fresh for help buffer
-    vim.cmd("help " .. (topic or ""))
-    local help_buf = vim.api.nvim_get_current_buf()
-    -- Close original help window
-    vim.cmd("wincmd c")
-    local win_id = vim.api.nvim_open_win(help_buf, true, {
-        relative = "win",
-        width = math.floor(0.8 * vim.o.columns),
-        height = math.floor(0.8 * vim.o.lines),
-        row = math.floor(0.1 * vim.o.lines),
-        col = math.floor(0.1 * vim.o.columns),
-        border = "rounded",
-    })
-    -- Set help-specific buffer options
-    vim.bo[help_buf].filetype = "help"
-    vim.bo[help_buf].buftype = "help"
-    vim.bo[help_buf].readonly = true
-    vim.bo[help_buf].modifiable = false
-    vim.bo[help_buf].bufhidden = "wipe"
-
-    -- Set window-specific options to mimic help window
-    vim.wo[win_id].number = false
-    vim.wo[win_id].relativenumber = false
-    vim.wo[win_id].cursorline = false
-    vim.wo[win_id].signcolumn = "no"
-    vim.wo[win_id].wrap = true
-    vim.wo[win_id].conceallevel = 2
-    vim.wo[win_id].colorcolumn = ""
-
-    -- Set keymaps
-    local function set_keymaps()
-        local keymap = vim.api.nvim_buf_set_keymap
-        local opt = { noremap = true, silent = true }
-        keymap(help_buf, "n", "q", ":q<CR>", opt)
-        keymap(help_buf, "n", "<Esc>", ":q<CR>", opt)
-    end
-    set_keymaps() -- Initial keymap setup
-    -- Reapply keymaps on BufEnter for this buffer
-    vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-        buffer = help_buf,
-        callback = set_keymaps,
-        desc = "Reapply help popup keymaps",
-    })
-    vim.cmd("clearjumps")
-end
-
-vim.api.nvim_create_user_command("HelpPopup", function(args)
-    show_help_popup(args.args)
-end, { desc = "Show Help in floating window", nargs = "?" })
-
 -- Toggle basedpyright warnings function
 local function toggle_unknown_types(value)
     local client = vim.lsp.get_clients({ name = "basedpyright" })[1]
