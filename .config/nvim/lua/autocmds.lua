@@ -2,12 +2,14 @@ local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
 autocmd("CmdlineEnter", {
+    desc = "When entering command mode show the command line",
     callback = function()
         vim.o.cmdheight = 1
     end,
 })
 
 autocmd("CmdlineLeave", {
+    desc = "When leaving command mode hide the command line",
     callback = function()
         vim.o.cmdheight = 0
     end,
@@ -40,7 +42,7 @@ autocmd("BufDelete", {
 })
 
 autocmd("LspAttach", {
-    desc = "Enable LSP completion and auto-formatting on buffer write",
+    desc = "Enable LSP auto-formatting on buffer write",
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
         if not client then return end
@@ -79,7 +81,7 @@ local function toggle_unknown_types(value)
     end
 end
 
--- Custom completion function
+-- Custom completion function for basedpyright completion list
 local function basedpy_completion_list(_, _, _)
     return { "off", "basic", "standard", "recommended", "strict", "all" }
 end
