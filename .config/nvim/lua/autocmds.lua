@@ -117,7 +117,6 @@ local function create_floating_terminal()
         row = row,
         style = "minimal",
         border = "rounded",
-        focusable = true,
     })
 
     -- Start zsh terminal, run script, focus, and enter insert mode
