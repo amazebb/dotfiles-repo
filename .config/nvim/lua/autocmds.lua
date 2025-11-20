@@ -68,11 +68,13 @@ local function toggle_unknown_types(value)
 
     -- Toggle settings
     local settings = client.config.settings
+    ---@diagnostic disable: undefined-field
     if settings ~= nil then
         settings.basedpyright.analysis.typeCheckingMode = value == ""
             and (settings.basedpyright.analysis.typeCheckingMode == "standard" and "recommended" or "standard")
             or value
     end
+    ---@diagnostic enable: undefined-field
 
     -- Update LSP client
     client:notify("workspace/didChangeConfiguration", { settings = settings })
@@ -122,7 +124,7 @@ local function create_floating_terminal()
     -- Start zsh terminal, run script, focus, and enter insert mode
     vim.api.nvim_set_current_win(win)
     vim.api.nvim_buf_call(buf, function()
-        vim.cmd('terminal zsh -c "nnn -G -p -"')
+        vim.cmd('terminal zsh -c "nnn-split"')
         vim.cmd("startinsert!")
     end)
 
