@@ -99,3 +99,6 @@ keymap('n', '<Leader><Leader>', function()
     local file = vim.fn.expand('%:p')
     vim.fn.system(string.format('qlmanage -p %s 2>/dev/null', vim.fn.shellescape(file)))
 end, { desc = 'QuickLook file preview of current buffer' })
+
+-- Nnn
+vim.keymap.set("n", "<leader>n", ":Nnn<CR>", { desc = "Trigger Nnn floating terminal", silent = true })
