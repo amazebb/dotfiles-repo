@@ -96,13 +96,6 @@ vim.api.nvim_create_user_command("TogglePythonWarnings", function(args)
     { nargs = "?", desc = "Toggle basedpyright Warnings", complete = basedpy_completion_list }
 )
 
-autocmd("FileType", {
-    pattern = { "applescript" },
-    callback = function()
-        vim.bo.commentstring = "-- %s"
-    end,
-})
-
 -- Autocommand group for Nnn
 local fun = require("functions")
 local augroupNnn = vim.api.nvim_create_augroup("Nnn", { clear = true })
@@ -118,6 +111,7 @@ vim.api.nvim_create_user_command("Nnn", function()
     vim.api.nvim_exec_autocmds("User", { pattern = "Nnn" })
 end, { desc = "Launch nnn file picker in floating window" })
 
+-- Disbale ShellCheck warning on current line
 vim.api.nvim_create_user_command("ShellCheckDisable", function()
     local line = vim.fn.line(".") - 1
     local diagnostics = vim.diagnostic.get(0, { lnum = line })
@@ -130,6 +124,14 @@ vim.api.nvim_create_user_command("ShellCheckDisable", function()
     end
     vim.notify("No ShellCheck warning found under cursor", vim.log.levels.WARN)
 end, { desc = "Disable ShellCheck warning for current line" })
+
+-- Applescript comment string
+autocmd("FileType", {
+    pattern = { "applescript" },
+    callback = function()
+        vim.bo.commentstring = "-- %s"
+    end,
+})
 
 -- Format AppleScript files
 vim.api.nvim_create_user_command("FormatAppleScript", function()
