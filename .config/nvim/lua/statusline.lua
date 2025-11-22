@@ -1,10 +1,12 @@
 Statusline = {}
 
-vim.api.nvim_set_hl(0, 'User3', { fg = '#e9c994' })
-vim.api.nvim_set_hl(0, 'User4', { fg = '#d8a5c1' })
-vim.api.nvim_set_hl(0, 'User5', { fg = '#4673d0' })
-vim.api.nvim_set_hl(0, 'User6', { fg = '#db9172' })
-vim.api.nvim_set_hl(0, 'User7', { fg = '#db9172' })
+vim.api.nvim_set_hl(0, 'User1', { fg = '#000000' })
+vim.api.nvim_set_hl(0, 'User2', { fg = '#FFFF00' })
+vim.api.nvim_set_hl(0, 'User3', { fg = '#8B0000' })
+vim.api.nvim_set_hl(0, 'User4', { fg = '#006400' })
+vim.api.nvim_set_hl(0, 'User5', { fg = '#0000FF' })
+vim.api.nvim_set_hl(0, 'User6', { fg = '#8B4500' })
+vim.api.nvim_set_hl(0, 'User7', { fg = '#2FFF4F' })
 
 -- Mode map: short → full name
 local mode_map = {
