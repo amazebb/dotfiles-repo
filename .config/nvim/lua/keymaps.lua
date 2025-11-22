@@ -101,4 +101,4 @@ keymap('n', '<Leader><Leader>', function()
 end, { desc = 'QuickLook file preview of current buffer' })
 
 -- Nnn
-vim.keymap.set("n", "<leader>n", ":Nnn<CR>", { desc = "Trigger Nnn floating terminal", silent = true })
+vim.keymap.set("n", "<leader>n", ":Nnn<CR>", { desc = "Launch Nnn in a floating window", silent = true })

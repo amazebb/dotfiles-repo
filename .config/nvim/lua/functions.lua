@@ -62,7 +62,7 @@ local function _setup_nnn(win, buf)
     vim.api.nvim_set_current_win(win)
     vim.api.nvim_buf_call(buf, function()
         -- option "-p -" Pressing Enter key echoes current selected item and exits
-        vim.cmd('terminal zsh -c "nnn-split -G -p -"')
+        vim.cmd('terminal zsh -c "nnn -G -p -"')
         vim.cmd("startinsert!")
     end)
 
