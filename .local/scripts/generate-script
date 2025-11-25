@@ -3,10 +3,10 @@
 
 # Function to escape backslashes and double quotes for shell strings
 escape_shell_string() {
-  local s="$1"
-  s="${s//\\/\\\\}"
-  s="${s//\"/\\\"}"
-  echo "$s"
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    echo "$s"
 }
 
 RED=$'\033[31m'
@@ -14,22 +14,22 @@ CL=$'\033[0m\n'
 
 # Function to validate argument names (restrict to single char, not 'h')
 validate_arg_name() {
-  local arg_name="$1"
-  if [[ ! $arg_name =~ ^[a-gi-z]$ ]]; then
-    printf "%sError: Optional argument name '%s' must be a single letter (not 'h').%s" "$RED" "$arg_name" "$CL" 2>&1
-    exit 1
-  fi
+    local arg_name="$1"
+    if [[ ! $arg_name =~ ^[a-gi-z]$ ]]; then
+        printf "%sError: Optional argument name '%s' must be a single letter (not 'h').%s" "$RED" "$arg_name" "$CL" 2>&1
+        exit 1
+    fi
 }
 
 # Function to check for duplicate arguments
 check_duplicate() {
-  local arg="$1" type="$2" array=("${@:3}")
-  for existing in "${array[@]}"; do
-    if [[ $existing == "$arg" ]]; then
-      printf "%sError: %s argument '%s' already used.%s" "$RED" "$type" "$arg" "$CL" 2>&1
-      exit 1
-    fi
-  done
+    local arg="$1" type="$2" array=("${@:3}")
+    for existing in "${array[@]}"; do
+        if [[ $existing == "$arg" ]]; then
+            printf "%sError: %s argument '%s' already used.%s" "$RED" "$type" "$arg" "$CL" 2>&1
+            exit 1
+        fi
+    done
 }
 
 # Default values
@@ -48,117 +48,117 @@ pos_min=0
 
 # Usage function
 usage() {
-  echo "Generate shell script with inputs, options."
-  echo
-  echo "Usage: $(basename "$0") [-s shell] [-d description] [-r required_arg|desc] [-o opt_arg|internal|desc|default] [-p pos_name|desc|min] <script_name>"
-  echo
-  echo "  -s: Shell to use (default: bash)"
-  echo "  -d: One-line script description (optional)"
-  echo "  -r: Required positional input (format: name|desc); fixed count"
-  echo "  -o: Optional argument (format: letter|internal|desc|default)"
-  echo "  -p: Variable positional args (format: name|desc|min); min optional (default 0, integer)"
-  echo "  -h: Show help"
-  exit 0
+    echo "Generate shell script with inputs, options."
+    echo
+    echo "Usage: $(basename "$0") [-s shell] [-d description] [-r required_arg|desc] [-o opt_arg|internal|desc|default] [-p pos_name|desc|min] <script_name>"
+    echo
+    echo "  -s: Shell to use (default: bash)"
+    echo "  -d: One-line script description (optional)"
+    echo "  -r: Required positional input (format: name|desc); fixed count"
+    echo "  -o: Optional argument (format: letter|internal|desc|default)"
+    echo "  -p: Variable positional args (format: name|desc|min); min optional (default 0, integer)"
+    echo "  -h: Show help"
+    exit 0
 }
 
 # Parse command-line options manually to allow mixed positionals and options
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-  -h) usage ;;
-  -s)
-    if [[ $# -lt 2 ]]; then
-      printf "%sError: -s requires and argumen.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    shell="$2"
+    case "$1" in
+    -h) usage ;;
+    -s)
+        if [[ $# -lt 2 ]]; then
+            printf "%sError: -s requires and argumen.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        shell="$2"
+        shift
+        ;;
+    -d)
+        if [[ $# -lt 2 ]]; then
+            printf "%sError: -d requires and argumen.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        script_desc="$2"
+        shift
+        ;;
+    -r)
+        if [[ $# -lt 2 ]]; then
+            printf "%sError: -r requires and argumen.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        IFS='|' read -r arg desc <<<"$2"
+        check_duplicate "$arg" "Required" "${required_args[@]}"
+        required_args+=("$arg")
+        required_desc+=("$desc")
+        shift
+        ;;
+    -o)
+        if [[ $# -lt 2 ]]; then
+            printf "%sError: -o requires and argumen.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        IFS='|' read -r arg internal desc default <<<"$2"
+        validate_arg_name "$arg"
+        check_duplicate "$arg" "Optional" "${optional_args[@]}"
+        optional_args+=("$arg")
+        internal_upper=$(echo "${internal:-$arg}" | tr '[:lower:]' '[:upper:]')
+        optional_internal+=("$internal_upper")
+        optional_desc+=("$desc")
+        optional_defaults+=("$default")
+        shift
+        ;;
+    -p)
+        if [[ $# -lt 2 ]]; then
+            printf "%sError: -p requires and argumen.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        if [[ -n $pos_name ]]; then
+            printf "%sError: Only one -p allowed.%s" "$RED" "$CL" 2>&1
+            exit 1
+        fi
+        IFS='|' read -r pos_name pos_desc pos_min_temp <<<"$2"
+        pos_min=${pos_min_temp:-0}
+        if ! [[ $pos_min =~ ^[0-9]+$ ]]; then
+            printf "%sError: min for -p must be integer >=0.%s" "$RED" "$CL" 2>&1
+            exit 1
+        fi
+        shift
+        ;;
+    -*)
+        printf "%sError: Invalid option %s.%s" "$RED" "$1" "$CL" 2>&1
+        usage
+        ;;
+    *)
+        if [[ -n $script_name ]]; then
+            printf "%sError: Multiple script names provided.%s" "$RED" "$CL" 2>&1
+            usage
+        fi
+        script_name="$1"
+        ;;
+    esac
     shift
-    ;;
-  -d)
-    if [[ $# -lt 2 ]]; then
-      printf "%sError: -d requires and argumen.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    script_desc="$2"
-    shift
-    ;;
-  -r)
-    if [[ $# -lt 2 ]]; then
-      printf "%sError: -r requires and argumen.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    IFS='|' read -r arg desc <<<"$2"
-    check_duplicate "$arg" "Required" "${required_args[@]}"
-    required_args+=("$arg")
-    required_desc+=("$desc")
-    shift
-    ;;
-  -o)
-    if [[ $# -lt 2 ]]; then
-      printf "%sError: -o requires and argumen.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    IFS='|' read -r arg internal desc default <<<"$2"
-    validate_arg_name "$arg"
-    check_duplicate "$arg" "Optional" "${optional_args[@]}"
-    optional_args+=("$arg")
-    internal_upper=$(echo "${internal:-$arg}" | tr '[:lower:]' '[:upper:]')
-    optional_internal+=("$internal_upper")
-    optional_desc+=("$desc")
-    optional_defaults+=("$default")
-    shift
-    ;;
-  -p)
-    if [[ $# -lt 2 ]]; then
-      printf "%sError: -p requires and argumen.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    if [[ -n $pos_name ]]; then
-      printf "%sError: Only one -p allowed.%s" "$RED" "$CL" 2>&1
-      exit 1
-    fi
-    IFS='|' read -r pos_name pos_desc pos_min_temp <<<"$2"
-    pos_min=${pos_min_temp:-0}
-    if ! [[ $pos_min =~ ^[0-9]+$ ]]; then
-      printf "%sError: min for -p must be integer >=0.%s" "$RED" "$CL" 2>&1
-      exit 1
-    fi
-    shift
-    ;;
-  -*)
-    printf "%sError: Invalid option %s.%s" "$RED" "$1" "$CL" 2>&1
-    usage
-    ;;
-  *)
-    if [[ -n $script_name ]]; then
-      printf "%sError: Multiple script names provided.%s" "$RED" "$CL" 2>&1
-      usage
-    fi
-    script_name="$1"
-    ;;
-  esac
-  shift
 done
 
 # Validate script name
 validate_script_info() {
-  if [[ -z $script_name ]]; then
-    printf "%sError: Script name is required.%s" "$RED" "$CL" 2>&1
-    usage
-  fi
-  if [[ ! $script_name =~ \.sh$ ]]; then
-    script_name="$script_name.sh"
-  fi
-  if [[ -f $script_name ]]; then
-    printf "%sError: File '%s' already exists.%s" "$RED" "$script_name" "$CL" 2>&1
-    exit 1
-  fi
+    if [[ -z $script_name ]]; then
+        printf "%sError: Script name is required.%s" "$RED" "$CL" 2>&1
+        usage
+    fi
+    if [[ ! $script_name =~ \.sh$ ]]; then
+        script_name="$script_name.sh"
+    fi
+    if [[ -f $script_name ]]; then
+        printf "%sError: File '%s' already exists.%s" "$RED" "$script_name" "$CL" 2>&1
+        exit 1
+    fi
 }
 
 validate_script_info
 
 # If no description, set a placeholder
 if [[ -z $script_desc ]]; then
-  script_desc="DESCRIPTION GOES HERE"
+    script_desc="DESCRIPTION GOES HERE"
 fi
 
 # Escape script description for generated script
@@ -185,53 +185,53 @@ EOF
 # Build dynamic usage line
 usage_line="  echo \"Usage: $script_basename [options]"
 for arg in "${required_args[@]}"; do
-  usage_line+=" <${arg}>"
+    usage_line+=" <${arg}>"
 done
 if [[ -n $pos_name ]]; then
-  if [[ $pos_min -gt 0 ]]; then
-    usage_line+=" <${pos_name}...>"
-  else
-    usage_line+=" [<${pos_name}...>]"
-  fi
+    if [[ $pos_min -gt 0 ]]; then
+        usage_line+=" <${pos_name}...>"
+    else
+        usage_line+=" [<${pos_name}...>]"
+    fi
 fi
 usage_line+="\""
 
 {
-  echo "$usage_line"
-  # Add options section
-  echo '  echo '
-  echo '  echo "Options:"'
-  echo '  echo "  -h, --help    Show this help message"'
-  echo '  echo "  --version     Show version information"'
+    echo "$usage_line"
+    # Add options section
+    echo '  echo '
+    echo '  echo "Options:"'
+    echo '  echo "  -h, --help    Show this help message"'
+    echo '  echo "  --version     Show version information"'
 } >>"$script_name"
 
 # Add optional arguments to options section
 if [[ ${#optional_args[@]} -gt 0 ]]; then
-  for i in "${!optional_args[@]}"; do
-    arg="${optional_args[$i]}"
-    desc=$(escape_shell_string "${optional_desc[$i]}")
-    default=$(escape_shell_string "${optional_defaults[$i]}")
-    if [[ -n $default ]]; then
-      echo "  echo \"  -${arg}  <value>   ${desc} (default: ${default})\"" >>"$script_name"
-    else
-      echo "  echo \"  -${arg}  <value>   ${desc}\"" >>"$script_name"
-    fi
-  done
+    for i in "${!optional_args[@]}"; do
+        arg="${optional_args[$i]}"
+        desc=$(escape_shell_string "${optional_desc[$i]}")
+        default=$(escape_shell_string "${optional_defaults[$i]}")
+        if [[ -n $default ]]; then
+            echo "  echo \"  -${arg}  <value>   ${desc} (default: ${default})\"" >>"$script_name"
+        else
+            echo "  echo \"  -${arg}  <value>   ${desc}\"" >>"$script_name"
+        fi
+    done
 fi
 
 # Add arguments section if there are positionals
 if [[ ${#required_args[@]} -gt 0 || -n $pos_name ]]; then
-  echo '  echo' >>"$script_name"
-  echo '  echo "Arguments:"' >>"$script_name"
-  for i in "${!required_args[@]}"; do
-    arg="${required_args[$i]}"
-    desc=$(escape_shell_string "${required_desc[$i]}")
-    echo "  echo \"  ${arg}    ${desc}\"" >>"$script_name"
-  done
-  if [[ -n $pos_name ]]; then
-    pos_desc=$(escape_shell_string "$pos_desc")
-    echo "  echo \"  ${pos_name}...   ${pos_desc}\"" >>"$script_name"
-  fi
+    echo '  echo' >>"$script_name"
+    echo '  echo "Arguments:"' >>"$script_name"
+    for i in "${!required_args[@]}"; do
+        arg="${required_args[$i]}"
+        desc=$(escape_shell_string "${required_desc[$i]}")
+        echo "  echo \"  ${arg}    ${desc}\"" >>"$script_name"
+    done
+    if [[ -n $pos_name ]]; then
+        pos_desc=$(escape_shell_string "$pos_desc")
+        echo "  echo \"  ${pos_name}...   ${pos_desc}\"" >>"$script_name"
+    fi
 fi
 
 # Finish usage
@@ -249,9 +249,9 @@ EOF
 
 # Initialize optional arguments with defaults
 for i in "${!optional_args[@]}"; do
-  internal="${optional_internal[$i]}"
-  default=$(escape_shell_string "${optional_defaults[$i]}")
-  echo "${internal}=\"${default}\"" >>"$script_name"
+    internal="${optional_internal[$i]}"
+    default=$(escape_shell_string "${optional_defaults[$i]}")
+    echo "${internal}=\"${default}\"" >>"$script_name"
 done
 
 # Add parsing loop
@@ -266,9 +266,9 @@ EOF
 
 # Add cases for optional arguments (assume they require value)
 for i in "${!optional_args[@]}"; do
-  arg="${optional_args[$i]}"
-  internal="${optional_internal[$i]}"
-  cat >>"$script_name" <<EOF
+    arg="${optional_args[$i]}"
+    internal="${optional_internal[$i]}"
+    cat >>"$script_name" <<EOF
     -${arg})
       if [[ \$# -lt 2 ]]; then
         echo "Error: -${arg} requires an argument" >&2
@@ -292,8 +292,8 @@ EOF
 
 # Add checks and assignments for fixed required positionals
 if [[ ${#required_args[@]} -gt 0 ]]; then
-  req_count=${#required_args[@]}
-  cat >>"$script_name" <<EOF
+    req_count=${#required_args[@]}
+    cat >>"$script_name" <<EOF
 # Check required positional inputs
 if [[ \$# -lt $req_count ]]; then
   echo "Error: Missing required positional inputs"
@@ -301,31 +301,31 @@ if [[ \$# -lt $req_count ]]; then
 fi
 
 EOF
-  for i in "${!required_args[@]}"; do
-    arg="${required_args[$i]}"
-    cat >>"$script_name" <<EOF
+    for i in "${!required_args[@]}"; do
+        arg="${required_args[$i]}"
+        cat >>"$script_name" <<EOF
 ${arg^^}="\$1"
 shift
 EOF
-  done
+    done
 fi
 
 # Add check for variable positional min (after any required shifts)
 if [[ -n $pos_name ]]; then
-  if [[ $pos_min -gt 0 ]]; then
-    cat >>"$script_name" <<EOF
+    if [[ $pos_min -gt 0 ]]; then
+        cat >>"$script_name" <<EOF
 if [[ \$# -lt $pos_min ]]; then
   echo "Error: At least $pos_min ${pos_name} required"
   usage
 fi
 
 EOF
-  fi
+    fi
 fi
 
 # Error on extra if required but no variable positional
 if [[ ${#required_args[@]} -gt 0 && -z $pos_name ]]; then
-  echo 'if [[ $# -gt 0 ]]; then echo "Error: Extra positional arguments provided"; usage; fi' >>"$script_name"
+    echo 'if [[ $# -gt 0 ]]; then echo "Error: Extra positional arguments provided"; usage; fi' >>"$script_name"
 fi
 
 # Add a placeholder for the main script logic
@@ -337,19 +337,19 @@ EOF
 
 # Echo required positional inputs
 for arg in "${required_args[@]}"; do
-  echo "echo \"${arg}: \$${arg^^}\"" >>"$script_name"
+    echo "echo \"${arg}: \$${arg^^}\"" >>"$script_name"
 done
 
 # Echo optional arguments
 for i in "${!optional_args[@]}"; do
-  arg="${optional_args[$i]}"
-  internal="${optional_internal[$i]}"
-  echo "echo \"-${arg}: \$${internal}\"" >>"$script_name"
+    arg="${optional_args[$i]}"
+    internal="${optional_internal[$i]}"
+    echo "echo \"-${arg}: \$${internal}\"" >>"$script_name"
 done
 
 # Echo variable positionals if present
 if [[ -n "$pos_name" ]]; then
-  echo "echo \"${pos_name}: \$*\"" >>"$script_name"
+    echo "echo \"${pos_name}: \$*\"" >>"$script_name"
 fi
 
 # Finalize the script

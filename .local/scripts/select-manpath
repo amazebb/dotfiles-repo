@@ -7,8 +7,8 @@ selected_entries=$(printf "%s\n" "${manpath_entries[@]}" | fzf --multi --prompt=
 
 # Join selected entries with ':' and set MANPATH
 if [[ -n "$selected_entries" ]]; then
-  export MANPATH=$(echo "$selected_entries" | tr '\n' ':' | sed 's/:$//')
-  echo "MANPATH set to: $MANPATH"
+    export MANPATH=$(echo "$selected_entries" | tr '\n' ':' | sed 's/:$//')
+    echo "MANPATH set to: $MANPATH"
 else
-  echo "No entries selected, keeping default MANPATH"
+    echo "No entries selected, keeping default MANPATH"
 fi

@@ -1,19 +1,19 @@
 #!/usr/bin/env sh
 # Pre-process PDFs, ZSDs for fz, ripgrep.
 case "$1" in
-  *.pdf)
+*.pdf)
     if [ -s "$1" ]; then
-      exec pdftotext "$1" -
+        exec pdftotext "$1" -
     else
-      exec cat
+        exec cat
     fi
     ;;
-  *)
+*)
     case $(file "$1") in
-      *Zstandard*)
+    *Zstandard*)
         exec pzstd -cdq "$1"
         ;;
-      *)
+    *)
         exec cat
         ;;
     esac

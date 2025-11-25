@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Plot function for Kitty terminal using gnuplot and kitten icat
 iplot() {
-  cat <<EOF | gnuplot
+    cat <<EOF | gnuplot
     set terminal pngcairo enhanced font 'Fira Sans,10'
     set autoscale
     set samples 1000

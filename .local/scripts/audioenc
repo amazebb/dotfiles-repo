@@ -24,18 +24,22 @@ version() {
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
-  case $1 in
-    -h|--help) usage ;;
+    case $1 in
+    -h | --help) usage ;;
     --version) version ;;
-    --) shift; break ;;
-    -*) echo "Unknown option: $1" >&2; usage ;;
-    *) break ;;  # Non-option args (positionals)
-  esac
-  shift
+    --)
+        shift
+        break
+        ;;
+    -*)
+        echo "Unknown option: $1" >&2
+        usage
+        ;;
+    *) break ;; # Non-option args (positionals)
+    esac
+    shift
 done
-
 
 # Main script logic here
 echo "Script running with the following inputs:"
 echo "files: $*"
-
