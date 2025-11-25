@@ -69,7 +69,7 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
-# Bind ? key for toggling the preview window, useful for long commands that dont fit on screen
+# Bind ? key for toggling the fzf preview window, useful for long commands that dont fit on screen
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
 
 # Setup for zoxide smarter 'cd'
