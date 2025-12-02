@@ -1,12 +1,11 @@
 Statusline = {}
 
-vim.api.nvim_set_hl(0, 'User1', { fg = '#000000' })
 vim.api.nvim_set_hl(0, 'User2', { fg = '#FFFF00' })
 vim.api.nvim_set_hl(0, 'User3', { fg = '#8B0000' })
-vim.api.nvim_set_hl(0, 'User4', { fg = '#006400' })
-vim.api.nvim_set_hl(0, 'User5', { fg = '#0000FF' })
-vim.api.nvim_set_hl(0, 'User6', { fg = '#8B4500' })
-vim.api.nvim_set_hl(0, 'User7', { fg = '#2FFF4F' })
+vim.api.nvim_set_hl(0, 'User4', { fg = '#aaff00' })
+vim.api.nvim_set_hl(0, 'User5', { fg = '#0099ff' })
+vim.api.nvim_set_hl(0, 'User6', { fg = '#fB4500' })
+vim.api.nvim_set_hl(0, 'User7', { fg = '#00FF00' })
 
 -- Mode map: short → full name
 local mode_map = {
@@ -49,16 +48,21 @@ local mode_map = {
     t = { "TERMINAL", "5" },          -- Terminal mode: keys go to the job
 }
 
-local ITEM_SEP = "|"
+local LHS_ITEM_SEP = " | "
+local RHS_ITEM_SEP = " | "
+function Statusline.enable_git_folder(val)
+    vim.g.enable_git_folder = val
+end
 
-function Statusline.active(branch)
+function Statusline.active(git_status)
     local mode = vim.fn.mode()
-    local mode_name = " " .. (mode_map[mode][1] or mode) .. ITEM_SEP
-    local hlUser = "%" .. (mode_map[mode][2] or "") .. "*"
+    local mode_name = " " .. (mode_map[mode][1] or mode)
+    local hlMode = "%" .. (mode_map[mode][2] or "") .. "*"
     if mode == "t" then
-        return hlUser .. mode_name .. "%*"
+        return hlMode .. mode_name .. "%*"
     else
-        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%Y" .. ITEM_SEP .. "%P %l:%c "
+        return hlMode ..
+            mode_name .. "%*" .. LHS_ITEM_SEP .. git_status .. "%F %6*%m%* %=%Y" .. RHS_ITEM_SEP .. "%P %l:%c "
     end
 end
 
@@ -76,9 +80,14 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "BufReadPost" }, {
         -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
         -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
         if branch ~= "" then
-            local git_folder = " " ..
-                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
-            branch = git_folder .. ITEM_SEP .. "󰘬 " .. branch .. ITEM_SEP
+            if vim.g.enable_git_folder then
+                local git_folder = (vim.g.statusline_symbols and " " or "") ..
+                    vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
+                branch = git_folder ..
+                LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
+            else
+                branch = (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
+            end
 
             local name = vim.api.nvim_buf_get_name(0)
             if name ~= "" then

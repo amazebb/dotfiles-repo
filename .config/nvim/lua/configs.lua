@@ -18,6 +18,8 @@ opt.winborder = "rounded"
 
 vim.cmd.filetype("plugin indent on")
 vim.g.python3_host_prog = "$HOME/.virtualenvs/py-nvim/.venv/bin/python3"
+vim.g.enable_git_folder = false
+vim.g.statusline_symbols = false
 
 vim.filetype.add({
     extension = {
