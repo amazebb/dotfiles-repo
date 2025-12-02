@@ -32,9 +32,9 @@ setup_prompt() {
                 BG_COLOR='%{%K{green}%}'
                 FG_COLOR='%{%F{green}%}'
             fi
-            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BACKGROUND$RIGHT_ARROW%f "
+            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BACKGROUND$RIGHT_ARROW%f%k "
         else
-            echo -n "$RESET_BACKGROUND$COLORED_RIGHT_ARROW "
+            echo -n "$RESET_BACKGROUND$COLORED_RIGHT_ARROW%k "
         fi
     }
 
