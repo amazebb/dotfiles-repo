@@ -49,26 +49,27 @@ local mode_map = {
     t = { "TERMINAL", "5" },          -- Terminal mode: keys go to the job
 }
 
+local ITEM_SEP = "|"
+
 function Statusline.active(branch)
     local mode = vim.fn.mode()
-    local mode_name = " " .. (mode_map[mode][1] or mode) .. "│"
+    local mode_name = " " .. (mode_map[mode][1] or mode) .. ITEM_SEP
     local hlUser = "%" .. (mode_map[mode][2] or "") .. "*"
     if mode == "t" then
         return hlUser .. mode_name .. "%*"
     else
-        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%Y│%P %l:%c "
+        return hlUser .. mode_name .. "%*" .. branch .. " %F %6*%m%* %=%Y" .. ITEM_SEP .. "%P %l:%c "
     end
 end
 
 local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
 
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufReadPost" }, {
     group = group,
     desc = "Activate statusline on focus",
     callback = function(ev)
-        local bt = vim.bo[ev.buf].buftype
-        local ft = vim.bo[ev.buf].filetype
-        if bt ~= "" and bt ~= "terminal" or ft == "help" or not vim.bo[ev.buf].buflisted or vim.bo[ev.buf].bufhidden == "wipe" then
+        if vim.bo[ev.buf].buftype ~= "" then
+            -- If not normal buffer exit early
             return
         end
         local branch = vim.trim(vim.fn.system("git-wrapper stline"))
@@ -76,15 +77,14 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
         if branch ~= "" then
             local git_folder = " " ..
-                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\"")) .. "│"
-            branch = git_folder .. "󰘬 " .. branch .. "│"
+                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
+            branch = git_folder .. ITEM_SEP .. "󰘬 " .. branch .. ITEM_SEP
 
-            if not (vim.fn.empty(vim.fn.bufname('%')) == 1) then
-                local is_tracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
-                    vim.fn.expand("%:p") .. " 2>/dev/null")
-                if is_tracked ~= "" then
-                    branch = branch .. " "
-                else
+            local name = vim.api.nvim_buf_get_name(0)
+            if name ~= "" then
+                local is_untracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
+                    vim.fn.expand("%:p") .. " 2>/dev/null") == ""
+                if is_untracked then
                     branch = branch .. "%#CurSearch#󰡯 "
                 end
             end

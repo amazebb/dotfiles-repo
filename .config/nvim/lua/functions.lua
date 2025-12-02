@@ -61,8 +61,9 @@ local function _setup_nnn(win, buf)
     -- Start zsh terminal, run script, focus, and enter insert mode
     vim.api.nvim_set_current_win(win)
     vim.api.nvim_buf_call(buf, function()
-        -- option "-p -" Pressing Enter key echoes current selected item and exits
-        vim.cmd('terminal zsh -c "nnn -G -p -"')
+        vim.fn.jobstart('zsh -c "nnn -G -p -" ', {
+            term = true,
+        })
         vim.cmd("startinsert!")
     end)
 
@@ -78,7 +79,9 @@ local function _setup_nnn(win, buf)
             local file = output[1]
             if file and vim.fn.filereadable(file) == 1 then
                 vim.api.nvim_win_close(win, true)
-                vim.api.nvim_buf_delete(buf, { force = true })
+                if vim.api.nvim_buf_is_valid(buf) then
+                    vim.api.nvim_buf_delete(buf, { force = true })
+                end
                 vim.cmd("edit " .. vim.fn.fnameescape(file))
                 vim.cmd("doautocmd BufRead")
             end
