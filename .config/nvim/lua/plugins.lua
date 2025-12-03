@@ -1,15 +1,15 @@
+-- {{{1 AppleScript
+vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
+
+-- {{{1 fzf-lua
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
+require("fzf-lua").setup({ buffers = { sort_lastused = false } })
+
+--{{{1 Treesitter
 vim.pack.add({ {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "master",
 } })
-vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
-vim.pack.add({
-    { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
-})
-
--- Sort buffers alphabetically
-require("fzf-lua").setup({ buffers = { sort_lastused = false } })
 
 ---@diagnostic disable: missing-fields
 require("nvim-treesitter.configs").setup({
@@ -41,6 +41,11 @@ require("nvim-treesitter.configs").setup({
     incremental_selection = { enable = true },
 })
 ---@diagnostic enable: missing-fields
+
+-- {{{1 Blink
+vim.pack.add({
+    { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
+})
 
 require("blink.cmp").setup({
     fuzzy = { implementation = "prefer_rust_with_warning" },

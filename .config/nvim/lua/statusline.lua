@@ -84,7 +84,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "BufReadPost" }, {
                 local git_folder = (vim.g.statusline_symbols and " " or "") ..
                     vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
                 branch = git_folder ..
-                LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
+                    LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
             else
                 branch = (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
             end
