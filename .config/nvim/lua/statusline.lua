@@ -10,6 +10,7 @@ vim.api.nvim_set_hl(0, 'User7', { fg = '#00FF00' })
 local LHS_ITEM_SEP = " | "
 local RHS_ITEM_SEP = " | "
 local git_status = ""
+local lsp_status = false
 
 local function toggle_git_folder()
     vim.g.enable_git_folder = not vim.g.enable_git_folder
@@ -44,6 +45,10 @@ local function update_git_status()
     end
 end
 
+local function update_lsp_status()
+    lsp_status = vim.lsp.get_clients({ bufnr = 0 }) ~= nil
+end
+
 function Statusline.set_statusline()
     local mode = vim.fn.mode():gsub("%c", "")
     local mode_name = ({ n = "NORMAL", i = "INSERT", v = "VISUAL", V = "VISUAL",
@@ -65,7 +70,10 @@ function Statusline.set_statusline()
         return hlMode .. mode_name .. "%*"
     else
         return hlMode .. mode_name .. "%*"
-            .. LHS_ITEM_SEP .. git_status .. "%F %6*%m%* %=%Y" .. RHS_ITEM_SEP .. "%P %l:%c "
+            .. LHS_ITEM_SEP ..
+            git_status ..
+            "%F %6*%m%* %=%Y " ..
+            (lsp_status and (vim.g.statusline_symbols and "󱐋" or "[LSP]") or "") .. RHS_ITEM_SEP .. "%P %l:%c "
     end
 end
 
@@ -79,6 +87,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
     callback = function(ev)
         if vim.bo[ev.buf].buftype == "" then
             update_git_status()
+            update_lsp_status()
             vim.opt_local.statusline = '%!v:lua.Statusline.set_statusline()'
         end
     end
@@ -86,8 +95,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
 
 vim.api.nvim_create_user_command("StatusLineToggleSymbols", function()
     toggle_symbols()
+    update_git_status()
+    update_lsp_status()
 end, { desc = "Toggle the statusline symbols" })
 
 vim.api.nvim_create_user_command("StatusLineToggleGitFolder", function()
     toggle_git_folder()
+    update_git_status()
 end, { desc = "Toggle the statusline git folder" })
