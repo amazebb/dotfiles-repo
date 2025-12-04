@@ -7,105 +7,87 @@ vim.api.nvim_set_hl(0, 'User5', { fg = '#0099ff' })
 vim.api.nvim_set_hl(0, 'User6', { fg = '#fB4500' })
 vim.api.nvim_set_hl(0, 'User7', { fg = '#00FF00' })
 
--- Mode map: short → full name
-local mode_map = {
-    n = { "NORMAL", "1" },            -- Normal
-    no = { "O-PENDING", "3" },        -- Operator-pending
-    nov = { "O-PENDING", "3" },       -- Operator-pending (forced charwise |o_v|)
-    noV = { "O-PENDING", "3" },       -- Operator-pending (forced linewise |o_V|)
-    ["no\22"] = { "O-PENDING", "3" }, -- Operator-pending (forced blockwise |o_CTRL-V|)
-    niI = { "NORMAL", "1" },          -- Normal using |i_CTRL-O| in |Insert-mode|
-    niR = { "NORMAL", "1" },          -- Normal using |i_CTRL-O| in |Replace-mode|
-    niV = { "NORMAL", "1" },          -- Normal using |i_CTRL-O| in |Virtual-Replace-mode|
-    nt = { "NORMAL", "1" },           -- Normal in |terminal-emulator| (insert goes to Terminal mode)
-    ntT = { "NORMAL", "1" },          -- Normal using |t_CTRL-\_CTRL-O| in |Terminal-mode|
-    v = { "VISUAL", "4" },            -- Visual by character
-    vs = { "VISUAL", "4" },           -- Visual by character using |v_CTRL-O| in Select mode
-    V = { "V-LINE", "4" },            -- Visual by line
-    Vs = { "V-LINE", "4" },           -- Visual by line using |v_CTRL-O| in Select mode
-    ["\22"] = { "V-BLOCK", "4" },     -- Visual blockwise
-    ["\22s"] = { "V-BLOCK", "4" },    -- Visual blockwise using |v_CTRL-O| in Select mode
-    s = { "SELECT", "5" },            -- Select by character
-    S = { "S-LINE", "5" },            -- Select by line
-    ["\19"] = { "S-BLOCK", "5" },     -- Select blockwise
-    i = { "INSERT", "2" },            -- Insert
-    ic = { "INSERT", "2" },           -- Insert mode completion |compl-generic|
-    ix = { "INSERT", "2" },           -- Insert mode |i_CTRL-X| completion
-    R = { "REPLACE", "6" },           -- Replace |R|
-    Rc = { "REPLACE", "6" },          -- Replace mode completion |compl-generic|
-    Rx = { "REPLACE", "6" },          -- Replace mode |i_CTRL-X| completion
-    Rv = { "V-REPLACE", "6" },        -- Virtual Replace |gR|
-    Rvc = { "V-REPLACE", "6" },       -- Virtual Replace mode completion |compl-generic|
-    Rvx = { "V-REPLACE", "6" },       -- Virtual Replace mode |i_CTRL-X| completion
-    c = { "COMMAND", "7" },           -- Command-line editing
-    cr = { "COMMAND", "7" },          -- Command-line editing overstrike mode |c_<Insert>|
-    cv = { "EX", "7" },               -- Vim Ex mode |gQ|
-    cvr = { "EX", "7" },              -- Vim Ex mode while in overstrike mode |c_<Insert>|
-    r = { "PROMPT", "3" },            -- Hit-enter prompt
-    rm = { "MORE", "3" },             -- The -- more -- prompt
-    ["r?"] = { "CONFIRM", "3" },      -- A |:confirm| query of some sort
-    ["!"] = { "SHELL", "4" },         -- Shell or external command is executing
-    t = { "TERMINAL", "5" },          -- Terminal mode: keys go to the job
-}
-
 local LHS_ITEM_SEP = " | "
 local RHS_ITEM_SEP = " | "
-function Statusline.enable_git_folder(val)
-    vim.g.enable_git_folder = val
+local git_status = ""
+
+local function toggle_git_folder()
+    vim.g.enable_git_folder = not vim.g.enable_git_folder
 end
 
-function Statusline.active(git_status)
-    local mode = vim.fn.mode()
-    local mode_name = " " .. (mode_map[mode][1] or mode)
-    local hlMode = "%" .. (mode_map[mode][2] or "") .. "*"
+local function toggle_symbols()
+    vim.g.statusline_symbols = not vim.g.statusline_symbols
+end
+
+local function update_git_status()
+    git_status = vim.trim(vim.fn.system("git-wrapper stline"))
+    -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
+    -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
+    if git_status ~= "" then
+        if vim.g.enable_git_folder then
+            local git_folder = (vim.g.statusline_symbols and " " or "") ..
+                vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
+            git_status = git_folder ..
+                LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. git_status .. LHS_ITEM_SEP
+        else
+            git_status = (vim.g.statusline_symbols and "󰘬 " or "") .. git_status .. LHS_ITEM_SEP
+        end
+
+        local name = vim.api.nvim_buf_get_name(0)
+        if name ~= "" then
+            local is_untracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
+                vim.fn.expand("%:p") .. " 2>/dev/null") == ""
+            if is_untracked then
+                git_status = git_status .. "%#CurSearch#󰡯 "
+            end
+        end
+    end
+end
+
+function Statusline.set_statusline()
+    local mode = vim.fn.mode():gsub("%c", "")
+    local mode_name = ({ n = "NORMAL", i = "INSERT", v = "VISUAL", V = "VISUAL",
+            s = "SELECT", S = "SELECT", R = "REPLACE", c = "COMMAND", r = "PROMPT", t = "TERM", ["!"] = "SHELL" })
+        [mode:sub(1, 1)] or mode
+    local colors = {
+        NORMAL = "1",
+        INSERT = "2",
+        VISUAL = "4",
+        SELECT = "5",
+        REPLACE = "6",
+        COMMAND = "7",
+        TERM = "5",
+        PROMPT = "5",
+        SHELL = "5"
+    }
+    local hlMode = "%" .. (colors[mode_name] or "") .. "*"
     if mode == "t" then
         return hlMode .. mode_name .. "%*"
     else
-        return hlMode ..
-            mode_name .. "%*" .. LHS_ITEM_SEP .. git_status .. "%F %6*%m%* %=%Y" .. RHS_ITEM_SEP .. "%P %l:%c "
+        return hlMode .. mode_name .. "%*"
+            .. LHS_ITEM_SEP .. git_status .. "%F %6*%m%* %=%Y" .. RHS_ITEM_SEP .. "%P %l:%c "
     end
 end
 
 local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
 
-vim.api.nvim_create_autocmd({ "BufWinEnter", "BufReadPost" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
+    -- TODO Consider some of these, but seems to be working ok..
+    -- "FocusGained", "DirChanged", "TermClose"
     group = group,
     desc = "Activate statusline on focus",
     callback = function(ev)
-        if vim.bo[ev.buf].buftype ~= "" then
-            -- If not normal buffer exit early
-            return
+        if vim.bo[ev.buf].buftype == "" then
+            update_git_status()
+            vim.opt_local.statusline = '%!v:lua.Statusline.set_statusline()'
         end
-        local branch = vim.trim(vim.fn.system("git-wrapper stline"))
-        -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
-        -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
-        if branch ~= "" then
-            if vim.g.enable_git_folder then
-                local git_folder = (vim.g.statusline_symbols and " " or "") ..
-                    vim.trim(vim.fn.system("git-wrapper rev-parse --absolute-git-dir | sed \"s|^$HOME|~|\""))
-                branch = git_folder ..
-                    LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
-            else
-                branch = (vim.g.statusline_symbols and "󰘬 " or "") .. branch .. LHS_ITEM_SEP
-            end
-
-            local name = vim.api.nvim_buf_get_name(0)
-            if name ~= "" then
-                local is_untracked = vim.fn.system("git-wrapper ls-files --error-unmatch " ..
-                    vim.fn.expand("%:p") .. " 2>/dev/null") == ""
-                if is_untracked then
-                    branch = branch .. "%#CurSearch#󰡯 "
-                end
-            end
-        end
-        vim.opt_local.statusline = '%!v:lua.Statusline.active("' .. branch .. '")'
-    end,
+    end
 })
 
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = group,
-    desc = "Deactivate statusline when unfocused",
-    callback = function()
-        vim.opt_local.statusline = "%t"
-    end,
-})
+vim.api.nvim_create_user_command("StatusLineToggleSymbols", function()
+    toggle_symbols()
+end, { desc = "Toggle the statusline symbols" })
+
+vim.api.nvim_create_user_command("StatusLineToggleGitFolder", function()
+    toggle_git_folder()
+end, { desc = "Toggle the statusline git folder" })
