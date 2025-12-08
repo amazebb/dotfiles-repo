@@ -46,7 +46,7 @@ local function update_git_status()
 end
 
 local function update_lsp_status()
-    lsp_status = vim.lsp.get_clients({ bufnr = 0 }) ~= nil
+    lsp_status = #vim.lsp.get_clients({ bufnr = 0 }) > 0
 end
 
 function Statusline.set_statusline()
