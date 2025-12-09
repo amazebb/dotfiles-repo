@@ -63,9 +63,8 @@ Footer is optional]]
                 local resp = vim.json.decode(curl_res.stdout)
                 local commit_msg = resp.choices[1].message.content
 
-                -- put commit message into clipboard
                 vim.fn.setreg('+', commit_msg)
-                -- vim.notify("Conventional commit ready:\n\n" .. commit_msg, vim.log.levels.INFO)
+
                 local buf_opts = { modifiable = true }
                 local float_opts = { title = "Commit Message" }
                 require("functions").create_popup(vim.split(commit_msg, "\n"), buf_opts, float_opts)
