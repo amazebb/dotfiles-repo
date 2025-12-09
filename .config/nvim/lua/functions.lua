@@ -1,4 +1,5 @@
 local M = {}
+
 function M.update_lspconfigs()
     local config = vim.fs.abspath(vim.g.lsp_config)
     local repo = vim.fs.abspath(vim.g.lsp_repo)
@@ -16,6 +17,10 @@ function M.update_lspconfigs()
 end
 
 -- Create a floating popup window with given text lines
+---@param input table|fun(...)
+---@param user_buf? table
+---@param user_float? table
+---@param user_win? table
 function M.create_popup(input, user_buf, user_float, user_win)
     local buf = vim.api.nvim_create_buf(false, true)
     local width = math.floor(vim.o.columns * 0.8)
