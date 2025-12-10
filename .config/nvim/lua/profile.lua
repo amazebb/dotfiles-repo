@@ -1,12 +1,36 @@
+---@class Profiler
+---@field public profile function Profile a synchronous function
+---@field public async function Profile an async function
+
 local M = {}
 
+---Profile a synchronous function
+---
+---Examples:
+---```lua
+--- local P = require("profile")
+--- -- 1. Profile a synchronous function every time it is run
+--- local compute_heavy = P.profile("my_fun", my_fun)
+--- compute_heavy()
+---
+---
+--- -- 2. Profile a user command, can be inserted into nvim_create_user_command
+--- vim.api.nvim_create_user_command("HeavyCmd", P.profile("HeavyCmd", function()
+---   vim.fn.system({ "sleep", "0.1" })
+---   print("Command done")
+--- end), {})
+--- ```
+---
+---@param name string Name of the function, does not have to be same as fn
+---@param fn function The function to profile
+---@return function fun Return profiled function
 function M.profile(name, fn)
     return function(...)
         local start = vim.uv.hrtime()
         local ok, result = pcall(fn, ...)
         local elapsed = (vim.uv.hrtime() - start) / 1e6
 
-        vim.print(("[SYNC ] %s: %.3f ms"):format(name, elapsed))
+        vim.print(("[PROFILE-SYNC] %s: %.3f ms"):format(name, elapsed))
 
         if not ok then
             error(result)
@@ -15,14 +39,29 @@ function M.profile(name, fn)
     end
 end
 
-function M.profile_async(name, fn)
+---Profile an async function
+---
+---Examples: Profile an async callback (timer, LSP, uv)
+---```lua
+--- local P = require("profile")
+--- local timer = vim.uv.new_timer()
+--- timer:start(1000, 0, P.async("timer_callback", function()
+---   vim.loop.sleep(50)
+---   print("Timer fired!")
+--- end))
+--- ```
+---
+---@param name string Name of the function, does not have to be same as fn
+---@param fn function The function to profile
+---@return function fun Returned profiled function
+function M.async(name, fn)
     return function(...)
         local start = vim.uv.hrtime()
         local ok, result = pcall(fn, ...)
         local elapsed = (vim.uv.hrtime() - start) / 1e6
 
         vim.schedule(function()
-            vim.print(("[ASYNC] %s: %.3f ms"):format(name, elapsed))
+            vim.print(("[PROFILE-ASYNC] %s: %.3f ms"):format(name, elapsed))
         end)
 
         if not ok then
@@ -33,49 +72,3 @@ function M.profile_async(name, fn)
 end
 
 return M
-
--- -- init.lua or any plugin file
--- local P = require("profile")        -- P.profile and P.async
---
--- -- 1. Profile a normal synchronous function
--- local function compute_heavy()
---   local sum = 0
---   for i = 1, 5e7 do
---     sum = sum + math.sin(i)
---   end
---   return sum
--- end
---
--- -- Wrap it once (idiomatic)
--- compute_heavy = P.profile("compute_heavy", compute_heavy)
---
--- -- Now every call is automatically timed
--- compute_heavy()     -- → [SYNC  ] compute_heavy: 187.342 ms
--- compute_heavy()     -- → [SYNC  ] compute_heavy: 186.971 ms
---
---
--- -- 2. Profile an async callback (timer, LSP, uv)
--- local timer = vim.uv.new_timer()
--- timer:start(1000, 0, P.async("timer_callback", function()
---   vim.loop.sleep(50)        -- simulate work
---   print("Timer fired!")
--- end))
---
--- -- 3. Profile a user command
--- vim.api.nvim_create_user_command("HeavyCmd", P.profile("HeavyCmd", function()
---   vim.fn.system({ "sleep", "0.1" })
---   print("Command done")
--- end), {})
---
--- -- Call it
--- :HeavyCmd                   -- → [SYNC  ] HeavyCmd: 102.451 ms
---
---
--- -- 4. One-off inline profiling (no permanent wrap)
--- local function once()
---   local slow = P.profile("once.slow_block", function()
---     vim.loop.sleep(200)
---   end)
---   slow()                    -- prints and returns nil
--- end
--- once()                      -- → [SYNC  ] once.slow_block: 200.113 ms
