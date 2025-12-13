@@ -5,7 +5,7 @@ vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 require("fzf-lua").setup({ buffers = { sort_lastused = false } })
 
---{{{1 Treesitter
+-- {{{1 Treesitter
 vim.pack.add({ {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "master",
