@@ -98,4 +98,19 @@ function M.nnn()
     M.create_popup(_setup_nnn)
 end
 
+function M.commit_msg_popup()
+    M.create_popup(function(win, buf)
+        vim.api.nvim_set_current_win(win)
+        vim.api.nvim_buf_call(buf, function()
+            -- Escape double quotes in the message for shell safety
+            local msg = vim.fn.getreg('+'):gsub('"', '\\"')
+            local git_cmd = 'zsh -c "git-wrapper commit -va -m \\"' .. msg .. '\\""'
+            vim.fn.jobstart(git_cmd, {
+                term = true,
+            })
+            vim.cmd("startinsert!")
+        end)
+    end)
+end
+
 return M
