@@ -90,9 +90,6 @@ local function generate_conventional_commit()
 
                 vim.fn.setreg('+', commit_msg)
 
-                -- local buf_opts = { modifiable = true }
-                -- local float_opts = { title = "Commit Message" }
-                -- require("functions").create_popup(vim.split(commit_msg, "\n"), buf_opts, float_opts)
                 require("functions").commit_msg_popup()
             end))
         end)

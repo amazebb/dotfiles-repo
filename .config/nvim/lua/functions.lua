@@ -11,52 +11,52 @@ function M.update_lspconfigs()
         vim.fn.system("cp " .. vim.fs.joinpath(lsp, file .. ".lua ") .. config)
         table.insert(lines, (vim.v.shell_error == 0 and "✅ " or "❌ ") .. file)
     end
-    local buf_opts = { modifiable = false }
-    local float_opts = { title = "LSP Config Sync" }
-    M.create_popup(lines, buf_opts, float_opts)
+    local opts = {
+        buf = { modifiable = false },
+        float = { title = "LSP Config Sync" }
+    }
+    M.floating_window(lines, opts)
 end
 
 -- Create a floating popup window with given text lines
 ---@param input table|fun(...)
----@param user_buf? table
----@param user_float? table
----@param user_win? table
-function M.create_popup(input, user_buf, user_float, user_win)
+---@param user_opts? table
+function M.floating_window(input, user_opts)
     local buf = vim.api.nvim_create_buf(false, true)
     local width = math.floor(vim.o.columns * 0.8)
     local height = math.floor(vim.o.lines * 0.8)
+
+    local opts = vim.tbl_extend("keep", user_opts or {}, {
+        enable_quit = true,
+        buf = { buflisted = false, bufhidden = "wipe" },
+        float = {
+            relative = "editor",
+            width = width,
+            height = height,
+            row = math.floor((vim.o.lines - height) / 2),
+            col = math.floor((vim.o.columns - width) / 2),
+            style = "minimal",
+            border = "rounded",
+        },
+        win_opts = { number = false, relativenumber = false, cursorline = false, signcolumn = "no" }
+    })
 
     if type(input) == "table" then
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, input)
         width = math.min(math.max(unpack(vim.tbl_map(string.len, input))) + 2, width)
         height = math.min(#input, height)
     end
-    local buf_opts = vim.tbl_extend("keep", user_buf or {}, { buflisted = false, bufhidden = "wipe" })
-    for k, v in pairs(buf_opts) do vim.bo[buf][k] = v end
+    for k, v in pairs(opts.buf) do vim.bo[buf][k] = v end
 
-    local float_opts = vim.tbl_extend("keep", user_float or {}, {
-        relative = "editor",
-        width = width,
-        height = height,
-        row = math.floor((vim.o.lines - height) / 2),
-        col = math.floor((vim.o.columns - width) / 2),
-        style = "minimal",
-        border = "rounded",
-    })
-
-    local win = vim.api.nvim_open_win(buf, true, float_opts)
-    local win_opts = vim.tbl_extend("keep", user_win or {},
-        { number = false, relativenumber = false, cursorline = false, signcolumn = "no" })
-    for k, v in pairs(win_opts) do vim.wo[win][k] = v end
-
+    local win = vim.api.nvim_open_win(buf, true, opts.float)
+    for k, v in pairs(opts.win_opts) do vim.wo[win][k] = v end
 
     if type(input) == "function" then
         input(win, buf)
     end
 
-    -- Keymaps to close window and buffer with ESC or q
-    for _, key in ipairs({ "<Esc>", "q" }) do
-        vim.keymap.set({ "n", "t" }, key, function()
+    if opts.enable_quit then
+        vim.keymap.set({ "n", "t" }, "q", function()
             vim.api.nvim_win_close(win, true)
         end, { buffer = 0, silent = true })
     end
@@ -95,22 +95,19 @@ local function _setup_nnn(win, buf)
 end
 
 function M.nnn()
-    M.create_popup(_setup_nnn)
+    M.floating_window(_setup_nnn)
 end
 
 function M.commit_msg_popup()
-    M.create_popup(function(win, buf)
+    M.floating_window(function(win, buf)
         vim.api.nvim_set_current_win(win)
         vim.api.nvim_buf_call(buf, function()
-            -- Escape double quotes in the message for shell safety
-            local msg = vim.fn.getreg('+'):gsub('"', '\\"')
-            local git_cmd = 'zsh -c "git-wrapper commit -va -m \\"' .. msg .. '\\""'
-            vim.fn.jobstart(git_cmd, {
+            vim.fn.jobstart('zsh -c "git-wrapper commit -va"', {
                 term = true,
             })
             vim.cmd("startinsert!")
         end)
-    end)
+    end, { enable_quit = false })
 end
 
 return M
