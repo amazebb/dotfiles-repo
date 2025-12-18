@@ -1,5 +1,6 @@
 local M = {}
 
+--- Update the LSP config settings
 function M.update_lspconfigs()
     local config = vim.fs.abspath(vim.g.lsp_config)
     local repo = vim.fs.abspath(vim.g.lsp_repo)
@@ -94,10 +95,12 @@ local function _setup_nnn(win, buf)
     })
 end
 
+--- Launch nnn file picker
 function M.nnn()
     M.floating_window(_setup_nnn)
 end
 
+--- Create a commit message window
 function M.commit_msg_popup()
     M.floating_window(function(win, buf)
         vim.api.nvim_set_current_win(win)
