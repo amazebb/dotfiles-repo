@@ -16,7 +16,7 @@ opt.swapfile = false
 opt.updatetime = 500
 opt.winborder = "rounded"
 opt.shortmess:append("I")
-opt.foldmethod = "marker"
+opt.foldmethod = "indent"
 
 vim.cmd.filetype("on")
 

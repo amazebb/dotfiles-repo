@@ -1,5 +1,33 @@
 local M = {}
 
+function M.pretty_json(bufnr)
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local input = table.concat(lines, "\n") .. "\n"
+    local result = vim.system({ "jq" }, { text = true, stdin = input }):wait()
+    if result.code ~= 0 then
+        error("pretty_json: Failed to pretty print JSON " .. result.stderr)
+    end
+    local new_lines = vim.split(result.stdout, "\n", { trimempty = true })
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, new_lines)
+end
+
+---Use MacOS security to get password given service name
+---@param service string
+---@return string|nil
+function M.get_password(service)
+    local result = vim.system(
+        { 'security', 'find-generic-password', '-s', service, '-w' },
+        { text = true, timeout = 5000 }
+    ):wait()
+
+    if result.code ~= 0 then
+        local msg = 'Failed to read "' .. service .. '" from keychain (code: ' .. result.code .. ')'
+        vim.notify(msg, vim.log.levels.ERROR)
+        error(msg)
+    end
+    return result.stdout and result.stdout:gsub('%s+$', '') or nil
+end
+
 --- Update the LSP config settings
 function M.update_lspconfigs()
     local config = vim.fs.abspath(vim.g.lsp_config)
@@ -19,7 +47,7 @@ function M.update_lspconfigs()
     M.floating_window(lines, opts)
 end
 
--- Create a floating popup window with given text lines
+-- Create a floating popup window with given text lines and configurable options
 ---@param input table|fun(...)
 ---@param user_opts? table
 function M.floating_window(input, user_opts)
@@ -29,6 +57,7 @@ function M.floating_window(input, user_opts)
 
     local opts = vim.tbl_extend("keep", user_opts or {}, {
         enable_quit = true,
+        fun = nil,
         buf = { buflisted = false, bufhidden = "wipe" },
         float = {
             relative = "editor",
@@ -54,6 +83,9 @@ function M.floating_window(input, user_opts)
 
     if type(input) == "function" then
         input(win, buf)
+    end
+    if type(opts.fun) == "function" then
+        opts.fun(win, buf)
     end
 
     if opts.enable_quit then

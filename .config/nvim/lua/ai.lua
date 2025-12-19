@@ -1,20 +1,16 @@
+---@class AI
 local M = {}
 
--- {{{1 AI config
 M.ai = {
-    -- {{{ Global settings
     provider = "xai",
     temperature = 0.2,
     max_tokens = 1000,
-    -- }}}
-    -- {{{ xAI
     xai = {
-        url = "https://api.x.ai/v1/chat/completions",
+        url_chat = "https://api.x.ai/v1/chat/completions",
+        url_billing = "https://management-api.x.ai/v1/billing/teams/TEAMID/prepaid/balance",
         models = { "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-code-fast-1", "grok-4-fast-reasoning", "grok-4-fast-non-reasoning" },
         selected_model = "grok-4-fast-non-reasoning",
     },
-    -- }}}
-    -- {{{ System Prompt
     system =
     {
         commit_msg = [[
@@ -34,21 +30,38 @@ Body is a paragraph of dot points, where each change is a dot point
 Footer is optional]]
     },
 }
--- }}}
--- }}}
 
-local function get_api_key()
-    local result = vim.system(
-        { 'security', 'find-generic-password', '-s', M.ai.provider .. "-api-key", '-w' },
-        { text = true, timeout = 5000 }
-    ):wait()
-
-    if result.code ~= 0 then
-        local msg = 'Failed to read ' .. M.ai.provider .. '-api-key from keychain (code ' .. result.code .. ')'
-        vim.notify(msg, vim.log.levels.ERROR)
-        error(msg)
+---Get the api-key given API type
+---@param opt string
+---@return string
+local function keyname(opt)
+    local key_name = M.ai.provider
+    if opt == "chat" then
+        key_name = key_name .. "-api-key"
+    elseif opt == "manage" then
+        key_name = key_name .. "-manage-api-key"
+    elseif opt == "team" then
+        key_name = key_name .. "-team-id"
     end
-    return result.stdout:gsub('%s+$', '')
+    return (assert(require("functions").get_password(key_name), "keyname: No key found for " .. key_name))
+end
+
+local function get_billing()
+    vim.system({ "curl", (M.ai[M.ai.provider].url_billing:gsub("TEAMID", keyname("team"))),
+        "-H", "Authorization: Bearer " .. keyname("manage"),
+    }, { text = true }, vim.schedule_wrap(function(res)
+        if res.code ~= 0 then
+            vim.notify(M.ai.provider .. " API call failed", vim.log.levels.ERROR)
+            return
+        end
+        local fun = require("functions")
+        fun.floating_window(vim.split(res.stdout, "\n", { plain = true }),
+            {
+                fun = function(_, buf)
+                    fun.pretty_json(buf)
+                end
+            })
+    end))
 end
 
 local function generate_conventional_commit()
@@ -76,16 +89,16 @@ local function generate_conventional_commit()
             })
 
             vim.system({
-                "curl", M.ai[M.ai.provider].url,
+                "curl", M.ai[M.ai.provider].url_chat,
                 "-H", "Content-Type: application/json",
-                "-H", "Authorization: Bearer " .. get_api_key(),
+                "-H", "Authorization: Bearer " .. keyname("chat"),
                 "-d", payload
-            }, { text = true }, vim.schedule_wrap(function(curl_res)
-                if curl_res.code ~= 0 then
+            }, { text = true }, vim.schedule_wrap(function(res)
+                if res.code ~= 0 then
                     vim.notify(M.ai.provider .. " API call failed", vim.log.levels.ERROR)
                     return
                 end
-                local resp = vim.json.decode(curl_res.stdout)
+                local resp = vim.json.decode(res.stdout)
                 local commit_msg = resp.choices[1].message.content
 
                 vim.fn.setreg('+', commit_msg)
@@ -96,5 +109,5 @@ local function generate_conventional_commit()
     )
 end
 
--- Example binding
-vim.keymap.set("n", "<leader>cc", generate_conventional_commit, { desc = "Generate conventional commit via xAI" })
+vim.keymap.set("n", "<leader>cc", generate_conventional_commit, { desc = "Generate conventional commit via AI" })
+vim.keymap.set("n", "<leader>ab", get_billing, { desc = "Get AI provider billing information" })
