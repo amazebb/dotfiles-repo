@@ -6,8 +6,10 @@ M.ai = {
     temperature = 0.2,
     max_tokens = 1000,
     xai = {
-        url_chat = "https://api.x.ai/v1/chat/completions",
-        url_billing = "https://management-api.x.ai/v1/billing/teams/TEAMID/prepaid/balance",
+        url = {
+            chat = "https://api.x.ai/v1/chat/completions",
+            billing = "https://management-api.x.ai/v1/billing/teams/TEAMID/prepaid/balance"
+        },
         models = { "grok-4-1-fast-reasoning", "grok-4-1-fast-non-reasoning", "grok-code-fast-1", "grok-4-fast-reasoning", "grok-4-fast-non-reasoning" },
         selected_model = "grok-4-fast-non-reasoning",
     },
@@ -47,7 +49,7 @@ local function keyname(opt)
 end
 
 local function get_billing()
-    vim.system({ "curl", (M.ai[M.ai.provider].url_billing:gsub("TEAMID", keyname("team"))),
+    vim.system({ "curl", (M.ai[M.ai.provider].url.billing:gsub("TEAMID", keyname("team"))),
         "-H", "Authorization: Bearer " .. keyname("manage"),
     }, { text = true }, vim.schedule_wrap(function(res)
         if res.code ~= 0 then
@@ -89,7 +91,7 @@ local function generate_conventional_commit()
             })
 
             vim.system({
-                "curl", M.ai[M.ai.provider].url_chat,
+                "curl", M.ai[M.ai.provider].url.chat,
                 "-H", "Content-Type: application/json",
                 "-H", "Authorization: Bearer " .. keyname("chat"),
                 "-d", payload
