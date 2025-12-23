@@ -55,7 +55,7 @@ function M.floating_window(input, user_opts)
     local width = math.floor(vim.o.columns * 0.8)
     local height = math.floor(vim.o.lines * 0.8)
 
-    local opts = vim.tbl_extend("keep", user_opts or {}, {
+    local opts = vim.tbl_deep_extend("keep", user_opts or {}, {
         enable_quit = true,
         fun = nil,
         buf = { buflisted = false, bufhidden = "wipe" },
