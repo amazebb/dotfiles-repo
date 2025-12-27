@@ -16,10 +16,11 @@ opt.swapfile = false
 opt.updatetime = 500
 opt.winborder = "rounded"
 opt.shortmess:append("I")
-opt.foldmethod = "indent"
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevelstart = 99
 
 vim.cmd.filetype("on")
-
 vim.g.python3_host_prog = "$HOME/.virtualenvs/py-nvim/.venv/bin/python3"
 vim.g.enable_git_folder = true
 vim.g.statusline_symbols = false

@@ -1,11 +1,11 @@
--- {{{1 AppleScript
+-- AppleScript
 vim.pack.add({ "https://github.com/vim-scripts/applescript.vim" })
 
--- {{{1 fzf-lua
+-- fzf-lua
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 require("fzf-lua").setup({ buffers = { sort_lastused = false } })
 
--- {{{1 Treesitter
+-- Treesitter
 vim.pack.add({ {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "master",
@@ -42,7 +42,7 @@ require("nvim-treesitter.configs").setup({
 })
 ---@diagnostic enable: missing-fields
 
--- {{{1 Blink
+-- Blink
 vim.pack.add({
     { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 })
