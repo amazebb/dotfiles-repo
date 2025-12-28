@@ -30,7 +30,7 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin"
 export PATH="$PATH:$HOME/.local/scripts"
-export PATH="$PATH:$HOME/.nvim-nightly/nvim-macos-arm64/bin"
+export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
 ## Aliases
 # Define file listing alias using eza
@@ -46,7 +46,7 @@ alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/
 alias dg='git-wrapper'
 
 # Define nn for nvim nightly our default editor
-alias nn="\$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
+alias nn="\$HOME/.nvim-nightly/bin/nvim"
 
 # Define n for our nnn script that starts in preview mode
 alias n='source ~/.local/scripts/nnn-split'

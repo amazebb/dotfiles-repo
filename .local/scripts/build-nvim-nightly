@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Git pull latest neovim and build
+
+# Version
+VERSION="1.0.0"
+
+# Help function
+usage() {
+  echo "build-nvim-nightly - Pull latest neovim and build"
+  echo
+  echo "Usage: build-nvim-nightly [options]"
+  echo
+  echo "Options:"
+  echo "  -h, --help    Show this help message"
+  echo "  --version     Show version information"
+  exit 0
+}
+
+# Version function
+version() {
+  echo "$VERSION"
+  exit 0
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h | --help) usage ;;
+    --version) version ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage
+      ;;
+    *) break ;; # Non-option args (positionals)
+  esac
+  shift
+done
+
+# Main script logic here
+echo "Script running with the following inputs:"
+
+nvim_repo="$HOME/Code/GitHub/neovim/"
+cd "$nvim_repo" || exit
+git pull
+rm -rf build
+make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.nvim-nightly"
+make install
