@@ -4,7 +4,6 @@ vim.g.lsp_enable_list = {
     "basedpyright",
     "bashls",
     "cssls",
-    "gopls",
     "html",
     "jdtls",
     "jsonls",

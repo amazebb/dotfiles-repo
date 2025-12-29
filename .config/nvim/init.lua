@@ -1,7 +1,7 @@
-require("configs")
-require("keymaps")
-require("autocmds")
-require("statusline")
-require("plugins")
-require("lsp")
-require("ai")
+require "configs"
+require "keymaps"
+require "autocmds"
+require "statusline"
+require "plugins"
+require "lsp"
+require "ai"
