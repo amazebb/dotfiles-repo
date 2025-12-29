@@ -32,6 +32,23 @@ export PATH="$PATH:$HOME/.juliaup/bin"
 export PATH="$PATH:$HOME/.local/scripts"
 export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
+## Environment variables
+# Tell MATLAB to use the MacOS Accelerate framework
+export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
+# MATLAB JRE Setup
+# 1. Update the MATLAB_JAVA version
+export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
+# 2. source ~/.zshrc
+# 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
+# After this step matlab can be started as a regualr applicatio
+
+export GITEA_WORK_DIR="$HOME/.gitea-data"
+export EDITOR="$HOME/.nvim-nightly/bin/nvim"
+export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
+
+# Bind ? key for toggling the fzf preview window, useful for long commands that dont fit on screen
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
+
 ## Aliases
 # Define file listing alias using eza
 alias ls="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
@@ -46,7 +63,7 @@ alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/
 alias dg='git-wrapper'
 
 # Define nn for nvim nightly our default editor
-alias nn="\$HOME/.nvim-nightly/bin/nvim"
+alias nn='$HOME/.nvim-nightly/bin/nvim'
 
 # Define n for our nnn script that starts in preview mode
 alias n='source ~/.local/scripts/nnn-split'
@@ -55,23 +72,6 @@ alias n='source ~/.local/scripts/nnn-split'
 # over as <2028>, (U+2028) is the Unicode Line Separator
 # To use copy selection in Apple Notes, then run cpnotes in the terminal
 alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
-
-## Environment variables
-# Tell MATLAB to use the MacOS Accelerate framework
-export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-# MATLAB JRE Setup
-# 1. Update the MATLAB_JAVA version
-export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
-# 2. source ~/.zshrc
-# 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
-# After this step matlab can be started as a regualr applicatio
-
-export GITEA_WORK_DIR="$HOME/.gitea-data"
-export EDITOR="$HOME/.nvim-nightly/nvim-macos-arm64/bin/nvim"
-export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
-
-# Bind ? key for toggling the fzf preview window, useful for long commands that dont fit on screen
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
 
 # Setup for zoxide smarter 'cd'
 # Initialize zoxide directory navigation tool for zsh
