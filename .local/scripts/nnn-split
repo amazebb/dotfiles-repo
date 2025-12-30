@@ -31,7 +31,7 @@ if [ -e "${TMUX%%,*}" ]; then
     tmux split-window -e "NNN_FIFO=$NNN_FIFO" -dh "$preview_cmd"
 fi
 
-nnn -G -a -Pp "$@"
+nnn -d -G -a -Pp "$@"
 
 # shellcheck source=/dev/null
 [ ! -f "$NNN_TMPFILE" ] || {
