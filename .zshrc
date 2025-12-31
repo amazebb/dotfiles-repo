@@ -15,9 +15,8 @@ setopt SHARE_HISTORY          # Share history across sessions
 unsetopt HIST_IGNORE_ALL_DUPS # Allow consecutive duplicates in history
 unsetopt HIST_IGNORE_SPACE    # Add commands starting with space to history
 
-# Bind Up arrow key (ANSI escape sequence) to search history backward for commands starting with current line prefix
+# Bind Up/Down arrow key to search backward/forward through history for commands starting with current line prefix
 bindkey "^[[A" history-beginning-search-backward
-# Bind Down arrow key (ANSI escape sequence) to search history forward for commands starting with current line prefix
 bindkey "^[[B" history-beginning-search-forward
 
 # Configure PATH environment variable
@@ -34,20 +33,20 @@ export PATH="$PATH:$HOME/.local/scripts"
 export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
 ## Environment variables
-# Tell MATLAB to use the MacOS Accelerate framework
+# Tell MATLAB to use the macOS Accelerate framework
 export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
 # MATLAB JRE Setup
 # 1. Update the MATLAB_JAVA version
 export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 # 2. source ~/.zshrc
 # 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
-# After this step matlab can be started as a regualr applicatio
+# After this step MATLAB can be started as a regular application
 
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="$HOME/.nvim-nightly/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
-# Bind ? key for toggling the fzf preview window, useful for long commands that dont fit on screen
+# Bind ? Key for toggling the fzf preview window, useful for long commands that don't fit on screen
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
 
 ## Aliases
@@ -71,7 +70,7 @@ alias n='source ~/.local/scripts/nnn-split'
 
 # Copies Apple Notes while retaining newline which would otherwise be copied
 # over as <2028>, (U+2028) is the Unicode Line Separator
-# To use copy selection in Apple Notes, then run cpnotes in the terminal
+# To use copy selection in Apple Notes, then run "cpnotes" in the terminal
 alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
 
 # Setup for zoxide smarter 'cd'

@@ -1,5 +1,5 @@
 # shellcheck disable=SC2329,SC2034
-# Function to set up custom zsh prompt with git status
+# Function to set up custom ZSH prompt with git status
 setup_prompt() {
     # Enable command substitution in prompt
     setopt PROMPT_SUBST
@@ -14,11 +14,11 @@ setup_prompt() {
         RIGHT_ARROW='\uE0B0'
         GIT_BRANCH_SYMBOL='\uE0A0'
         COLORED_RIGHT_ARROW='%{%F{blue}%}'$RIGHT_ARROW'%f'
-        # Prevent Mac Terminal.app brightening font color with no background
+        # In macOS 15.x and prior, prevent Terminal.app brightening font color with no background:
         # https://apple.stackexchange.com/questions/282911/
         # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
-        # Setting background to an out of range value works, %k and %K{256} do not work
-        # Not needed for Kitty
+        # Setting background to an out of range value works, %k and %K{256} do not work.
+        # Not needed for Kitty and terminals that support truecolor
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
             RESET_BACKGROUND='%{\e[48;5;256m%}'
         else
@@ -50,7 +50,6 @@ setup_prompt() {
 
     # Update Git status before each prompt
     precmd() {
-        # Update the Git status line
         GIT_STLINE=$(git-wrapper stline)
     }
 
@@ -85,6 +84,6 @@ setup_prompt() {
         # %(?.X.Y)    : Conditional: X if last command succeeded (exit code 0), Y if failed
     }
 
-    # Hook precmd to update prompt
+    # Final precmd hook to update prompt
     precmd_functions+=(precmd_prompt rprompt_segment)
 }
