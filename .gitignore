@@ -13,8 +13,6 @@
 !/.config/kitty/kitty.conf
 !/.config/homebrew
 
-!/.virtualenvs
-
 !.zshrc
 !.zsh_prompt
 !.editorconfig
