@@ -7,7 +7,7 @@ vim.g.lsp_enable_list = {
     "html",
     "jdtls",
     "jsonls",
-    "julials",
+    "jetls",
     "lua_ls",
     "ruff",
     "ts_ls",

@@ -29,6 +29,7 @@ export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin"
+export PATH="$PATH:$HOME/.julia/bin"
 export PATH="$PATH:$HOME/.local/scripts"
 export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
