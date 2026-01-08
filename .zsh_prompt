@@ -1,4 +1,4 @@
-# shellcheck disable=SC2329,SC2034
+# shellcheck disable=SC2329,SC2034,SC2295,SC2296
 # Function to set up custom ZSH prompt with git status
 setup_prompt() {
     # Enable command substitution in prompt
@@ -7,22 +7,23 @@ setup_prompt() {
 
     prompt_segment() {
         # Wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
-        echo -n "%{%K{blue}%}%60<..<%~"
+        FG_TEXT='%{%F{15}%}'
+        echo -n "%{%K{blue}%}$FG_TEXT%60<..<%~"
     }
 
     prompt_segment_tail() {
         RIGHT_ARROW='\uE0B0'
         GIT_BRANCH_SYMBOL='\uE0A0'
         COLORED_RIGHT_ARROW='%{%F{blue}%}'$RIGHT_ARROW'%f'
+        FG_TEXT='%{%F{15}%}'
         # In macOS 15.x and prior, prevent Terminal.app brightening font color with no background:
         # https://apple.stackexchange.com/questions/282911/
         # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
         # Setting background to an out of range value works, %k and %K{256} do not work.
         # Not needed for Kitty and terminals that support truecolor
+        RESET_BG='%k'
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            RESET_BACKGROUND='%{\e[48;5;256m%}'
-        else
-            RESET_BACKGROUND='%k'
+            RESET_BG+='%k%{\e[48;5;256m%}'
         fi
         if [[ -n ${GIT_STLINE} ]]; then
             if [[ ${GIT_STLINE} =~ [+~?] ]]; then
@@ -32,13 +33,13 @@ setup_prompt() {
                 BG_COLOR='%{%K{green}%}'
                 FG_COLOR='%{%F{green}%}'
             fi
-            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BACKGROUND$RIGHT_ARROW%f%k "
+            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $FG_TEXT$GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BG$RIGHT_ARROW%f "
         else
-            echo -n "$RESET_BACKGROUND$COLORED_RIGHT_ARROW%k "
+            echo -n "$RESET_BG$COLORED_RIGHT_ARROW "
         fi
     }
 
-    # Prompt segment for user@host without triangle
+    # Segment for user@host without triangle
     user_host_segment() {
         ENABLE_USER_HOST=0
         if [[ ${ENABLE_USER_HOST} -eq 1 ]]; then
@@ -61,29 +62,67 @@ setup_prompt() {
         PS1="${left_prompt}"
     }
 
+    get_relative_depth() {
+        # Calculate relative path from VENV to current directory as "../" notation
+        # Given a base path (typically a Python virtual environment parent), returns
+        # a string of "../" repeated for each directory level between the base and PWD.
+        local VENV="$1"
+        local relative result depth
+
+        [[ "$PWD" == "$VENV" ]] && relative="" || relative="${PWD#$VENV/}"
+        
+        if [[ -n "$relative" ]]; then
+            depth=$(( ${#${relative//[^\/]}} + 1 ))
+        else
+            depth=0
+        fi
+        
+        result=""
+        for ((i=0; i<depth; i++)); do result+="../"; done
+        
+        echo "$result"
+    }
+
     # Update right prompt dynamically
     rprompt_segment() {
         LEFT_ARROW=$'\uE0B2'
         PYTHON_SYMBOL=$'\uE606'
-        PYTHON_VENV_STATUS=""
+        PYTHON_VENV=""
+
+        RESET_BG='%k'
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            RESET_BACKGROUND=$'%{\e[48;5;256m%}'
-        else
-            RESET_BACKGROUND=''
+            RESET_BG+=$'%{\e[48;5;256m%}'
         fi
+
         if [[ -n "$VIRTUAL_ENV" ]]; then
-            venv_parent="${VIRTUAL_ENV%/*}"
-            if [[ "$PWD" == "$venv_parent"/* || "$PWD" == "$venv_parent" ]]; then
-                PYTHON_VENV_STATUS="%{%F{blue}%}$LEFT_ARROW%f%{%K{blue}%}$PYTHON_SYMBOL"
+            VENV="${VIRTUAL_ENV%/*}"
+
+            if [[ "$PWD" == "$VENV"/* || "$PWD" == "$VENV" ]]; then
+                FG_COLOR='%{%F{blue}%}'
+                BG_COLOR='%{%K{blue}%}'
+                relative_path=$(get_relative_depth "$VENV")
+                VENV_STR="$relative_path${VIRTUAL_ENV##*/}"
             else
-                PYTHON_VENV_STATUS="%{%F{magenta}%}$LEFT_ARROW%f%{%K{magenta}%}$PYTHON_SYMBOL"
+                FG_COLOR='%{%F{magenta}%}'
+                BG_COLOR='%{%K{magenta}%}'
+                VENV_STR="$VENV"
             fi
+            PYTHON_VENV="$FG_COLOR$LEFT_ARROW"
+            PYTHON_VENV+="%f$BG_COLOR$PYTHON_SYMBOL $VENV_STR "
         fi
+
         # See Chapter 13: Prompt Expansion in Z Shell Manual for more info
-        RPS1="${RESET_BACKGROUND}${PYTHON_VENV_STATUS} %(?.%{%F{green}%}.%{%F{red}%})${LEFT_ARROW}%f%(?.%{%K{green}%}.%{%K{red}%}) %*%f%k"
-        # %(?.X.Y)    : Conditional: X if last command succeeded (exit code 0), Y if failed
+        FG_OK='%{%F{green}%}'
+        BG_OK='%{%K{green}%}'
+        FG_ERROR='%{%F{red}%}'
+        BG_ERROR='%{%K{red}%}'
+        FG_TEXT='%{%F{15}%}'
+
+        RPS1="$RESET_BG$PYTHON_VENV"
+        RPS1+="%(?.$FG_OK.$FG_ERROR)$LEFT_ARROW"
+        RPS1+="$FG_TEXT%(?.$BG_OK.$BG_ERROR) %*%f%k"
     }
 
-    # Final precmd hook to update prompt
+    # Final hook to update prompt
     precmd_functions+=(precmd_prompt rprompt_segment)
 }
