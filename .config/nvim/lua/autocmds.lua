@@ -141,19 +141,21 @@ autocmd("FileType", {
 vim.api.nvim_create_user_command("FormatAppleScript", function()
     local file = vim.fn.expand("%:p")
     local posix_file = vim.fn.fnameescape(file)
-    local cmd = string.format(
+    local cmd = { "sh", "-c", string.format(
         "osadecompile %q > %q.formatted && mv %q.formatted %q",
         posix_file,
         posix_file,
         posix_file,
         posix_file
-    )
-    local _, err = vim.fn.system(cmd)
-    if vim.v.shell_error == 0 then
-        vim.cmd("edit") -- Reload buffer
-    else
-        print("Error formatting AppleScript: " .. err)
-    end
+    ) }
+
+    vim.system(cmd, { text = true }, vim.schedule_wrap(function(result)
+        if result.code == 0 then
+            vim.cmd("edit") -- Reload buffer
+        else
+            print("Error formatting AppleScript: " .. (result.stderr or result.stdout or "unknown error"))
+        end
+    end))
 end, { desc = "Format AppleScript using osadecompile" })
 
 -- Highlight yanked text

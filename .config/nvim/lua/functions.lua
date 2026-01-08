@@ -35,16 +35,23 @@ function M.update_lspconfigs()
     local lsp = vim.fs.joinpath(repo, "lsp")
     local lines = {}
 
-    vim.fn.system("git -C " .. repo .. " pull")
-    for _, file in ipairs(vim.g.lsp_enable_list) do
-        vim.fn.system("cp " .. vim.fs.joinpath(lsp, file .. ".lua ") .. config)
-        table.insert(lines, (vim.v.shell_error == 0 and "✅ " or "❌ ") .. file)
-    end
-    local opts = {
-        buf = { modifiable = false },
-        float = { title = "LSP Config Sync" }
-    }
-    M.floating_window(lines, opts)
+    vim.system({ "git", "-C", repo, "pull" }, { text = true }, vim.schedule_wrap(function(result)
+        if vim.trim(result.stdout) == "Already up to date." then
+            -- Copy all files when there has been a change
+            for _, file in ipairs(vim.g.lsp_enable_list) do
+                local ok, err = vim.uv.fs_copyfile(vim.fs.joinpath(lsp, file .. ".lua"),
+                    vim.fs.joinpath(config, file .. ".lua"))
+                table.insert(lines, (ok and "✅ " or "❌ " .. err .. " ") .. file)
+            end
+        else
+            lines = { "No changes to nvim-lspconfig repository" }
+        end
+        local opts = {
+            buf = { modifiable = false },
+            float = { title = "LSP Config Sync" }
+        }
+        M.floating_window(lines, opts)
+    end))
 end
 
 -- Create a floating popup window with given text lines and configurable options

@@ -16,7 +16,7 @@ local M = {}
 ---
 --- -- 2. Profile a user command, can be inserted into nvim_create_user_command
 --- vim.api.nvim_create_user_command("HeavyCmd", P.profile("HeavyCmd", function()
----   vim.fn.system({ "sleep", "0.1" })
+---   vim.system({ "sleep", "0.1" }):wait()
 ---   print("Command done")
 --- end), {})
 --- ```
