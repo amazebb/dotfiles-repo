@@ -1,4 +1,4 @@
-# shellcheck disable=SC2329,SC2034,SC2295,SC2296
+# shellcheck disable=SC2329,SC2034
 # Function to set up custom ZSH prompt with git status
 setup_prompt() {
     # Enable command substitution in prompt
@@ -8,7 +8,7 @@ setup_prompt() {
     prompt_segment() {
         # Wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
         FG_TEXT='%{%F{15}%}'
-        echo -n "%{%K{blue}%}$FG_TEXT%60<..<%~"
+        echo -n "%{%K{blue}%}$FG_TEXT%40<..<%~"
     }
 
     prompt_segment_tail() {
@@ -65,21 +65,17 @@ setup_prompt() {
     get_relative_depth() {
         # Calculate relative path from VENV to current directory as "../" notation
         # Given a base path (typically a Python virtual environment parent), returns
-        # a string of "../" repeated for each directory level between the base and PWD.
+        # a string of "/" repeated for each directory level between the base and PWD.
         local VENV="$1"
-        local relative result depth
+        local relative result
+        local depth=0
 
-        [[ "$PWD" == "$VENV" ]] && relative="" || relative="${PWD#$VENV/}"
+        [[ "$PWD" != "$VENV" ]] && relative="${PWD#"$VENV"/}"
         
-        if [[ -n "$relative" ]]; then
-            depth=$(( ${#${relative//[^\/]}} + 1 ))
-        else
-            depth=0
-        fi
+        [[ -n "$relative" ]] && depth=$(( ${#${relative//[^\/]}} + 1 ))
         
-        result=""
-        for ((i=0; i<depth; i++)); do result+="../"; done
-        
+        for ((i=0; i<depth; i++)); do result+="/"; done
+
         echo "$result"
     }
 
@@ -105,7 +101,7 @@ setup_prompt() {
             else
                 FG_COLOR='%{%F{magenta}%}'
                 BG_COLOR='%{%K{magenta}%}'
-                VENV_STR="$VENV"
+                VENV_STR="${${VENV/#$PWD/}/#$HOME/~}"
             fi
             PYTHON_VENV="$FG_COLOR$LEFT_ARROW"
             PYTHON_VENV+="%f$BG_COLOR$PYTHON_SYMBOL $VENV_STR "
