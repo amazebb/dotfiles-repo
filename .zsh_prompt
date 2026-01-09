@@ -74,7 +74,7 @@ setup_prompt() {
         
         [[ -n "$relative" ]] && depth=$(( ${#${relative//[^\/]}} + 1 ))
         
-        for ((i=0; i<depth; i++)); do result+="/"; done
+        for ((i=0; i<depth; i++)); do result+="../"; done
 
         echo "$result"
     }
@@ -101,7 +101,8 @@ setup_prompt() {
             else
                 FG_COLOR='%{%F{magenta}%}'
                 BG_COLOR='%{%K{magenta}%}'
-                VENV_STR="${${VENV/#$PWD/}/#$HOME/~}"
+                local tmp=${VENV/#$PWD/}
+                VENV_STR="${tmp/#$HOME/~}"
             fi
             PYTHON_VENV="$FG_COLOR$LEFT_ARROW"
             PYTHON_VENV+="%f$BG_COLOR$PYTHON_SYMBOL $VENV_STR "
