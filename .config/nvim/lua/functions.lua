@@ -117,12 +117,10 @@ local function _setup_nnn(win, buf)
         buffer = buf,
         once = true,
         callback = function()
-            ---@diagnostic disable: param-type-mismatch
-            local output = vim.fn.getbufline(buf, 1, "$")
-            ---@diagnostic enable: param-type-mismatch
+            local output = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
             local file = output[1]
-            if file and vim.fn.filereadable(file) == 1 then
+            if file and vim.uv.fs_stat(file) ~= nil then
                 vim.api.nvim_win_close(win, true)
                 if vim.api.nvim_buf_is_valid(buf) then
                     vim.api.nvim_buf_delete(buf, { force = true })

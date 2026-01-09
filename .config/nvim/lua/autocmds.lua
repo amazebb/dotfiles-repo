@@ -117,7 +117,7 @@ end, { desc = "Launch nnn file picker in floating window" })
 
 -- Disbale ShellCheck warning on current line
 vim.api.nvim_create_user_command("ShellCheckDisable", function()
-    local line = vim.fn.line(".") - 1
+    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
     local diagnostics = vim.diagnostic.get(0, { lnum = line })
     for _, diag in ipairs(diagnostics) do
         if diag.source == "shellcheck" and diag.code then

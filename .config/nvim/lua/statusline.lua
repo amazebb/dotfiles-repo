@@ -54,7 +54,7 @@ local function update_lsp_status()
 end
 
 function Statusline.set_statusline()
-    local mode = vim.fn.mode():gsub("%c", "")
+    local mode = vim.api.nvim_get_mode().mode:gsub("%c", "")
     local mode_name = ({ n = "NORMAL", i = "INSERT", v = "VISUAL", V = "VISUAL",
             s = "SELECT", S = "SELECT", R = "REPLACE", c = "COMMAND", r = "PROMPT", t = "TERM", ["!"] = "SHELL" })
         [mode:sub(1, 1)] or mode
