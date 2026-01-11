@@ -1,21 +1,31 @@
 # shellcheck disable=SC2329,SC2034
 # Function to set up custom ZSH prompt with git status
+typeset -gA ZZP
+ZZP=(
+    [fgt]='%{%F{15}%}'     # Foreground text color
+    [k]='%{\e[48;5;256m%}' # Reset background for 256 color macOS Terminal
+    [+]='yellow'           # Git working tree changes color
+    [ok]='green'           # Git working tree clean color
+    [color]='blue'         # Main prompt color
+    [host]=''              # Display user@host ("%n@%m"), or hide ("")
+    [width]='40'           # Width of the prompt
+    [ra]='\uE0B0'          # PS1 right trailing symbol
+    [la]=$'\uE0B2'         # RPS1 left leading symbol
+    [git]='\uE0A0'         # Git branch symbol
+    [python]=$'\uE606'     # Python symbol
+ )
+
 setup_prompt() {
     # Enable command substitution in prompt
     setopt PROMPT_SUBST
-    GIT_STLINE=""
 
     prompt_segment() {
         # Wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
-        FG_TEXT='%{%F{15}%}'
-        echo -n "%{%K{blue}%}$FG_TEXT%40<..<%~"
+        echo -n "%{%K{blue}%}${ZZP[fgt]}%${ZZP[width]}<..<%~"
     }
 
     prompt_segment_tail() {
-        RIGHT_ARROW='\uE0B0'
-        GIT_BRANCH_SYMBOL='\uE0A0'
-        COLORED_RIGHT_ARROW='%{%F{blue}%}'$RIGHT_ARROW'%f'
-        FG_TEXT='%{%F{15}%}'
+        COLORED_RIGHT_ARROW='%{%F{blue}%}'${ZZP[ra]}'%f'
         # In macOS 15.x and prior, prevent Terminal.app brightening font color with no background:
         # https://apple.stackexchange.com/questions/282911/
         # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
@@ -23,7 +33,7 @@ setup_prompt() {
         # Not needed for Kitty and terminals that support truecolor
         RESET_BG='%k'
         if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            RESET_BG+='%k%{\e[48;5;256m%}'
+            RESET_BG+=${ZZP[k]}
         fi
         if [[ -n ${GIT_STLINE} ]]; then
             if [[ ${GIT_STLINE} =~ [+~?] ]]; then
@@ -33,19 +43,9 @@ setup_prompt() {
                 BG_COLOR='%{%K{green}%}'
                 FG_COLOR='%{%F{green}%}'
             fi
-            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW $FG_TEXT$GIT_BRANCH_SYMBOL ${GIT_STLINE}$FG_COLOR $RESET_BG$RIGHT_ARROW%f "
+            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW ${ZZP[fgt]}${ZZP[git]} ${GIT_STLINE}$FG_COLOR $RESET_BG${ZZP[ra]}%f "
         else
             echo -n "$RESET_BG$COLORED_RIGHT_ARROW "
-        fi
-    }
-
-    # Segment for user@host without triangle
-    user_host_segment() {
-        ENABLE_USER_HOST=0
-        if [[ ${ENABLE_USER_HOST} -eq 1 ]]; then
-            echo -n "%n@%m"
-        else
-            echo ""
         fi
     }
 
@@ -56,7 +56,7 @@ setup_prompt() {
 
     # Build left prompt dynamically to include git status
     precmd_prompt() {
-        left_prompt=$(user_host_segment)
+        left_prompt=${ZZP[host]} 
         left_prompt+=$(prompt_segment)
         left_prompt+=$(prompt_segment_tail)
         PS1="${left_prompt}"
@@ -65,16 +65,16 @@ setup_prompt() {
     get_relative_depth() {
         # Calculate relative path from VENV to current directory as "../" notation
         # Given a base path (typically a Python virtual environment parent), returns
-        # a string of "/" repeated for each directory level between the base and PWD.
+        # a string of "../" repeated for each directory level between the base and PWD.
         local VENV="$1"
         local relative result
         local depth=0
 
         [[ "$PWD" != "$VENV" ]] && relative="${PWD#"$VENV"/}"
-        
+
         [[ -n "$relative" ]] && depth=$(( ${#${relative//[^\/]}} + 1 ))
-        
-        for ((i=0; i<depth; i++)); do result+="../"; done
+
+        for ((i = 0; i < depth; i++)); do result+="../"; done
 
         echo "$result"
     }
@@ -113,11 +113,10 @@ setup_prompt() {
         BG_OK='%{%K{green}%}'
         FG_ERROR='%{%F{red}%}'
         BG_ERROR='%{%K{red}%}'
-        FG_TEXT='%{%F{15}%}'
 
         RPS1="$RESET_BG$PYTHON_VENV"
         RPS1+="%(?.$FG_OK.$FG_ERROR)$LEFT_ARROW"
-        RPS1+="$FG_TEXT%(?.$BG_OK.$BG_ERROR) %*%f%k"
+        RPS1+="${ZZP[fgt]}%(?.$BG_OK.$BG_ERROR) %*%f%k"
     }
 
     # Final hook to update prompt
