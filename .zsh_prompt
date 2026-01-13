@@ -15,8 +15,10 @@ ZZ_PROMPT=(
     [width]='40'            # Width of the prompt
     [sa]='\ue0b0'           # PS1 right trailing separator symbol
     [sb]='\ue0b2'           # RPS1 left leading separator symbol
-    [git]='\ue0a0'          # Git branch symbol
+    [git]='\ue725'          # Git branch symbol
     [py]='\ue606'           # Python symbol
+    [h]='\uf015 '            # Home folder symbol
+    [t]='*'
  )
 
 setup_prompt() {
@@ -45,8 +47,13 @@ setup_prompt() {
        print -n -- "$k"
     }
 
+    pwd-icon() {
+        local p=${PWD/#$HOME/$(M h)}
+        print -n -- "$p"
+    }
+
     ps1a() {
-        print -n -- "$(K "$(M color)")$(F "$(M tc)")$(M u)%$(M width)<..<%~"
+        print -n -- "$(K "$(M color)")$(F "$(M tc)")$(M u)%$(M width)<..<$(pwd-icon)"
     }
 
     ps1b() {
@@ -103,7 +110,7 @@ setup_prompt() {
    
     rps1b(){
         R="%(?.$(F "$(M ok)").$(F "$(M er)"))$(M sb)"
-        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%*%f$(R)"
+        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%$(M t)%f$(R)"
         print -n -- "$R"
     }
 
