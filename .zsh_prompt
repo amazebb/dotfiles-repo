@@ -17,8 +17,8 @@ ZZ_PROMPT=(
     [sb]='\ue0b2'           # RPS1 left leading separator symbol
     [git]='\ue725'          # Git branch symbol
     [py]='\ue606'           # Python symbol
-    [h]='\uf015 '            # Home folder symbol
-    [t]='*'
+    [h]='\uf015 '           # Home folder symbol
+    [t]='*'                 # Date/Time format for RSP1 component 
  )
 
 setup_prompt() {
