@@ -1,124 +1,116 @@
 # shellcheck disable=SC2329,SC2034
 # Function to set up custom ZSH prompt with git status
-typeset -gA ZZP
-ZZP=(
-    [fgt]='%{%F{15}%}'     # Foreground text color
-    [k]='%{\e[48;5;256m%}' # Reset background for 256 color macOS Terminal
-    [+]='yellow'           # Git working tree changes color
-    [ok]='green'           # Git working tree clean color
-    [color]='blue'         # Main prompt color
-    [host]=''              # Display user@host ("%n@%m"), or hide ("")
-    [width]='40'           # Width of the prompt
-    [ra]='\uE0B0'          # PS1 right trailing symbol
-    [la]=$'\uE0B2'         # RPS1 left leading symbol
-    [git]='\uE0A0'         # Git branch symbol
-    [python]=$'\uE606'     # Python symbol
+typeset -gA ZZ_PROMPT
+ZZ_PROMPT=(
+    [color]='blue'          # Main prompt color
+    [tc]='15'               # Text color of prompt, ANSI 15 is bright white
+    [k]='%{\e[48;5;256m%}'  # Reset background for 256 color macOS Terminal
+    [x]='red'               # Git working tree changes color
+    [ok]='green'            # Git working tree clean color
+    [er]='red'              # Text color for when last command was an error used by RPS1
+    [cv]='magenta'          # Color for RPS1 PWD when virtual env active but PWD is not within project folder  
+    [gs]=""                 # Git status line returned by `git-wrapper stline
+    [gc]=""                 # This either ZZ_PROMPT[x] or ZZ_PROMPT[ok] according to git status
+    [u]=""                  # Display user@host ("%n@%m"), or hide ("")
+    [width]='40'            # Width of the prompt
+    [sa]='\ue0b0'           # PS1 right trailing separator symbol
+    [sb]='\ue0b2'           # RPS1 left leading separator symbol
+    [git]='\ue0a0'          # Git branch symbol
+    [py]='\ue606'           # Python symbol
  )
 
 setup_prompt() {
     # Enable command substitution in prompt
     setopt PROMPT_SUBST
 
-    prompt_segment() {
-        # Wrap in %{ %} to ensure the %K{blue} is not interpreted as spaces
-        echo -n "%{%K{blue}%}${ZZP[fgt]}%${ZZP[width]}<..<%~"
+    M(){
+        print -n -- "${ZZ_PROMPT[$1]}"
     }
 
-    prompt_segment_tail() {
-        COLORED_RIGHT_ARROW='%{%F{blue}%}'${ZZP[ra]}'%f'
-        # In macOS 15.x and prior, prevent Terminal.app brightening font color with no background:
-        # https://apple.stackexchange.com/questions/282911/
-        # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
-        # Setting background to an out of range value works, %k and %K{256} do not work.
-        # Not needed for Kitty and terminals that support truecolor
-        RESET_BG='%k'
-        if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            RESET_BG+=${ZZP[k]}
-        fi
-        if [[ -n ${GIT_STLINE} ]]; then
-            if [[ ${GIT_STLINE} =~ [+~?] ]]; then
-                BG_COLOR='%{%K{yellow}%}'
-                FG_COLOR='%{%F{yellow}%}'
-            else
-                BG_COLOR='%{%K{green}%}'
-                FG_COLOR='%{%F{green}%}'
-            fi
-            echo -n "$BG_COLOR$COLORED_RIGHT_ARROW ${ZZP[fgt]}${ZZP[git]} ${GIT_STLINE}$FG_COLOR $RESET_BG${ZZP[ra]}%f "
+    F(){
+        print -r -- "%{%F{$1}%}"
+    }
+
+    K(){
+        print -r -- "%{%K{$1}%}"
+    }
+   
+    R(){
+       # In macOS 15.x and prior, prevent Terminal.app brightening font color with no background:
+       # https://apple.stackexchange.com/questions/282911/
+       # prevent-mac-terminal-brightening-font-color-with-no-background/446604#446604
+       # Setting background to an out of range value works, %k and %K{256} do not work.
+       # Not needed for Kitty and terminals that support truecolor
+       [[ -z "$KITTY_WINDOW_ID" ]] && k="%k$(M k)" || k='%k'
+       print -n -- "$k"
+    }
+
+    ps1a() {
+        print -n -- "$(K "$(M color)")$(F "$(M tc)")$(M u)%$(M width)<..<%~"
+    }
+
+    ps1b() {
+        S="$(F "$(M color)")$(M sa)"
+        if [[ -n $(M gs) ]]; then
+            print -n -- "$(K "$(M gc)")$S$(F "$(M tc)")$(M git) $(M gs)$(R)$(F "$(M gc)")$(M sa) %f"
         else
-            echo -n "$RESET_BG$COLORED_RIGHT_ARROW "
+            print -n -- "$(R)$S %f"
         fi
+    }
+
+    # Build left prompt
+    ps1() {
+        PS1="$(ps1a)$(ps1b)"
     }
 
     # Update Git status before each prompt
     precmd() {
-        GIT_STLINE=$(git-wrapper stline)
+        ZZ_PROMPT[gs]=$(git-wrapper stline)
+        [[ $(M gs) =~ [+~?] ]] && ZZ_PROMPT[gc]=$(M x) || ZZ_PROMPT[gc]=$(M ok)
     }
 
-    # Build left prompt dynamically to include git status
-    precmd_prompt() {
-        left_prompt=${ZZP[host]} 
-        left_prompt+=$(prompt_segment)
-        left_prompt+=$(prompt_segment_tail)
-        PS1="${left_prompt}"
-    }
-
-    get_relative_depth() {
+    venv_path() {
         # Calculate relative path from VENV to current directory as "../" notation
-        # Given a base path (typically a Python virtual environment parent), returns
+        # Given a base path (Python virtual environment parent), returns
         # a string of "../" repeated for each directory level between the base and PWD.
-        local VENV="$1"
         local relative result
-        local depth=0
+        depth=0
 
-        [[ "$PWD" != "$VENV" ]] && relative="${PWD#"$VENV"/}"
-
+        [[ "$PWD" != "$1" ]] && relative="${PWD#"$1"/}"
         [[ -n "$relative" ]] && depth=$(( ${#${relative//[^\/]}} + 1 ))
-
         for ((i = 0; i < depth; i++)); do result+="../"; done
 
-        echo "$result"
+        print -n -- "$result"
     }
 
-    # Update right prompt dynamically
-    rprompt_segment() {
-        LEFT_ARROW=$'\uE0B2'
-        PYTHON_SYMBOL=$'\uE606'
-        PYTHON_VENV=""
-
-        RESET_BG='%k'
-        if [[ -z "$KITTY_WINDOW_ID" ]]; then
-            RESET_BG+=$'%{\e[48;5;256m%}'
-        fi
-
+    rps1a(){
         if [[ -n "$VIRTUAL_ENV" ]]; then
-            VENV="${VIRTUAL_ENV%/*}"
-
-            if [[ "$PWD" == "$VENV"/* || "$PWD" == "$VENV" ]]; then
-                FG_COLOR='%{%F{blue}%}'
-                BG_COLOR='%{%K{blue}%}'
-                relative_path=$(get_relative_depth "$VENV")
-                VENV_STR="$relative_path${VIRTUAL_ENV##*/}"
+            venv="${VIRTUAL_ENV%/*}"
+            if [[ "$PWD" == "$venv"/* || "$PWD" == "$venv" ]]; then
+                C="$(M color)"
+                relative_path=$(venv_path "$venv")
+                venv="$relative_path${VIRTUAL_ENV##*/}"
             else
-                FG_COLOR='%{%F{magenta}%}'
-                BG_COLOR='%{%K{magenta}%}'
-                local tmp=${VENV/#$PWD/}
-                VENV_STR="${tmp/#$HOME/~}"
+                C="$(M cv)"
+                venv=${venv/#$PWD/}
+                venv="${venv/#$HOME/~}"
             fi
-            PYTHON_VENV="$FG_COLOR$LEFT_ARROW"
-            PYTHON_VENV+="%f$BG_COLOR$PYTHON_SYMBOL $VENV_STR "
+            py_venv="$(F "$C")$(M sb)"
+            py_venv+="%f$(K "$C")$(M py) $venv"
         fi
+        print -n -- "$(R)$py_venv"
+    }
+   
+    rps1b(){
+        R="%(?.$(F "$(M ok)").$(F "$(M er)"))$(M sb)"
+        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%*%f$(R)"
+        print -n -- "$R"
+    }
 
-        # See Chapter 13: Prompt Expansion in Z Shell Manual for more info
-        FG_OK='%{%F{green}%}'
-        BG_OK='%{%K{green}%}'
-        FG_ERROR='%{%F{red}%}'
-        BG_ERROR='%{%K{red}%}'
-
-        RPS1="$RESET_BG$PYTHON_VENV"
-        RPS1+="%(?.$FG_OK.$FG_ERROR)$LEFT_ARROW"
-        RPS1+="${ZZP[fgt]}%(?.$BG_OK.$BG_ERROR) %*%f%k"
+    rps1(){
+        RPS1="$(rps1a)$(rps1b)"
     }
 
     # Final hook to update prompt
-    precmd_functions+=(precmd_prompt rprompt_segment)
+    precmd_functions=(ps1 rps1)
 }
