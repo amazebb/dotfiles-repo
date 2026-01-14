@@ -87,7 +87,7 @@ fi
 [[ -s "$HOME/.local/scripts/fzf-man" ]] && source "$HOME/.local/scripts/fzf-man"
 
 # Setup prompt
-[[ -s $HOME/.zsh_prompt ]] && source "$HOME/.zsh_prompt"
+[[ -s $HOME/.prompt.zsh ]] && source "$HOME/.prompt.zsh"
 
 # Define n for our nnn script that starts in preview mode
 [[ -s $HOME/.local/scripts/nnn-split ]] && alias n='source $HOME/.local/scripts/nnn-split'

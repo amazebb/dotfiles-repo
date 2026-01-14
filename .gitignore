@@ -14,7 +14,7 @@
 !/.config/homebrew
 
 !.zshrc
-!.zsh_prompt
+!.prompt.zsh
 !.editorconfig
 !.gitconfig
 !.gitignore
