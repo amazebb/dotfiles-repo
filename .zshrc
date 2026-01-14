@@ -16,6 +16,9 @@ setopt SHARE_HISTORY          # Share history across sessions
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
+## Prompt indentation right hand side for RPS1
+export ZLE_RPROMPT_INDENT=0
+#
 # Configure PATH environment variable
 # Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
 export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"

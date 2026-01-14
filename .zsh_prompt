@@ -2,23 +2,30 @@
 # Function to set up custom ZSH prompt with git status
 typeset -gA ZZ_PROMPT
 ZZ_PROMPT=(
-    [color]='blue'          # Main prompt color
-    [tc]='15'               # Text color of prompt, ANSI 15 is bright white
-    [k]='%{\e[48;5;256m%}'  # Reset background for 256 color macOS Terminal
-    [x]='red'               # Git working tree changes color
-    [ok]='green'            # Git working tree clean color
-    [er]='red'              # Text color for when last command was an error used by RPS1
-    [cv]='magenta'          # Color for RPS1 PWD when virtual env active but PWD is not within project folder  
-    [gs]=""                 # Git status line returned by `git-wrapper stline
-    [gc]=""                 # This either ZZ_PROMPT[x] or ZZ_PROMPT[ok] according to git status
-    [u]=""                  # Display user@host ("%n@%m"), or hide ("")
-    [width]='40'            # Width of the prompt
-    [sa]='\ue0b0'           # PS1 right trailing separator symbol
-    [sb]='\ue0b2'           # RPS1 left leading separator symbol
-    [git]='\ue725'          # Git branch symbol
-    [py]='\ue606'           # Python symbol
-    [h]='\uf015 '           # Home folder symbol
+    # Colors
+    [color]='blue'          # Prompt color
+    [tc]='15'               # Text color, ANSI 15 is bright white
+    [k]='%{\e[48;5;256m%}'  # Reset background for macOS Terminal
+    ## PS1 
+    # Home
+    [u]=''                  # Display user@host ("%n@%m"), or hide ("")
+    [h]='\ueb06 '           # Home glyph
+    [sa]='\ue0b0'           # PS1 right trailing glyph
+    [width]='40'            # Prompt width
+    # Git
+    [gs]=''                 # Git status line
+    [gc]=''                 # Either ZZ_PROMPT[x] or ZZ_PROMPT[ok] 
+    [git]='\ue725'          # Branch glyph
+    [x]='red'               # Working tree changes
+    [ok]='green'            # Working tree clean 
+    ## RPS1
+    # Virtiual Environment
+    [py]='\ue606'           # Python glyph
+    [sb]='\ue0b2'           # RPS1 left leading glyph 
+    [cv]='magenta'          # Virtual env but PWD outside project folder
+    # System
     [t]='*'                 # Date/Time format for RSP1 component 
+    [er]='red'              # Last command an error, RPS1
  )
 
 setup_prompt() {
@@ -110,7 +117,7 @@ setup_prompt() {
    
     rps1b(){
         R="%(?.$(F "$(M ok)").$(F "$(M er)"))$(M sb)"
-        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%$(M t)%f$(R)"
+        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%$(M t)"
         print -n -- "$R"
     }
 
