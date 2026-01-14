@@ -1,32 +1,32 @@
-# shellcheck disable=SC2329,SC2034
 # Function to set up custom ZSH prompt with git status
 typeset -gA ZZ_PROMPT
 ZZ_PROMPT=(
-    # Colors
-    [color]='blue'          # PWD bgc
-    [tc]='#eeffee'          # Text fgc
-    [k]='%{\e[48;5;256m%}'  # Reset bgc for macOS Terminal
-    ## PS1 
-    # Home
-    [u]=''                  # Display user@host ("%n@%m"), or hide ("")
-    [h]='\U000f07d2'        # Home glyph
-    [pwd]='\uea83'          # Folder glyph
-    [sa]='\ue0b0'           # PS1 right trailing glyph
+    ## Prompt
     [width]='40'            # Prompt width
+    # Colors (K=background, F=foreground)
+    [b]='blue'              # (K) PWD
+    [f]='#eeffee'           # (F) Text
+    [k]='%{\e[48;5;256m%}'  # (K) Reset for macOS Terminal
+    ## PS1 
+    [p1]='\ue0b0'           # Trailing glyph
+    # Home
+    [u]=''                  # user@host ("%n@%m"), or hide ("")
+    [h]='\U000f07d2'        # Home glyph
+    [p]='\uea83'            # Folder glyph
     # Git
     [gs]=''                 # Git status line
-    [gc]=''                 # Either ZZ_PROMPT[x] or ZZ_PROMPT[ok] 
-    [git]='\ue725'          # Branch glyph
-    [x]='red'               # Working tree changes bgc
-    [ok]='#5ca37a'          # Working tree clean bgc
+    [gc]=''                 # Either ZZ_PROMPT[g~] or ZZ_PROMPT[go] 
+    [gg]='\ue725'           # Branch glyph
+    [g~]='red'              # (K) Working tree changes
+    [go]='#5ca37a'          # (K) Working tree clean
     ## RPS1
+    [r1]='\ue0b2'           # Leading glyph 
     # Virtiual Environment
     [py]='\ue606'           # Python glyph
-    [sb]='\ue0b2'           # RPS1 left leading glyph 
-    [cv]='magenta'          # PWD outside project folder bgc
+    [cv]='magenta'          # (K) Outside project folder
     # System
-    [t]='*'                 # Date/Time format for RSP1 component 
-    [er]='red'              # Last command error, RPS1 bgc
+    [t]='*'                 # Date/Time
+    [x]='red'               # (K) Last command error
  )
 
 setup_prompt() {
@@ -56,18 +56,18 @@ setup_prompt() {
     }
 
     pwd-icon() {
-        [[ $PWD = *$HOME* ]] && p=${PWD/#$HOME/$(M h) } || p=$(M pwd)" "$PWD
+        [[ $PWD = *$HOME* ]] && p=${PWD/#$HOME/$(M h) } || p=$(M p)" "$PWD
         print -n -- "$p"
     }
 
     ps1a() {
-        print -n -- "$(K "$(M color)")$(F "$(M tc)")$(M u)%$(M width)<..<$(pwd-icon)"
+        print -n -- "$(K "$(M b)")$(F "$(M f)")$(M u)%$(M width)<..<$(pwd-icon)"
     }
 
     ps1b() {
-        S="$(F "$(M color)")$(M sa)"
+        S="$(F "$(M b)")$(M p1)"
         if [[ -n $(M gs) ]]; then
-            print -n -- "$(K "$(M gc)")$S$(F "$(M tc)")$(M git) $(M gs)$(R)$(F "$(M gc)")$(M sa) %f"
+            print -n -- "$(K "$(M gc)")$S$(F "$(M f)")$(M gg) $(M gs)$(R)$(F "$(M gc)")$(M p1) %f"
         else
             print -n -- "$(R)$S %f"
         fi
@@ -81,7 +81,7 @@ setup_prompt() {
     # Update Git status before each prompt
     precmd() {
         ZZ_PROMPT[gs]=$(git-wrapper stline)
-        [[ $(M gs) =~ [+~?] ]] && ZZ_PROMPT[gc]=$(M x) || ZZ_PROMPT[gc]=$(M ok)
+        [[ $(M gs) =~ [+~?] ]] && ZZ_PROMPT[gc]=$(M g~) || ZZ_PROMPT[gc]=$(M go)
     }
 
     venv_path() {
@@ -102,7 +102,7 @@ setup_prompt() {
         if [[ -n "$VIRTUAL_ENV" ]]; then
             venv="${VIRTUAL_ENV%/*}"
             if [[ "$PWD" == "$venv"/* || "$PWD" == "$venv" ]]; then
-                C="$(M color)"
+                C="$(M b)"
                 venv=$(venv_path "$venv")
                 venv="$venv${VIRTUAL_ENV##*/}"
             else
@@ -110,15 +110,15 @@ setup_prompt() {
                 venv=${venv/#$PWD/}
                 venv="${venv/#$HOME/~}"
             fi
-            py_venv="$(F "$C")$(M sb)"
+            py_venv="$(F "$C")$(M r1)"
             py_venv+="%f$(K "$C")$(M py) $venv"
         fi
         print -n -- "$(R)$py_venv"
     }
    
     rps1b(){
-        R="%(?.$(F "$(M ok)").$(F "$(M er)"))$(M sb)"
-        R+="$(F "$(M tc)")%(?.$(K "$(M ok)").$(K "$(M er)"))%$(M t)"
+        R="%(?.$(F "$(M go)").$(F "$(M x)"))$(M r1)"
+        R+="$(F "$(M f)")%(?.$(K "$(M go)").$(K "$(M x)"))%$(M t)"
         print -n -- "$R"
     }
 
