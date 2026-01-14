@@ -3,29 +3,30 @@
 typeset -gA ZZ_PROMPT
 ZZ_PROMPT=(
     # Colors
-    [color]='blue'          # Prompt color
-    [tc]='15'               # Text color, ANSI 15 is bright white
-    [k]='%{\e[48;5;256m%}'  # Reset background for macOS Terminal
+    [color]='blue'          # PWD bgc
+    [tc]='#eeffee'          # Text fgc
+    [k]='%{\e[48;5;256m%}'  # Reset bgc for macOS Terminal
     ## PS1 
     # Home
     [u]=''                  # Display user@host ("%n@%m"), or hide ("")
     [h]='\ueb06 '           # Home glyph
+    [pwd]='\uea83'          # Folder glyph
     [sa]='\ue0b0'           # PS1 right trailing glyph
     [width]='40'            # Prompt width
     # Git
     [gs]=''                 # Git status line
     [gc]=''                 # Either ZZ_PROMPT[x] or ZZ_PROMPT[ok] 
     [git]='\ue725'          # Branch glyph
-    [x]='red'               # Working tree changes
-    [ok]='green'            # Working tree clean 
+    [x]='red'               # Working tree changes bgc
+    [ok]='#5ca37a'          # Working tree clean bgc
     ## RPS1
     # Virtiual Environment
     [py]='\ue606'           # Python glyph
     [sb]='\ue0b2'           # RPS1 left leading glyph 
-    [cv]='magenta'          # Virtual env but PWD outside project folder
+    [cv]='magenta'          # PWD outside project folder bgc
     # System
     [t]='*'                 # Date/Time format for RSP1 component 
-    [er]='red'              # Last command an error, RPS1
+    [er]='red'              # Last command error, RPS1 bgc
  )
 
 setup_prompt() {
@@ -55,7 +56,7 @@ setup_prompt() {
     }
 
     pwd-icon() {
-        local p=${PWD/#$HOME/$(M h)}
+        [[ $PWD = *$HOME* ]] && p=${PWD/#$HOME/$(M h)} || p=$(M pwd)" "$PWD
         print -n -- "$p"
     }
 
