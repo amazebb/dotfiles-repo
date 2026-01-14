@@ -128,3 +128,5 @@ setup_prompt() {
     # Final hook to update prompt
     precmd_functions=(ps1 rps1)
 }
+
+setup_prompt
