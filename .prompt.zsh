@@ -9,7 +9,7 @@ ZZ_PROMPT=(
     ## PS1 
     # Home
     [u]=''                  # Display user@host ("%n@%m"), or hide ("")
-    [h]='\ueb06 '           # Home glyph
+    [h]='\U000f07d2'        # Home glyph
     [pwd]='\uea83'          # Folder glyph
     [sa]='\ue0b0'           # PS1 right trailing glyph
     [width]='40'            # Prompt width
@@ -56,7 +56,7 @@ setup_prompt() {
     }
 
     pwd-icon() {
-        [[ $PWD = *$HOME* ]] && p=${PWD/#$HOME/$(M h)} || p=$(M pwd)" "$PWD
+        [[ $PWD = *$HOME* ]] && p=${PWD/#$HOME/$(M h) } || p=$(M pwd)" "$PWD
         print -n -- "$p"
     }
 
@@ -103,8 +103,8 @@ setup_prompt() {
             venv="${VIRTUAL_ENV%/*}"
             if [[ "$PWD" == "$venv"/* || "$PWD" == "$venv" ]]; then
                 C="$(M color)"
-                relative_path=$(venv_path "$venv")
-                venv="$relative_path${VIRTUAL_ENV##*/}"
+                venv=$(venv_path "$venv")
+                venv="$venv${VIRTUAL_ENV##*/}"
             else
                 C="$(M cv)"
                 venv=${venv/#$PWD/}
