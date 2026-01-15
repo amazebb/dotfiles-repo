@@ -328,12 +328,16 @@ if [[ ${#required_args[@]} -gt 0 && -z $pos_name ]]; then
     echo 'if [[ $# -gt 0 ]]; then echo "Error: Extra positional arguments provided"; usage; fi' >>"$script_name"
 fi
 
-# Add a placeholder for the main script logic
-cat >>"$script_name" <<'EOF'
+# # Add a placeholder for the main script logic
+# cat >>"$script_name" <<'EOF'
+#
+# # Main script logic here
+# echo "Running with the following inputs:"
+# echo
+# EOF
 
-# Main script logic here
-echo "Script running with the following inputs:"
-EOF
+echo "echo \"$script_name running with the following:\"" >>"$script_name"
+echo "echo" >>"$script_name"
 
 # Echo required positional inputs
 for arg in "${required_args[@]}"; do
@@ -344,7 +348,8 @@ done
 for i in "${!optional_args[@]}"; do
     arg="${optional_args[$i]}"
     internal="${optional_internal[$i]}"
-    echo "echo \"-${arg}: \$${internal}\"" >>"$script_name"
+    desc="${optional_desc[$i]}"
+    echo "echo \"-${arg}:\$${internal} (${desc})\"" >>"$script_name"
 done
 
 # Echo variable positionals if present
