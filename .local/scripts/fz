@@ -45,13 +45,12 @@ shift $((OPTIND - 1))
 
 PATTERN=$1
 
-dotgit="$HOME/.local/scripts/git-wrapper"
-# Check if in dotfiles bare repo by inspecting git git-cmd output
-if "$dotgit" git-cmd 2>/dev/null | grep -q "bin/git$"; then
-    # Not in dotfiles repo, use standard ripgrep behavior
-    RELOAD="reload:rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
+cmd=$("$HOME"/.local/scripts/git-wrapper git-cmd)
+if [[ $cmd == *git-wrapper ]]; then
+    # in dotfiles repo
+    RELOAD="reload:$cmd ls-files -z | xargs -0 rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
 else
-    RELOAD="reload:$dotgit ls-files -z | xargs -0 rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
+    RELOAD="reload:rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
 fi
 
 # shellcheck disable=SC2016
