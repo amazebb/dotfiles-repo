@@ -12,6 +12,7 @@
 /.config/kitty/*
 !/.config/kitty/kitty.conf
 !/.config/homebrew
+!/.config/dotfiles
 
 !.zshrc
 !.prompt.zsh
