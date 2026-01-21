@@ -80,7 +80,7 @@ setup_prompt() {
 
     # Update Git status before each prompt
     precmd() {
-        ZZ_PROMPT[gs]=$(git-wrapper stline)
+        ZZ_PROMPT[gs]=$(dotfiles stline)
         [[ $(M gs) =~ [+~?] ]] && ZZ_PROMPT[gc]=$(M g~) || ZZ_PROMPT[gc]=$(M go)
     }
 

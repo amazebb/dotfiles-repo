@@ -54,7 +54,7 @@ Custom AI integration using X.AI (Grok) API:
 
 **Statusline (lua/statusline.lua)**:
 - Custom statusline with git status integration
-- Uses external `git-wrapper` command for git information
+- Uses external `dotfiles` command for git information
 - Shows LSP status, file info, mode, and position
 - Toggle symbols with `:StatusLineToggleSymbols`
 - Toggle git folder display with `:StatusLineToggleGitFolder`
@@ -67,14 +67,14 @@ Custom AI integration using X.AI (Grok) API:
 
 ### External Dependencies
 This config relies on external shell commands:
-- `git-wrapper` - Custom git wrapper for statusline and commits
+- `dotfiles` - Custom git wrapper for statusline and commits
 - `jq` - JSON formatting
 - `security` - macOS Keychain access
 - `nnn` - Terminal file manager
 - `qlmanage` - macOS QuickLook for file preview
 
 ### Git Commands
-**IMPORTANT**: Always use `git-wrapper` instead of `git` when running git commands via the Bash tool. This applies to all git operations including status, log, diff, commit, etc.
+**IMPORTANT**: Always use `dotfiles` instead of `git` when running git commands via the Bash tool. This applies to all git operations including status, log, diff, commit, etc.
 
 ### Python Environment
 Python integration uses a dedicated virtual environment at `~/.config/nvim/py-nvim/.venv/` with debugpy and neovim packages.

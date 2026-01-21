@@ -45,8 +45,8 @@ shift $((OPTIND - 1))
 
 PATTERN=$1
 
-cmd=$("$HOME"/.local/scripts/git-wrapper git-cmd)
-if [[ $cmd == *git-wrapper ]]; then
+cmd=$("$HOME"/.local/scripts/dotfiles git-cmd)
+if [[ $cmd == *dotfiles ]]; then
     # in dotfiles repo
     RELOAD="reload:$cmd ls-files -z | xargs -0 rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
 else

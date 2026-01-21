@@ -1,12 +1,12 @@
 {
-  "permissions": {
-    "allow": [
-      "WebSearch",
-      "Bash(git-wrapper status:*)",
-      "Bash(git-wrapper diff:*)",
-      "Bash(git-wrapper log:*)",
-      "Bash(git-wrapper add:*)",
-      "Bash(git-wrapper commit -m \"$\\(cat <<''EOF''\nchore\\(nvim\\): add Claude Code permissions for git-wrapper commands\n\n- Add git-wrapper status and diff to allowed Bash commands\n- Enable Claude Code to use custom git wrapper for repository operations\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
-    ]
-  }
+    "permissions": {
+        "allow": [
+            "WebSearch",
+            "Bash(dotfiles status:*)",
+            "Bash(dotfiles diff:*)",
+            "Bash(dotfiles log:*)",
+            "Bash(dotfiles add:*)",
+            "Bash(dotfiles commit -m \"$\\(cat <<''EOF''\nchore\\(nvim\\): add Claude Code permissions for dotfiles commands\n\n- Add dotfiles status and diff to allowed Bash commands\n- Enable Claude Code to use custom git wrapper for repository operations\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+        ]
+    }
 }

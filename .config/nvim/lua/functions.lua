@@ -142,7 +142,7 @@ function M.commit_msg_popup()
     M.floating_window(function(win, buf)
         vim.api.nvim_set_current_win(win)
         vim.api.nvim_buf_call(buf, function()
-            vim.fn.jobstart('zsh -c "git-wrapper commit -va"', {
+            vim.fn.jobstart('zsh -c "dotfiles commit -va"', {
                 term = true,
             })
             vim.cmd("startinsert!")

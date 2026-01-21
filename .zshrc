@@ -93,7 +93,7 @@ fi
 [[ -s $HOME/.local/scripts/nnn-split ]] && alias n='source $HOME/.local/scripts/nnn-split'
 
 # dotfiles git wrapper
-[[ -s $HOME/.local/scripts/git-wrapper ]] && alias dg='git-wrapper'
+[[ -s $HOME/.local/scripts/dotfiles ]] && alias dg='dotfiles'
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management

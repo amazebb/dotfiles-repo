@@ -21,15 +21,15 @@ local function toggle_symbols()
 end
 
 local function update_git_status()
-    -- NOTE For some reason opening Kitty config errors on finding git-wrapper
+    -- NOTE For some reason opening Kitty config errors on finding dotfiles
     -- Seems it does not have the same PATH as running nvim normally ?
-    local res = vim.system({ "sh", "-c", "git-wrapper stline" }, { text = true })
+    local res = vim.system({ "sh", "-c", "dotfiles stline" }, { text = true })
     git_status = vim.trim(res:wait().stdout)
     -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
     -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
     if git_status ~= "" then
         if vim.g.enable_git_folder then
-            local obj = vim.system({ 'git-wrapper', 'rev-parse', '--absolute-git-dir' }, { text = true }):wait()
+            local obj = vim.system({ 'dotfiles', 'rev-parse', '--absolute-git-dir' }, { text = true }):wait()
             local git_dir = vim.trim(obj.stdout or ""):gsub("^" .. vim.pesc(vim.env.HOME), "~")
             local git_folder = (vim.g.statusline_symbols and " " or "") .. git_dir
             git_status = git_folder ..
@@ -40,7 +40,7 @@ local function update_git_status()
 
         local name = vim.api.nvim_buf_get_name(0)
         if name ~= "" then
-            local is_untracked = vim.system({ "sh", "-c", "git-wrapper ls-files --error-unmatch " ..
+            local is_untracked = vim.system({ "sh", "-c", "dotfiles ls-files --error-unmatch " ..
             vim.fn.expand("%:p") .. " 2>/dev/null" }):wait() == ""
             if is_untracked then
                 git_status = git_status .. "%#CurSearch#󰡯 "
