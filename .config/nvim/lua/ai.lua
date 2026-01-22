@@ -68,7 +68,7 @@ end
 
 local function generate_conventional_commit()
     vim.system(
-        { "dotfiles", "d", "-b" },
+        { "zsh", "-c", "dotfiles d -b" },
         { text = true },
         vim.schedule_wrap(function(result)
             if result.code ~= 0 then

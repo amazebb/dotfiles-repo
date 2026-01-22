@@ -15,6 +15,7 @@
 !/.config/dotfiles
 
 !.zshrc
+!.zshenv
 !.prompt.zsh
 !.editorconfig
 !.gitconfig

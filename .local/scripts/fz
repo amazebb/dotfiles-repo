@@ -1,7 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 # Search text interactively with ripgrep, fzf.
 VERSION="1.0.0"
-
 # Help function
 usage() {
     echo "Usage: fz [OPTIONAL] pattern"
@@ -42,13 +41,11 @@ shift $((OPTIND - 1))
     echo "Error: Missing pattern" >&2
     usage
 }
-
 PATTERN=$1
 
-cmd=$("$HOME"/.local/scripts/dotfiles git-cmd)
-if [[ $cmd == *dotfiles ]]; then
+if (($(dotfiles track))); then
     # in dotfiles repo
-    RELOAD="reload:$cmd ls-files -z | xargs -0 rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
+    RELOAD="reload:dotfiles ls-files -z | xargs -0 rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
 else
     RELOAD="reload:rg $PRE_RG --hidden --column --line-number --no-heading --color=always --smart-case {q} || :"
 fi

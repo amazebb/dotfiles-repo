@@ -71,7 +71,7 @@ command -v nvim &>/dev/null && alias nn='$HOME/.nvim-nightly/bin/nvim'
 # Zoxide
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 
-# Set up fzf key bindings and fuzzy completion
+# Fzf key bindings and completion
 # shellcheck disable=SC1090
 if command -v zsh &>/dev/null; then
     # Bind ? Key for toggling the fzf preview window, useful for long commands that don't fit on screen
@@ -82,15 +82,14 @@ if command -v zsh &>/dev/null; then
     source <(fzf --zsh)
 fi
 
-# fzf-man  ^h binding for man pages
+# Fzf-man  ^h binding for man pages
 [[ -s "$HOME/.local/scripts/fzf-man" ]] && source "$HOME/.local/scripts/fzf-man"
 
 # Nnn
 [[ -s $HOME/.local/scripts/nnn-split ]] && alias n='source $HOME/.local/scripts/nnn-split'
 
-# dotfiles
-# [[ -s $HOME/.local/bin/dotfiles ]] && source "$HOME/.local/bin/dotfiles"
-[[ -s $HOME/.local/scripts/dotfiles ]] && alias dg='dotfiles'
+# Dotfiles
+(( ${+functions[dotfiles]} )) && alias dg=dotfiles
 
 # Prompt
 [[ -s $HOME/.prompt.zsh ]] && source "$HOME/.prompt.zsh"
