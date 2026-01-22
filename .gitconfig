@@ -15,8 +15,6 @@
 	email = <26394523+x626f@users.noreply.github.com
 [diff]
 	tool = opendiff
-[dotfiles]
-	tracked-folders = ~/.local/scripts,~/.config/nvim,~/.config/kitty,~/.config/homebrew
 [alias]
 	c = commit
 	cv = commit -v
