@@ -16,7 +16,7 @@
 
 !.zshrc
 !.zshenv
-!.prompt.zsh
+!.zsh_prompt
 !.editorconfig
 !.gitconfig
 !.gitignore
