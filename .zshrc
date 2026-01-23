@@ -92,7 +92,7 @@ fi
 (( ${+functions[dotfiles]} )) && alias dg=dotfiles
 
 # Prompt
-[[ -s $HOME/.zsh_prompt ]] && source "$HOME/.zsh_prompt"
+[[ -s $HOME/.local/share/zsh-prompt/zsh_prompt ]] && source "$HOME/.local/share/zsh-prompt/zsh_prompt"
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
