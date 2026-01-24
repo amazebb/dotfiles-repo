@@ -23,7 +23,7 @@ end
 local function update_git_status()
     -- NOTE For some reason opening Kitty config errors on finding dotfiles
     -- Seems it does not have the same PATH as running nvim normally ?
-    local res = vim.system({ 'zsh', '-c', 'dotfiles stline --echo' }, { text = true })
+    local res = vim.system({ 'zsh', '-c', 'dotfiles stline' }, { text = true })
     git_status = vim.trim(res:wait().stdout)
     -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
     -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
