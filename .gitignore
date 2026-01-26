@@ -8,12 +8,10 @@
 !/.config/nvim
 !/.config/nvim/rplugin/python3
 /.config/nvim/nvim-pack-lock.json
-!/.config/kitty
-/.config/kitty/*
-!/.config/kitty/kitty.conf
 !/.config/homebrew
 !/.config/dotfiles
 
+!/.config/kitty/kitty.conf
 !.zshrc
 !.zshenv
 !.zsh_prompt
