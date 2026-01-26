@@ -5,10 +5,10 @@
 
 !/.config
 /.config/*
+!/.config/homebrew
 !/.config/nvim
 !/.config/nvim/rplugin/python3
 /.config/nvim/nvim-pack-lock.json
-!/.config/homebrew
 
 !/.config/kitty/kitty.conf
 !.zshrc
