@@ -26,10 +26,8 @@ export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:$HOME/.juliaup/bin"
-export PATH="$PATH:$HOME/.julia/bin"
-export PATH="$PATH:$HOME/.local/scripts"
 export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
 ## Environment variables
@@ -84,11 +82,11 @@ if command -v zsh &>/dev/null; then
     source <(fzf --zsh)
 fi
 
-# Fzf-man  ^h binding for man pages
-[[ -s "$HOME/.local/scripts/fzf-man" ]] && source "$HOME/.local/scripts/fzf-man"
+# Fzf-man ^h binding for man pages
+[[ -s "$HOME/.local/bin/fzf-man" ]] && source "$HOME/.local/bin/fzf-man"
 
 # Nnn
-[[ -s $HOME/.local/scripts/nnn-split ]] && alias n='source $HOME/.local/scripts/nnn-split'
+[[ -s $HOME/.local/bin/nnn-split ]] && alias n='source $HOME/.local/bin/nnn-split'
 
 # Dotfiles
 (( ${+functions[dotfiles]} )) && alias dg=dotfiles

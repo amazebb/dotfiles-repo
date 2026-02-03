@@ -1,8 +1,4 @@
 /*
-!/.local
-/.local/*
-!/.local/scripts
-
 !/.config
 /.config/*
 !/.config/homebrew
