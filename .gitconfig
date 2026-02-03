@@ -11,8 +11,8 @@
 	editor = ~/.nvim-nightly/bin/nvim
 	pager = bat
 [user]
-	name = x626f
-	email = <26394523+x626f@users.noreply.github.com
+	name = bb
+	email = <26394523+broeknbytes@users.noreply.github.com
 [diff]
 	tool = opendiff
 [alias]
