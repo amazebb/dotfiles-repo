@@ -3,6 +3,7 @@
 !/.config
 /.config/*
 !/.config/homebrew
+!/.config/terminal
 !/.config/nvim
 !/.config/nvim/rplugin/python3
 /.config/nvim/nvim-pack-lock.json
