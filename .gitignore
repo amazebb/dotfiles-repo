@@ -7,7 +7,10 @@
 !/.config/nvim
 !/.config/nvim/rplugin/python3
 /.config/nvim/nvim-pack-lock.json
+!/.config/kitty
+/.config/kitty/*
 !/.config/kitty/kitty.conf
+!/.config/kitty/*auto.conf
 
 !.zshrc
 !.zshenv
