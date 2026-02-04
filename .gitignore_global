@@ -1,17 +1,18 @@
-# https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
+# Personal collection of global ignores
 
-# General
+# macOS specific ignores, more global templates here:
+# https://github.com/github/gitignore/blob/main/Global/
+## General
 .DS_Store
+__MACOSX/
 .AppleDouble
 .LSOverride
+Icon[]
 
-# Icon must end with two \r
-# Icon
-
-# Thumbnails
+## Thumbnails
 ._*
 
-# Files that might appear in the root of a volume
+## Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
 .Spotlight-V100
@@ -20,14 +21,16 @@
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
 
-# Directories potentially created on remote AFP share
+## Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
 Network Trash Folder
 Temporary Items
 .apdisk
 
-# This section separate from above github template
+# XCode
+xcuserdata/
+
 # Binaries and build outputs
 *.o
 *.exe
@@ -37,10 +40,18 @@ Temporary Items
 *.bin
 
 # Temporary files
+*.bak
+*.gho
+*.ori
+*.orig
 *.tmp
 *~
 
-# Python cache files
+# Diff
+*.patch
+*.diff
+
+# Python files
 __pycache__/
 *.pyc
 *.pyo
@@ -50,8 +61,9 @@ uv.lock
 # Other common ignores
 *.log
 *.egg-info/
+*.swp
 .venv/
 .env
-*.swp
 lazy-lock.json
+
 
