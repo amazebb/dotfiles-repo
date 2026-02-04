@@ -28,7 +28,6 @@ export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:$HOME/.nvim-nightly/bin"
 
 ## Environment variables
 # Tell MATLAB to use the macOS Accelerate framework
@@ -41,7 +40,7 @@ export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 # After this step MATLAB can be started as a regular application
 
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-export EDITOR="$HOME/.nvim-nightly/bin/nvim"
+export EDITOR="$HOME/.local/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
 ## Aliases
@@ -65,8 +64,8 @@ if command -v brew &>/dev/null; then
     alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 fi
 
-# Nvim nightly
-command -v nvim &>/dev/null && alias nn='$HOME/.nvim-nightly/bin/nvim'
+# Nvim 
+command -v nvim &>/dev/null && alias nn='$HOME/.local/bin/nvim'
 
 # Zoxide
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
