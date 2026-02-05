@@ -3,6 +3,7 @@ local opt = vim.opt
 opt.cmdheight = 0
 opt.completeopt = { "menuone", "popup", "noinsert", "preview" }
 opt.cursorline = true
+opt.cursorlineopt = "number"
 opt.expandtab = true
 opt.number = true
 opt.numberwidth = 2
