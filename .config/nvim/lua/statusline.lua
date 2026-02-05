@@ -21,16 +21,17 @@ local function toggle_symbols()
 end
 
 local function update_git_status()
-    -- NOTE For some reason opening Kitty config errors on finding dotfiles
-    -- Seems it does not have the same PATH as running nvim normally ?
-    local res = vim.system({ 'zsh', '-c', 'dotfiles stline' }, { text = true })
-    git_status = vim.trim(res:wait().stdout)
+    local git_dir
+    local res = vim.system({ 'zsh', '-c', 'dotfiles --print-status' }, { text = true }):wait()
+    if res.code == 0 then
+        local lines = vim.split(res.stdout, '\n', { trimempty = true })
+        git_status = lines[1]
+        git_dir = lines[3]
+    end
     -- Enter 5-digit hex code in Insert mode: <C-r>=nr2char(0xf062c)
     -- For regular 4-code ie. e0a0, in Insert mode: <C-v> u e0a0
     if git_status ~= "" then
         if vim.g.enable_git_folder then
-            local obj = vim.system({ 'zsh', '-c', 'dotfiles rev-parse --absolute-git-dir' }, { text = true }):wait()
-            local git_dir = vim.trim(obj.stdout or ""):gsub("^" .. vim.pesc(vim.env.HOME), "~")
             local git_folder = (vim.g.statusline_symbols and " " or "") .. git_dir
             git_status = git_folder ..
                 LHS_ITEM_SEP .. (vim.g.statusline_symbols and "󰘬 " or "") .. git_status .. LHS_ITEM_SEP
@@ -40,8 +41,6 @@ local function update_git_status()
 
         local name = vim.api.nvim_buf_get_name(0)
         if name ~= "" then
-            -- local is_untracked = vim.system({ 'dotfiles', 'ls-files', '--error-unmatch ', vim.fn.expand("%:p"),
-            --     ' 2>/dev/null' }):wait() == ""
             local is_untracked = vim.system({ "zsh", "-c", "dotfiles ls-files --error-unmatch " ..
             vim.fn.expand("%:p") .. " 2>/dev/null" }):wait() == ""
             if is_untracked then
