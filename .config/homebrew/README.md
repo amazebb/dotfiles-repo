@@ -25,7 +25,6 @@ This document organizes all packages from the Brewfile by category.
   - [Development Libraries](#development-libraries)
   - [Reverse Engineering](#reverse-engineering)
   - [Hardware & Embedded](#hardware--embedded)
-  - [Color Tools](#color-tools)
   - [Miscellaneous / Uncategorized](#miscellaneous--uncategorized)
 - [Casks (GUI Applications)](#casks-gui-applications)
   - [Media Players & Editors](#media-players--editors)
@@ -61,11 +60,12 @@ This document organizes all packages from the Brewfile by category.
 ### Shells & Terminal
 
 <details>
-<summary>9 formulas</summary>
+<summary>10 formulas</summary>
 
 | Formula | Description | Alternatives |
 |---------|-------------|--------------|
 | `bash` | Bourne-Again SHell | `fish`, `nushell` |
+| `bat` | Cat clone with syntax highlighting | |
 | `btop` | Resource monitor | |
 | `coreutils` | GNU core utilities | `uutils-coreutils` |
 | `eza` | Modern replacement for ls | |
@@ -357,26 +357,15 @@ This document organizes all packages from the Brewfile by category.
 
 </details>
 
-### Color Tools
+### Miscellaneous / Uncategorized
 
 <details>
 <summary>2 formulas</summary>
 
 | Formula | Description | Alternatives |
 |---------|-------------|--------------|
-| `bat` | Cat clone with syntax highlighting | |
-| `pastel` | Color manipulation CLI | |
-
-</details>
-
-### Miscellaneous / Uncategorized
-
-<details>
-<summary>1 formula</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
 | `iso-codes` | ISO language/country codes | |
+| `pastel` | Color manipulation CLI | |
 
 </details>
 
