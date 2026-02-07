@@ -1,542 +1,134 @@
-# Homebrew Packages
-
-This document organizes all packages from the Brewfile by category.
-
-## Contents
-
-- [Taps (Repositories)](#taps-repositories)
-- [Formulas](#formulas)
-  - [Shells & Terminal](#shells--terminal)
-  - [Version Control](#version-control)
-  - [Programming Languages & Runtimes](#programming-languages--runtimes)
-  - [Language Servers & IDE Support](#language-servers--ide-support)
-  - [Build Systems & Compilers](#build-systems--compilers)
-  - [Code Quality & Linting](#code-quality--linting)
-  - [Media Processing](#media-processing)
-  - [Document & Text Processing](#document--text-processing)
-  - [Data Processing & Analysis](#data-processing--analysis)
-  - [File & Archive Tools](#file--archive-tools)
-  - [Metadata & File Information](#metadata--file-information)
-  - [Network Tools](#network-tools)
-  - [Search & Text Processing](#search--text-processing)
-  - [System Utilities](#system-utilities)
-  - [Python Tools](#python-tools)
-  - [Lua Ecosystem](#lua-ecosystem)
-  - [Development Libraries](#development-libraries)
-  - [Reverse Engineering](#reverse-engineering)
-  - [Hardware & Embedded](#hardware--embedded)
-  - [Miscellaneous / Uncategorized](#miscellaneous--uncategorized)
-- [Casks (GUI Applications)](#casks-gui-applications)
-  - [Media Players & Editors](#media-players--editors)
-  - [E-book & Media Management](#e-book--media-management)
-  - [Audio Utilities](#audio-utilities)
-  - [Development Tools](#development-tools)
-  - [System Utilities (Casks)](#system-utilities-casks)
-  - [Quick Look Plugins](#quick-look-plugins)
-  - [Fonts](#fonts)
-  - [Virtualization](#virtualization)
-
----
-
-## Taps (Repositories)
-
-<details>
-<summary>5 taps</summary>
-
-| Tap | Description |
-|-----|-------------|
-| `alhadis/troff` | Troff-related tools |
-| `homebrew/bundle` | Bundler for Homebrew |
-| `homebrew/services` | Manage background services |
-| `martido/graph` | Graph-related tools |
-| `oven-sh/bun` | Bun JavaScript runtime |
-
-</details>
-
----
-
-## Formulas
-
-### Shells & Terminal
-
-<details>
-<summary>10 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `bash` | Bourne-Again SHell | `fish`, `nushell` |
-| `bat` | Cat clone with syntax highlighting | |
-| `btop` | Resource monitor | |
-| `coreutils` | GNU core utilities | `uutils-coreutils` |
-| `eza` | Modern replacement for ls | |
-| `fd` | Simple, fast alternative to find | |
-| `fzf` | Fuzzy finder | `skim` |
-| `tmux` | Terminal multiplexer | `zellij` |
-| `tree` | Directory listing as a tree | `broot` |
-| `zoxide` | Smarter cd command | |
-
-</details>
-
-### Version Control
-
-<details>
-<summary>7 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `gh` | GitHub CLI | |
-| `git` | Distributed version control | `jj` |
-| `git-filter-repo` | Rewrite git history | |
-| `git-lfs` | Git Large File Storage | |
-| `git-svn` | Bidirectional Git/SVN bridge | |
-| `gitea` | Self-hosted Git service | `forgejo` |
-| `gitea-mcp-server` | MCP server for Gitea | |
-
-</details>
-
-### Programming Languages & Runtimes
-
-<details>
-<summary>6 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `chapel` | Parallel programming language | |
-| `fennel` | Lisp dialect for Lua | |
-| `lua` | Scripting language | `luajit` |
-| `node` | JavaScript runtime | `deno` |
-| `oven-sh/bun/bun` | Fast JavaScript runtime | |
-| `perl` | Practical extraction and report language | |
-
-</details>
-
-### Language Servers & IDE Support
-
-<details>
-<summary>10 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `basedpyright` | Python type checker | |
-| `bash-language-server` | LSP for Bash | |
-| `fennel-ls` | LSP for Fennel | |
-| `gopls` | LSP for Go | |
-| `jdtls` | LSP for Java | |
-| `lua-language-server` | LSP for Lua | |
-| `sql-language-server` | LSP for SQL | |
-| `typescript-language-server` | LSP for TypeScript/JavaScript | |
-| `vscode-langservers-extracted` | HTML/CSS/JSON/ESLint LSPs | |
-| `yaml-language-server` | LSP for YAML | |
-
-</details>
-
-### Build Systems & Compilers
-
-<details>
-<summary>7 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `cmake` | Cross-platform build system | `meson` |
-| `cmake-docs` | CMake documentation | |
-| `gradle` | Build automation for Java | |
-| `llvm` | Compiler infrastructure | |
-| `make` | GNU make | `just` |
-| `ninja` | Small build system | |
-| `pkgconf` | Package compiler and linker metadata | |
-
-</details>
-
-### Code Quality & Linting
-
-<details>
-<summary>4 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `ruff` | Fast Python linter/formatter | |
-| `shellcheck` | Shell script analysis tool | |
-| `shfmt` | Shell script formatter | |
-| `swiftlint` | Swift style and conventions | |
-
-</details>
-
-### Media Processing
-
-<details>
-<summary>14 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `chafa` | Image to terminal graphics | |
-| `ffmpeg` | Audio/video transcoding | |
-| `fluid-synth` | Software MIDI synthesizer | |
-| `gmic` | Image processing framework | |
-| `graphicsmagick` | Image processing tools | `vips` |
-| `imagemagick` | Image manipulation tools | `vips` |
-| `libcaca` | ASCII art graphics library | |
-| `libheif` | HEIF/HEIC image format | |
-| `little-cms2` | Color management system | |
-| `mpv` | Media player | |
-| `openjpeg` | JPEG 2000 codec | |
-| `portmidi` | MIDI I/O library | |
-| `sdl2` | Multimedia library | `sdl3` |
-| `sox` | Sound processing tool | |
-| `yt-dlp` | Video downloader | |
-
-</details>
-
-### Document & Text Processing
-
-<details>
-<summary>6 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `djvulibre` | DjVu document format | |
-| `epubcheck` | EPUB validator | |
-| `pandoc` | Universal document converter | `typst` |
-| `qpdf` | PDF transformation tool | |
-| `texinfo` | GNU documentation system | |
-| `utftex` | Unicode TeX rendering | |
-
-</details>
-
-### Data Processing & Analysis
-
-<details>
-<summary>8 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `cjson` | JSON parser in C | |
-| `duckdb` | Analytical SQL database | |
-| `jq` | JSON processor | `jaq` |
-| `json-glib` | JSON parser for GLib | |
-| `qsv` | CSV data wrangling toolkit | |
-| `tidy-viewer` | CSV pretty printer | `csvlens` |
-| `visidata` | Terminal data exploration | |
-| `xan` | CSV toolkit | |
-
-</details>
-
-### File & Archive Tools
-
-<details>
-<summary>7 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `atool` | Archive file manager | |
-| `cabextract` | Microsoft cabinet extractor | |
-| `cdrtools` | CD/DVD/Blu-ray tools | |
-| `libdvdcss` | DVD decryption library | |
-| `librsync` | Remote delta algorithm library | |
-| `p7zip` | 7-Zip file archiver | `sevenzip` |
-| `rsync` | Fast file synchronization | |
-
-</details>
-
-### Metadata & File Information
-
-<details>
-<summary>3 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `exiftool` | Read/write file metadata | |
-| `exiv2` | Image metadata library | |
-| `media-info` | Media file information | |
-
-</details>
-
-### Network Tools
-
-<details>
-<summary>3 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `curl` | Data transfer tool | |
-| `sniffnet` | Network traffic monitor | |
-| `wget` | File retrieval tool | `aria2` |
-
-</details>
-
-### Search & Text Processing
-
-<details>
-<summary>4 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `gawk` | GNU awk | |
-| `gnu-sed` | GNU stream editor | `sd` |
-| `mawk` | Fast awk implementation | |
-| `ripgrep` | Fast recursive grep | |
-
-</details>
-
-### System Utilities
-
-<details>
-<summary>7 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `gperftools` | Performance analysis tools | |
-| `hyperfine` | Command-line benchmarking | |
-| `mac-cleanup-go` | macOS cleanup utility | |
-| `mactop` | macOS system monitor | |
-| `parallel` | Execute jobs in parallel | |
-| `smartmontools` | Disk health monitoring | |
-| `tldr` | Simplified man pages | `tealdeer` |
-
-</details>
-
-### Python Tools
-
-<details>
-<summary>3 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `ipython` | Interactive Python shell | `ptpython` |
-| `pygments` | Syntax highlighting | |
-| `uv` | Fast Python package installer | |
-
-</details>
-
-### Lua Ecosystem
-
-<details>
-<summary>1 formula</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `luarocks` | Lua package manager | |
-
-</details>
-
-### Development Libraries
-
-<details>
-<summary>7 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `gettext` | Internationalization library | |
-| `graphviz` | Graph visualization | |
-| `gsl` | GNU Scientific Library | |
-| `libcerf` | Complex error functions | |
-| `libomp` | OpenMP runtime | |
-| `qt@5` | Cross-platform UI framework | `qt` |
-| `tree-sitter-cli` | Parser generator tool | |
-
-</details>
-
-### Reverse Engineering
-
-<details>
-<summary>1 formula</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `rizin` | Reverse engineering framework | `radare2` |
-
-</details>
-
-### Hardware & Embedded
-
-<details>
-<summary>1 formula</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `arduino-cli` | Arduino command-line tool | |
-
-</details>
-
-### Miscellaneous / Uncategorized
-
-<details>
-<summary>2 formulas</summary>
-
-| Formula | Description | Alternatives |
-|---------|-------------|--------------|
-| `iso-codes` | ISO language/country codes | |
-| `pastel` | Color manipulation CLI | |
-
-</details>
-
----
-
-## Casks (GUI Applications)
-
-### Media Players & Editors
-
-<details>
-<summary>4 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `audacity` | Audio editor | `ocenaudio` |
-| `blender` | 3D creation suite | |
-| `iina` | Modern media player | |
-| `makemkv` | DVD/Blu-ray ripper | `handbrake` |
-
-</details>
-
-### E-book & Media Management
-
-<details>
-<summary>2 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `calibre` | E-book manager | |
-| `kid3` | Audio file tag editor | |
-
-</details>
-
-### Audio Utilities
-
-<details>
-<summary>2 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `blackhole-16ch` | Virtual audio driver (16 channel) | |
-| `blackhole-2ch` | Virtual audio driver (2 channel) | |
-
-</details>
-
-### Development Tools
-
-<details>
-<summary>5 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `basictex` | Minimal TeX distribution | |
-| `dbeaver-community` | Database management tool | `tableplus` |
-| `gitup-app` | Git GUI client | `fork` |
-| `jdk-mission-control` | JVM monitoring and profiling | |
-| `kitty` | GPU-accelerated terminal | `ghostty`, `wezterm` |
-
-</details>
-
-### System Utilities (Casks)
-
-<details>
-<summary>6 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `appcleaner` | Application uninstaller | `pearcleaner` |
-| `disk-inventory-x` | Disk usage visualizer | `grandperspective` |
-| `grandperspective` | Disk usage analyzer | |
-| `keka` | File archiver | |
-| `stats` | System monitor in menu bar | |
-| `suspicious-package` | Package inspector | |
-
-</details>
-
-### Quick Look Plugins
-
-<details>
-<summary>2 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `qlmarkdown` | Preview Markdown files | |
-| `syntax-highlight` | Preview source code files | |
-
-</details>
-
-### Fonts
-
-<details>
-<summary>2 casks</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `font-fira-mono-nerd-font` | Fira Mono with Nerd Font icons | |
-| `font-symbols-only-nerd-font` | Nerd Font symbols only | |
-
-</details>
-
-### Virtualization
-
-<details>
-<summary>1 cask</summary>
-
-| Cask | Description | Alternatives |
-|------|-------------|--------------|
-| `utm` | Virtual machines for macOS | |
-
-</details>
-
----
-
-## All Packages
-
-> **Note:** The dropdown filters below require JavaScript. They work when viewing this file locally in a browser or in markdown renderers that allow scripts. On GitHub, the table renders without filtering.
->
-> **[View interactive version with filtering](docs/packages.html)** (via GitHub Pages)
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homebrew Packages</title>
 <style>
-.pkg-table { border-collapse: collapse; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; }
-.pkg-table th, .pkg-table td { border: 1px solid #d0d7de; padding: 6px 13px; text-align: left; }
-.pkg-table th { background: #f6f8fa; position: sticky; top: 0; z-index: 2; }
-.pkg-table tr:nth-child(even) { background: #f6f8fa; }
-.pkg-table tr.hidden { display: none; }
-.pkg-table code { background: #eff1f3; padding: 2px 5px; border-radius: 3px; font-size: 13px; }
-.filter-wrap { position: relative; display: inline-block; }
-.filter-btn { cursor: pointer; background: none; border: none; font-weight: 600; font-size: 14px; font-family: inherit; padding: 0; color: inherit; }
-.filter-btn::after { content: " ▾"; font-size: 10px; }
-.filter-btn.active::after { content: " ▴"; }
-.filter-dropdown { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid #d0d7de; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 220px; max-height: 300px; z-index: 10; }
-.filter-dropdown.show { display: block; }
-.filter-search { width: calc(100% - 16px); margin: 8px; padding: 5px 8px; border: 1px solid #d0d7de; border-radius: 4px; font-size: 13px; box-sizing: border-box; }
-.filter-options { max-height: 220px; overflow-y: auto; padding: 0 4px 4px; }
-.filter-options label { display: block; padding: 3px 8px; cursor: pointer; font-size: 13px; border-radius: 3px; white-space: nowrap; }
-.filter-options label:hover { background: #f0f4ff; }
-.filter-options input { margin-right: 6px; }
-.filter-actions { display: flex; justify-content: space-between; padding: 6px 8px; border-top: 1px solid #d0d7de; }
-.filter-actions button { font-size: 12px; cursor: pointer; background: none; border: none; color: #0969da; padding: 2px 4px; }
-.filter-actions button:hover { text-decoration: underline; }
-.filter-badge { background: #0969da; color: #fff; border-radius: 10px; font-size: 11px; padding: 1px 6px; margin-left: 4px; font-weight: normal; }
-</style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: #1f2328; background: #fff; padding: 24px; max-width: 1200px; margin: 0 auto; line-height: 1.5; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #656d76; font-size: 14px; margin-bottom: 20px; }
+  .subtitle a { color: #0969da; text-decoration: none; }
+  .subtitle a:hover { text-decoration: underline; }
 
-<table class="pkg-table" id="pkgTable">
+  /* Stats bar */
+  .stats { display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: #656d76; }
+  .stats span { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 4px 10px; }
+
+  /* Search */
+  .search-bar { margin-bottom: 16px; }
+  .search-bar input { width: 100%; max-width: 400px; padding: 8px 12px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; outline: none; }
+  .search-bar input:focus { border-color: #0969da; box-shadow: 0 0 0 3px rgba(9,105,218,0.15); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid #d0d7de; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { padding: 8px 16px; text-align: left; border-bottom: 1px solid #d0d7de; }
+  th { background: #f6f8fa; position: sticky; top: 0; z-index: 2; white-space: nowrap; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #f6f8fa; }
+  tr.hidden { display: none; }
+  code { background: #eff1f3; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+
+  /* Filter buttons in header */
+  .filter-wrap { position: relative; display: inline-block; }
+  .filter-btn { cursor: pointer; background: none; border: 1px solid transparent; font-weight: 600; font-size: 14px; font-family: inherit; padding: 2px 6px; color: inherit; border-radius: 4px; }
+  .filter-btn:hover { background: #e8ecf0; }
+  .filter-btn::after { content: " \25BE"; font-size: 11px; color: #656d76; }
+  .filter-btn.active { background: #ddf4ff; border-color: #54aeff; }
+
+  /* Badge */
+  .filter-badge { background: #0969da; color: #fff; border-radius: 10px; font-size: 11px; padding: 1px 7px; margin-left: 4px; font-weight: normal; vertical-align: middle; }
+
+  /* Dropdown panel */
+  .filter-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); min-width: 240px; max-height: 360px; z-index: 20; }
+  .filter-dropdown.show { display: block; }
+  .filter-search { width: calc(100% - 16px); margin: 8px; padding: 6px 10px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 13px; outline: none; }
+  .filter-search:focus { border-color: #0969da; box-shadow: 0 0 0 3px rgba(9,105,218,0.15); }
+  .filter-options { max-height: 240px; overflow-y: auto; padding: 0 4px 4px; }
+  .filter-options label { display: flex; align-items: center; gap: 8px; padding: 4px 8px; cursor: pointer; font-size: 13px; border-radius: 4px; }
+  .filter-options label:hover { background: #f0f4ff; }
+  .filter-options input[type="checkbox"] { accent-color: #0969da; }
+  .filter-actions { display: flex; justify-content: space-between; padding: 8px 10px; border-top: 1px solid #d0d7de; }
+  .filter-actions button { font-size: 12px; cursor: pointer; background: none; border: none; color: #0969da; padding: 2px 4px; font-family: inherit; }
+  .filter-actions button:hover { text-decoration: underline; }
+
+  /* No results */
+  .no-results { display: none; padding: 40px; text-align: center; color: #656d76; font-size: 14px; }
+  .no-results.show { display: block; }
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    body { background: #0d1117; color: #e6edf3; }
+    th { background: #161b22; }
+    td { border-color: #30363d; }
+    th { border-color: #30363d; }
+    .table-wrap { border-color: #30363d; }
+    tbody tr:hover { background: #161b22; }
+    code { background: #343942; }
+    .search-bar input { background: #0d1117; color: #e6edf3; border-color: #30363d; }
+    .search-bar input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+    .stats span { background: #161b22; border-color: #30363d; color: #8b949e; }
+    .subtitle { color: #8b949e; }
+    .subtitle a { color: #58a6ff; }
+    .filter-btn:hover { background: #30363d; }
+    .filter-btn.active { background: #122d42; border-color: #58a6ff; }
+    .filter-btn::after { color: #8b949e; }
+    .filter-dropdown { background: #161b22; border-color: #30363d; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .filter-search { background: #0d1117; color: #e6edf3; border-color: #30363d; }
+    .filter-search:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+    .filter-options label:hover { background: #1c2128; }
+    .filter-actions { border-color: #30363d; }
+    .filter-actions button { color: #58a6ff; }
+    .filter-badge { background: #58a6ff; color: #0d1117; }
+    .no-results { color: #8b949e; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Homebrew Packages</h1>
+<p class="subtitle">Interactive package list from <a href="../Brewfile">Brewfile</a></p>
+
+<div class="stats">
+  <span id="statTotal"></span>
+  <span id="statFormula"></span>
+  <span id="statCask"></span>
+  <span id="statShowing"></span>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="nameSearch" placeholder="Search by name or description...">
+</div>
+
+<div class="table-wrap">
+<table id="pkgTable">
 <thead>
 <tr>
-<th>Name</th>
-<th>
-<span class="filter-wrap">
-<button class="filter-btn" onclick="toggleDropdown('typeFilter')">Formula/Cask</button>
-<span id="typeBadge"></span>
-<div class="filter-dropdown" id="typeFilter">
-<input class="filter-search" type="text" placeholder="Search..." oninput="filterOptions('typeFilter', this.value)">
-<div class="filter-options" id="typeFilterOptions"></div>
-<div class="filter-actions"><button onclick="selectAll('typeFilter')">Select All</button><button onclick="clearAll('typeFilter')">Clear</button></div>
-</div>
-</span>
-</th>
-<th>Description</th>
-<th>Alternatives</th>
-<th>
-<span class="filter-wrap">
-<button class="filter-btn" onclick="toggleDropdown('catFilter')">Category</button>
-<span id="catBadge"></span>
-<div class="filter-dropdown" id="catFilter">
-<input class="filter-search" type="text" placeholder="Search..." oninput="filterOptions('catFilter', this.value)">
-<div class="filter-options" id="catFilterOptions"></div>
-<div class="filter-actions"><button onclick="selectAll('catFilter')">Select All</button><button onclick="clearAll('catFilter')">Clear</button></div>
-</div>
-</span>
-</th>
+  <th>Name</th>
+  <th>
+    <span class="filter-wrap">
+      <button class="filter-btn" id="typeBtnEl">Formula/Cask</button><span id="typeBadge"></span>
+      <div class="filter-dropdown" id="typeFilter">
+        <input class="filter-search" type="text" placeholder="Search...">
+        <div class="filter-options"></div>
+        <div class="filter-actions"><button class="sel-all">Select All</button><button class="clr-all">Clear</button></div>
+      </div>
+    </span>
+  </th>
+  <th>Description</th>
+  <th>Alternatives</th>
+  <th>
+    <span class="filter-wrap">
+      <button class="filter-btn" id="catBtnEl">Category</button><span id="catBadge"></span>
+      <div class="filter-dropdown" id="catFilter">
+        <input class="filter-search" type="text" placeholder="Search...">
+        <div class="filter-options"></div>
+        <div class="filter-actions"><button class="sel-all">Select All</button><button class="clr-all">Clear</button></div>
+      </div>
+    </span>
+  </th>
 </tr>
 </thead>
 <tbody>
@@ -678,25 +270,46 @@ This document organizes all packages from the Brewfile by category.
 <tr><td><code>utm</code></td><td>Cask</td><td>Virtual machines for macOS</td><td></td><td>Virtualization</td></tr>
 </tbody>
 </table>
+</div>
+
+<div class="no-results" id="noResults">No packages match the current filters.</div>
 
 <script>
 (function() {
-  var filters = { typeFilter: { col: 1, selected: new Set() }, catFilter: { col: 4, selected: new Set() } };
   var table = document.getElementById('pkgTable');
-  var rows = table.querySelectorAll('tbody tr');
+  var rows = Array.from(table.querySelectorAll('tbody tr'));
+  var searchInput = document.getElementById('nameSearch');
+  var noResults = document.getElementById('noResults');
 
-  function init(id) {
+  // Filter state
+  var filters = {
+    typeFilter: { col: 1, selected: new Set(), all: [], badge: document.getElementById('typeBadge'), btn: document.getElementById('typeBtnEl') },
+    catFilter:  { col: 4, selected: new Set(), all: [], badge: document.getElementById('catBadge'),  btn: document.getElementById('catBtnEl') }
+  };
+
+  // Stats
+  var statTotal = document.getElementById('statTotal');
+  var statFormula = document.getElementById('statFormula');
+  var statCask = document.getElementById('statCask');
+  var statShowing = document.getElementById('statShowing');
+  var totalFormulas = rows.filter(function(r) { return r.cells[1].textContent.trim() === 'Formula'; }).length;
+  var totalCasks = rows.length - totalFormulas;
+  statTotal.textContent = rows.length + ' packages';
+  statFormula.textContent = totalFormulas + ' formulas';
+  statCask.textContent = totalCasks + ' casks';
+
+  // Initialize filter values
+  Object.keys(filters).forEach(function(id) {
     var f = filters[id];
     var vals = new Set();
     rows.forEach(function(r) { vals.add(r.cells[f.col].textContent.trim()); });
     f.all = Array.from(vals).sort();
     f.selected = new Set(f.all);
-    renderOptions(id, '');
-  }
+  });
 
   function renderOptions(id, query) {
     var f = filters[id];
-    var container = document.getElementById(id + 'Options');
+    var container = document.querySelector('#' + id + ' .filter-options');
     container.innerHTML = '';
     var q = query.toLowerCase();
     f.all.forEach(function(v) {
@@ -709,7 +322,6 @@ This document organizes all packages from the Brewfile by category.
       cb.addEventListener('change', function() {
         if (this.checked) f.selected.add(v); else f.selected.delete(v);
         applyFilters();
-        updateBadge(id);
       });
       label.appendChild(cb);
       label.appendChild(document.createTextNode(v));
@@ -717,59 +329,100 @@ This document organizes all packages from the Brewfile by category.
     });
   }
 
-  function updateBadge(id) {
-    var f = filters[id];
-    var badgeId = id === 'typeFilter' ? 'typeBadge' : 'catBadge';
-    var badge = document.getElementById(badgeId);
-    if (f.selected.size < f.all.length) {
-      badge.innerHTML = '<span class="filter-badge">' + f.selected.size + '/' + f.all.length + '</span>';
-    } else {
-      badge.innerHTML = '';
-    }
+  function updateBadges() {
+    Object.keys(filters).forEach(function(id) {
+      var f = filters[id];
+      if (f.selected.size < f.all.length) {
+        f.badge.innerHTML = '<span class="filter-badge">' + f.selected.size + '/' + f.all.length + '</span>';
+        f.btn.classList.add('active');
+      } else {
+        f.badge.innerHTML = '';
+        f.btn.classList.remove('active');
+      }
+    });
   }
 
   function applyFilters() {
+    var query = searchInput.value.toLowerCase();
+    var visible = 0;
     rows.forEach(function(r) {
       var typeVal = r.cells[1].textContent.trim();
       var catVal = r.cells[4].textContent.trim();
-      var show = filters.typeFilter.selected.has(typeVal) && filters.catFilter.selected.has(catVal);
+      var nameVal = r.cells[0].textContent.toLowerCase();
+      var descVal = r.cells[2].textContent.toLowerCase();
+      var matchType = filters.typeFilter.selected.has(typeVal);
+      var matchCat = filters.catFilter.selected.has(catVal);
+      var matchSearch = !query || nameVal.indexOf(query) !== -1 || descVal.indexOf(query) !== -1;
+      var show = matchType && matchCat && matchSearch;
       r.classList.toggle('hidden', !show);
+      if (show) visible++;
     });
+    statShowing.textContent = visible < rows.length ? 'showing ' + visible : '';
+    noResults.classList.toggle('show', visible === 0);
+    updateBadges();
   }
 
-  window.toggleDropdown = function(id) {
+  // Search
+  searchInput.addEventListener('input', applyFilters);
+
+  // Toggle dropdown
+  function toggleDropdown(id) {
     var dd = document.getElementById(id);
-    var btn = dd.parentElement.querySelector('.filter-btn');
     var isOpen = dd.classList.contains('show');
+    closeAll();
+    if (!isOpen) {
+      dd.classList.add('show');
+      var search = dd.querySelector('.filter-search');
+      search.value = '';
+      renderOptions(id, '');
+      search.focus();
+    }
+  }
+
+  function closeAll() {
     document.querySelectorAll('.filter-dropdown').forEach(function(d) { d.classList.remove('show'); });
-    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
-    if (!isOpen) { dd.classList.add('show'); btn.classList.add('active'); dd.querySelector('.filter-search').value = ''; renderOptions(id, ''); dd.querySelector('.filter-search').focus(); }
-  };
+  }
 
-  window.filterOptions = function(id, query) { renderOptions(id, query); };
-
-  window.selectAll = function(id) {
+  // Wire up filter buttons
+  Object.keys(filters).forEach(function(id) {
     var f = filters[id];
-    f.selected = new Set(f.all);
-    renderOptions(id, document.getElementById(id).querySelector('.filter-search').value);
-    applyFilters();
-    updateBadge(id);
-  };
+    var dd = document.getElementById(id);
 
-  window.clearAll = function(id) {
-    filters[id].selected = new Set();
-    renderOptions(id, document.getElementById(id).querySelector('.filter-search').value);
-    applyFilters();
-    updateBadge(id);
-  };
+    f.btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleDropdown(id);
+    });
 
-  document.addEventListener('click', function(e) {
-    document.querySelectorAll('.filter-dropdown').forEach(function(dd) {
-      if (!dd.parentElement.contains(e.target)) { dd.classList.remove('show'); dd.parentElement.querySelector('.filter-btn').classList.remove('active'); }
+    dd.addEventListener('click', function(e) { e.stopPropagation(); });
+
+    dd.querySelector('.filter-search').addEventListener('input', function() {
+      renderOptions(id, this.value);
+    });
+
+    dd.querySelector('.sel-all').addEventListener('click', function() {
+      f.selected = new Set(f.all);
+      renderOptions(id, dd.querySelector('.filter-search').value);
+      applyFilters();
+    });
+
+    dd.querySelector('.clr-all').addEventListener('click', function() {
+      f.selected = new Set();
+      renderOptions(id, dd.querySelector('.filter-search').value);
+      applyFilters();
     });
   });
 
-  init('typeFilter');
-  init('catFilter');
+  document.addEventListener('click', closeAll);
+
+  // Keyboard: Escape closes dropdowns
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  // Initial render
+  updateBadges();
+  applyFilters();
 })();
 </script>
+</body>
+</html>
