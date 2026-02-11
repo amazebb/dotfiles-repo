@@ -72,7 +72,7 @@ command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
-if command -v zsh &>/dev/null; then
+if command -v fzf &>/dev/null; then
     # Bind ? Key for toggling the fzf preview window, useful for long commands that don't fit on screen
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line
