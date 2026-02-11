@@ -44,6 +44,15 @@ export EDITOR="$HOME/.local/bin/nvim"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 
 ## Aliases
+# Homebrew
+if command -v brew &>/dev/null; then
+    alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
+    alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
+else
+    read -p "Install homebrew ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c\
+        "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
 # Copies Apple Notes while retaining newline which would otherwise be copied
 # over as <2028>, (U+2028) is the Unicode Line Separator
 # To use copy selection in Apple Notes, then run "cpnotes" in the terminal
@@ -56,19 +65,24 @@ if command -v eza &>/dev/null; then
     alias ll="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
     alias llp="eza -D -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
     alias llf="eza -f -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-fi
-
-# Homebrew
-if command -v brew &>/dev/null; then
-    alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-    alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
+else
+    read -p "Install eza ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
 fi
 
 # Nvim 
-command -v nvim &>/dev/null && alias nn='$HOME/.local/bin/nvim'
+if command -v nvim &>/dev/null; then
+    alias nn='$HOME/.local/bin/nvim'
+else
+    read -p "Install nvim ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install neovim
+fi
 
 # Zoxide
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+else
+    read -p "Install zoxide ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install zoxide
+fi
+
 
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
@@ -79,6 +93,8 @@ if command -v fzf &>/dev/null; then
     # ALT-C  - cd into the selected directory
     export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
     source <(fzf --zsh)
+else
+    read -p "Install fzf ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install fzf
 fi
 
 # Fzf-man ^h binding for man pages
