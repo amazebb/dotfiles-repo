@@ -49,7 +49,7 @@ if command -v brew &>/dev/null; then
     alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
     alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 else
-    read -p "Install homebrew ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c\
+    printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c\
         "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
@@ -66,21 +66,21 @@ if command -v eza &>/dev/null; then
     alias llp="eza -D -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
     alias llf="eza -f -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 else
-    read -p "Install eza ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
+    printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
 fi
 
 # Nvim 
 if command -v nvim &>/dev/null; then
     alias nn='$HOME/.local/bin/nvim'
 else
-    read -p "Install nvim ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install neovim
+    printf "Install nvim ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install neovim
 fi
 
 # Zoxide
 if command -v zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
 else
-    read -p "Install zoxide ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install zoxide
+    printf "Install zoxide ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install zoxide
 fi
 
 
@@ -94,7 +94,7 @@ if command -v fzf &>/dev/null; then
     export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
     source <(fzf --zsh)
 else
-    read -p "Install fzf ? (y/N) " -n 1 -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install fzf
+    printf "Install fzf ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install fzf
 fi
 
 # Fzf-man ^h binding for man pages
