@@ -3,6 +3,7 @@ vim.g.lsp_enable_list = {
     "awk_ls",
     "basedpyright",
     "bashls",
+    "clangd",
     "cssls",
     "html",
     "jdtls",
