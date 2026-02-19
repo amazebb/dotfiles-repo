@@ -47,7 +47,11 @@ export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 # Homebrew
 if command -v brew &>/dev/null; then
     alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-    alias brewlist="{brew leaves -r | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /'; brew list --cask | xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /'; brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
+    alias brewlist="{brew leaves -r |\
+        xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /';\
+        brew list --cask |\
+        xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /';\
+        brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 else
     printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c\
         "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -101,7 +105,11 @@ fi
 [[ -s "$HOME/.local/bin/fzf-man" ]] && source "$HOME/.local/bin/fzf-man"
 
 # Nnn
-[[ -s $HOME/.local/bin/nnn-split ]] && alias n='source $HOME/.local/bin/nnn-split'
+if [[ -s $HOME/.local/bin/nnn-split ]]; then
+    alias n='source $HOME/.local/bin/nnn-split'
+    BLK="0B" CHR="0B" DIR="1b" EXE="06" REG="00" HARDLINK="06" SYMLINK="06" MISSING="00" ORPHAN="09" FIFO="06" SOCK="0B" OTHER="06"
+    export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
+fi
 
 # Dotfiles
 (( ${+functions[dotfiles]} )) && alias dg=dotfiles
