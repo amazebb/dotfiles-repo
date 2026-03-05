@@ -12,11 +12,3 @@
 !/.config/kitty/kitty.conf
 !/.config/kitty/*auto.conf
 
-!.zshrc
-!.zshenv
-!.zprofile
-!.editorconfig
-!.gitconfig
-!.gitignore
-!.gitignore_global
-!LICENSE
