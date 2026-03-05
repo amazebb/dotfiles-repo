@@ -98,10 +98,11 @@ if command -v fzf &>/dev/null; then
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
         local selected
-        selected=$(fc -liD -t '%Y%m%d %H:%M' "-$SAVEHIST" -1 |
+        selected=$(fc -liD -t '%Y%m%d %H:%M' "-$SAVEHIST" -1 | cut -d ' ' -f 2- |
             fzf --tac --no-sort \
-                --preview 'echo {}' --preview-window down:3:hidden:wrap \
+                --preview 'printf "%s\n" {4..}' --preview-window down:3:hidden:wrap \
                 --bind '?:toggle-preview' --no-mouse \
+                --header='History (?:Toggle preview)'\
                 --query="${LBUFFER}")
         if [[ -n "$selected" ]]; then
             LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 5-)
