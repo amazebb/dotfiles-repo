@@ -1,16 +1,16 @@
 ## Setup the history
 # shellcheck disable=SC2034
 HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
-HISTSIZE=200000             # Set maximum number of commands stored in memory for current session
+HISTSIZE=250000             # Set maximum number of commands stored in memory for current session
 SAVEHIST=200000             # Set maximum number of commands saved to history file on disk
 export LESSHISTFILE=-       # Prevent 'less' from saving command history (e.g., when viewing man pages)
 
 # Configure history behavior options
-setopt EXTENDED_HISTORY       # Log with Unix timestamps
-setopt HIST_EXPIRE_DUPS_FIRST # Remove duplicates from history first when trimming
-setopt HIST_IGNORE_DUPS       # Don't add duplicate commands to history
-setopt INC_APPEND_HISTORY     # Write to history after each command
-setopt SHARE_HISTORY          # Share history across sessions
+setopt EXTENDED_HISTORY         # Log with Unix timestamps
+setopt HIST_EXPIRE_DUPS_FIRST   # Remove duplicates first when trimming
+setopt HIST_FIND_NO_DUPS        # Hide dupes in search, but still SAVE them all
+setopt HIST_VERIFY              # Expand history substitutions before executing
+setopt SHARE_HISTORY            # Share history across sessions (implies INC_APPEND_HISTORY)
 
 # Bind Up/Down arrow key to search backward/forward through history for commands starting with current line prefix
 bindkey "^[[A" history-beginning-search-backward
@@ -87,16 +87,28 @@ else
     printf "Install zoxide ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install zoxide
 fi
 
-
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
 if command -v fzf &>/dev/null; then
-    # Bind ? Key for toggling the fzf preview window, useful for long commands that don't fit on screen
     # CTRL-T - Paste the selected files and directories onto the command-line
-    # CTRL-R - Paste the selected command from history onto the command-line
+    # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
-    export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --no-mouse"
     source <(fzf --zsh)
+    # Override CTRL-R to show timestamps (yyyymmdd HH:MM) and command duration
+    # Bind ? key to toggle preview window for long commands
+    fzf-history-widget() {
+        local selected
+        selected=$(fc -liD -t '%Y%m%d %H:%M' "-$SAVEHIST" -1 |
+            fzf --tac --no-sort \
+                --preview 'echo {}' --preview-window down:3:hidden:wrap \
+                --bind '?:toggle-preview' --no-mouse \
+                --query="${LBUFFER}")
+        if [[ -n "$selected" ]]; then
+            LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 5-)
+        fi
+        zle reset-prompt
+    }
+    zle -N fzf-history-widget
 else
     printf "Install fzf ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install fzf
 fi
