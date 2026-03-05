@@ -98,14 +98,15 @@ if command -v fzf &>/dev/null; then
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
         local selected
-        selected=$(fc -liD -t '%Y%m%d %H:%M' "-$SAVEHIST" -1 | cut -d ' ' -f 2- |
+        selected=$(cat "$HISTFILE" | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 | \
+            awk -F':0' '{printf("%s %s\n",strftime("%Y-%m-%d %H:%M", $1), substr($0,index($0,$2)))}' |
             fzf --tac --no-sort \
-                --preview 'printf "%s\n" {4..}' --preview-window down:3:hidden:wrap \
+                --preview 'printf "%s\n" {3..}' --preview-window down:3:hidden:wrap \
                 --bind '?:toggle-preview' --no-mouse \
                 --header='History (?:Toggle preview)'\
                 --query="${LBUFFER}")
         if [[ -n "$selected" ]]; then
-            LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 5-)
+            LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 3-)
         fi
         zle reset-prompt
     }
