@@ -125,6 +125,12 @@ if [[ -s $HOME/.local/bin/nnn-split ]]; then
     export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 fi
 
+git-dirty() {
+  fd -Htd '^\.git$' "${1:-.}" | sed 's/\.git\/$//' | while read -r dir; do
+    [ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ] && echo "${dir#./}"
+  done
+}
+
 # Dotfiles
 (( ${+functions[dotfiles]} )) && alias dg=dotfiles
 
