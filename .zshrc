@@ -142,6 +142,10 @@ git-dirty() {
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# macOS fix for manpath/makewhatis due to APFS by default being
+# case-insensitive. manpath auto-infers paths from $PATH, which produces entries
+# like gnubin/man, as well as gnubin/MAN. 
+# The below resolves symlinks and deduplicate to keep makewhatis happy.
 mpath=$(manpath | tr ':' '\n' | while read -r p; do
   resolved=$(realpath "$p" 2>/dev/null) && [ -d "$resolved" ] && echo "$resolved"
 done | sort -uf | paste -sd ':' -)
