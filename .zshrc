@@ -43,7 +43,7 @@ export GITEA_WORK_DIR="$HOME/.gitea-data"
 export EDITOR="$HOME/.local/bin/nvim"
 export MANPAGER='nvim +Man!'
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
-
+export SDL_FRAMEBUFFER_ACCELERATION=opengl
 ## Aliases
 # Homebrew
 if command -v brew &>/dev/null; then
