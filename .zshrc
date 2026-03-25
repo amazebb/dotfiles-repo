@@ -65,11 +65,11 @@ fi
 
 # Eza
 if command -v eza &>/dev/null; then
-    alias l="eza -1lh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
+    alias l="eza -1lh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
     # Show only dot files and folders, add -D for folders only, and -f for files only
-    alias ll="eza -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-    alias llp="eza -D -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-    alias llf="eza -f -1alh -s=name --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
+    alias ll="eza -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
+    alias llp="eza -D -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
+    alias llf="eza -f -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
 else
     printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
 fi
