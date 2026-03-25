@@ -126,10 +126,14 @@ if [[ -s $HOME/.local/bin/nnn-split ]]; then
     export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 fi
 
-alias fext='find . -type f | awk -F. '\''{if (NF>1) print tolower($NF)}'\'' | sort | uniq -c | sort -nr'
+fext() {
+    find "${1:-.}" -type f |\
+        awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' \
+        | sort | uniq -c | sort -nr
+}
 
 git-dirty() {
-  fd -Htd '^\.git$' "${1:-.}" | sed 's/\.git\/$//' | while read -r dir; do
+    fd -Htd '^\.git$' "${1:-.}" | sed 's/\.git\/$//' | while read -r dir; do
     [ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ] && echo "${dir#./}"
   done
 }
