@@ -6,41 +6,32 @@ vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 require("fzf-lua").setup({ buffers = { sort_lastused = false } })
 
 -- Treesitter
-vim.pack.add({ {
-    src = "https://github.com/nvim-treesitter/nvim-treesitter",
-    version = "master",
-} })
+vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
 
----@diagnostic disable: missing-fields
-require("nvim-treesitter.configs").setup({
-    ensure_installed = {
-        "awk",
-        "bash",
-        "c",
-        "fortran",
-        "lua",
-        "vim",
-        "vimdoc",
-        "markdown",
-        "markdown_inline",
-        "typescript",
-        "tsx",
-        "python",
-        "html",
-        "css",
-        "java",
-        "javascript",
-        "julia",
-        "query",
-        "sql",
-    },
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    incremental_selection = { enable = true },
-})
----@diagnostic enable: missing-fields
+require("nvim-treesitter").install({
+    "awk",
+    "bash",
+    "css",
+    "diff",
+    "fennel",
+    "fortran",
+    "git_config",
+    "git_rebase",
+    "gitattributes",
+    "gitcommit",
+    "gitignore",
+    "html",
+    "java",
+    "javascript",
+    "julia",
+    "latex",
+    "matlab",
+    "python",
+    "sql",
+    "tsx",
+    "typescript",
+    "yaml" }
+)
 
 -- Blink
 vim.pack.add({
