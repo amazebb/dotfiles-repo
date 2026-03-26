@@ -127,7 +127,7 @@ if [[ -s $HOME/.local/bin/nnn-split ]]; then
 fi
 
 fext() {
-    find "${1:-.}" -type f |\
+    find "${1:-.}" -type "${2:-f}" |\
         awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' \
         | sort | uniq -c | sort -nr
 }
