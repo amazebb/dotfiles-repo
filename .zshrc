@@ -6,11 +6,11 @@ SAVEHIST=200000             # Set maximum number of commands saved to history fi
 export LESSHISTFILE=-       # Prevent 'less' from saving command history (e.g., when viewing man pages)
 
 # Configure history behavior options
-setopt EXTENDED_HISTORY         # Log with Unix timestamps
-setopt HIST_EXPIRE_DUPS_FIRST   # Remove duplicates first when trimming
-setopt HIST_FIND_NO_DUPS        # Hide dupes in search, but still SAVE them all
-setopt HIST_VERIFY              # Expand history substitutions before executing
-setopt SHARE_HISTORY            # Share history across sessions (implies INC_APPEND_HISTORY)
+setopt EXTENDED_HISTORY       # Log with Unix timestamps
+setopt HIST_EXPIRE_DUPS_FIRST # Remove duplicates first when trimming
+setopt HIST_FIND_NO_DUPS      # Hide dupes in search, but still SAVE them all
+setopt HIST_VERIFY            # Expand history substitutions before executing
+setopt SHARE_HISTORY          # Share history across sessions (implies INC_APPEND_HISTORY)
 
 # Bind Up/Down arrow key to search backward/forward through history for commands starting with current line prefix
 bindkey "^[[A" history-beginning-search-backward
@@ -54,8 +54,7 @@ if command -v brew &>/dev/null; then
         xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /';\
         brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 else
-    printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c\
-        "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # Copies Apple Notes while retaining newline which would otherwise be copied
@@ -74,7 +73,7 @@ else
     printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
 fi
 
-# Nvim 
+# Nvim
 if command -v nvim &>/dev/null; then
     alias nn='$HOME/.local/bin/nvim'
 else
@@ -99,12 +98,12 @@ if command -v fzf &>/dev/null; then
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
         local selected
-        selected=$(cat "$HISTFILE" | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 | \
+        selected=$(cat "$HISTFILE" | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 |
             awk -F':0' '{printf("%s %s\n",strftime("%Y-%m-%d %H:%M", $1), substr($0,index($0,$2)))}' |
             fzf --tac --no-sort \
                 --preview 'printf "%s\n" {3..}' --preview-window down:3:hidden:wrap \
                 --bind '?:toggle-preview' --no-mouse \
-                --header='History (?:Toggle preview)'\
+                --header='History (?:Toggle preview)' \
                 --query="${LBUFFER}")
         if [[ -n "$selected" ]]; then
             LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 3-)
@@ -127,19 +126,19 @@ if [[ -s $HOME/.local/bin/nnn-split ]]; then
 fi
 
 fext() {
-    find "${1:-.}" -type "${2:-f}" |\
-        awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' \
-        | sort | uniq -c | sort -nr
+    find "${1:-.}" -type "${2:-f}" |
+        awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' |
+        sort | uniq -c | sort -nr
 }
 
 git-dirty() {
     fd -Htd '^\.git$' "${1:-.}" | sed 's/\.git\/$//' | while read -r dir; do
-    [ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ] && echo "${dir#./}"
-  done
+        [ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ] && echo "${dir#./}"
+    done
 }
 
 # Dotfiles
-(( ${+functions[dotfiles]} )) && alias dg=dotfiles
+((${+functions[dotfiles]})) && alias dg=dotfiles
 
 # Prompt
 [[ -s $HOME/.local/share/zsh-prompt/zsh_prompt ]] && source "$HOME/.local/share/zsh-prompt/zsh_prompt"
@@ -154,10 +153,13 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # entries like gnubin/man, as well as gnubin/MAN. The below resolves symlinks,
 # deduplicates and moves homebrews versions upfront to keep makewhatis happy
 
-resolved=$(manpath | tr ':' '\n' | \
+resolved=$(manpath | tr ':' '\n' |
     while read -r p; do
-    r=$(realpath "$p" 2>/dev/null) && [ -d "$r" ] && echo "$r"
-done)
+        r=$(realpath "$p" 2>/dev/null) && [ -d "$r" ] && echo "$r"
+    done)
 
-r="$({ echo "$resolved" | grep '/opt/homebrew'; echo "$resolved" | grep -v '/opt/homebrew'; } | paste -sd ':' -)"
+r="$({
+    echo "$resolved" | grep '/opt/homebrew'
+    echo "$resolved" | grep -v '/opt/homebrew'
+} | paste -sd ':' -)"
 export MANPATH="$r"
