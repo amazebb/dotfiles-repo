@@ -125,6 +125,12 @@ if [[ -s $HOME/.local/bin/nnn-split ]]; then
     export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 fi
 
+uvlist() {
+    echo "uv Cache List"
+    find "$(uv cache dir)/archive-v0" -name "METADATA" -path "*.dist-info/*" -print0 2>/dev/null |
+        xargs -0 grep -h "^Name:\|^Version:" 2>/dev/null | paste - -
+}
+
 fext() {
     find "${1:-.}" -type "${2:-f}" |
         awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' |
