@@ -131,10 +131,41 @@ uvlist() {
         xargs -0 grep -h "^Name:\|^Version:" 2>/dev/null | paste - -
 }
 
+# fext() {
+#     find "${1:-.}" -type "${2:-f}" |
+#         awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' |
+#         sort | uniq -c | sort -nr
+# }
+
 fext() {
-    find "${1:-.}" -type "${2:-f}" |
-        awk -F. '{sub(/^\./,"",$0); if ($0 == "" || $0 == $NF) print "(no extension)"; else print tolower($NF)}' |
-        sort | uniq -c | sort -nr
+    # fext [path] [type] [column]
+    #
+    # Recursively tally files by extension under [path] (default: .), restricted
+    # to find -type [type] (default: f), sorted descending by [column] (1=count,
+    # 2=size, 3=extension; default: 1). Outputs three columns: file count, total
+    # size (human-readable, B/K/M/G/T), extension.
+    #
+    # Example: Sort by size(2) descending
+    #
+    #       fext . f 2
+
+    find "${1:-.}" -type "${2:-f}" -exec stat --printf='%s\t%n\n' {} + |
+        awk -F'\t' '{
+            n = split($2, p, "/"); name = p[n]
+            m = match(name, /\.[^.]+$/)
+            # key = (m > 1) ? tolower(substr(name, m + 1)) : "(no extension)"
+            key = (m > 1) ? tolower(substr(name, m + 1)) : name
+            c[key]++; s[key] += $1
+        }
+        END { for (e in c) printf "%d\t%d\t%s\n", c[e], s[e], e }' |
+        sort -t$'\t' "-k${3:-1},${3:-1}hr" |
+        awk -F'\t' '
+        function h(b,   u,i) {
+            split("B K M G T", u, " "); i = 1
+            while (b >= 1024 && i < 5) { b /= 1024; i++ }
+            return (i == 1) ? sprintf("%d%s", b, u[i]) : sprintf("%.1f%s", b, u[i])
+        }
+        { printf "%7d  %9s  %s\n", $1, h($2), $3 }'
 }
 
 git-dirty() {
