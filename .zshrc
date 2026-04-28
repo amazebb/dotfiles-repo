@@ -141,7 +141,7 @@ git-dirty() {
 ((${+functions[dotfiles]})) && alias dg=dotfiles
 
 # Prompt
-[[ -s $HOME/.local/share/zsh-prompt/zsh_prompt ]] && source "$HOME/.local/share/zsh-prompt/zsh_prompt"
+[[ -s $HOME/.local/share/zsh/prompt/zsh-prompt ]] && source "$HOME/.local/share/zsh/prompt/zsh-prompt"
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
