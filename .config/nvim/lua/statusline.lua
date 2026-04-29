@@ -22,7 +22,7 @@ end
 
 local function update_git_status()
     local git_dir
-    local res = vim.system({ 'zsh', '-c', 'dotfiles --zsh-prompt --print-status' }, { text = true }):wait()
+    local res = vim.system({ 'zsh', '-c', 'dotfiles --print-status' }, { text = true }):wait()
     if res.code == 0 then
         local lines = vim.split(res.stdout, '\n', { trimempty = true })
         git_status = lines[1]
