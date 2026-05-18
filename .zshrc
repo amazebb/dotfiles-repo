@@ -127,10 +127,10 @@ if [[ -s $HOME/.local/bin/n3 ]]; then
     export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 fi
 
-uvlist() {
-    echo "uv Cache List"
-    find "$(uv cache dir)/archive-v0" -name "METADATA" -path "*.dist-info/*" -print0 2>/dev/null |
-        xargs -0 grep -h "^Name:\|^Version:" 2>/dev/null | paste - -
+uvcachelist() {
+    find "$(uv cache dir)/archive-v0" -name "METADATA" -path "*.dist-info/*" |
+        awk -F/ '{split($(NF-1),a,"-");gsub(/\.dist.*/,"",a[2]); print a[1], a[2]}' |
+        sort -f | column -t
 }
 
 git-dirty() {
