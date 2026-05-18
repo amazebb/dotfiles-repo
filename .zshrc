@@ -40,10 +40,9 @@ export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 # After this step MATLAB can be started as a regular application
 
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-export EDITOR="$HOME/.local/bin/nvim"
-export MANPAGER='nvim +Man!'
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 export SDL_FRAMEBUFFER_ACCELERATION=opengl
+
 ## Aliases
 # Homebrew
 if command -v brew &>/dev/null; then
@@ -76,6 +75,8 @@ fi
 # Nvim
 if command -v nvim &>/dev/null; then
     alias nn='$HOME/.local/bin/nvim'
+    export EDITOR="$HOME/.local/bin/nvim"
+    export MANPAGER='nvim +Man!'
 else
     printf "Install nvim ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install neovim
 fi
