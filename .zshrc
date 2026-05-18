@@ -98,7 +98,8 @@ if command -v fzf &>/dev/null; then
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
         local selected
-        selected=$(cat "$HISTFILE" | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 |
+        selected=$(awk '!/:0;\\$/ ' "$HISTFILE" |
+            LC_ALL=C awk '!NF{if(cont){printf "\n";cont=0};next} /\\$/{gsub(/\\+$/,"");printf "%s ",$0;cont=1;next} {print;cont=0}' | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 |
             awk -F':0' '{printf("%s %s\n",strftime("%Y-%m-%d %H:%M", $1), substr($0,index($0,$2)))}' |
             fzf --tac --no-sort \
                 --preview 'printf "%s\n" {3..}' --preview-window down:3:hidden:wrap \
