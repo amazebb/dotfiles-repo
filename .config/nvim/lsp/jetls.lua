@@ -6,9 +6,8 @@
 return {
     cmd = {
         "jetls",
-        "--threads=auto",
-        "--",
+        "serve",
     },
     filetypes = { "julia" },
-    root_markers = { 'Project.toml', 'JuliaProject.toml' }
+    root_markers = { 'Project.toml' }
 }
