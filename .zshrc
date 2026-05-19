@@ -1,5 +1,6 @@
-## Setup the history
 # shellcheck disable=SC2034
+
+## Setup the history
 HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
 HISTSIZE=250000             # Set maximum number of commands stored in memory for current session
 SAVEHIST=200000             # Set maximum number of commands saved to history file on disk
@@ -123,8 +124,6 @@ fi
 # Nnn
 if [[ -s $HOME/.local/bin/n3 ]]; then
     alias n='source $HOME/.local/bin/n3'
-    BLK="0B" CHR="0B" DIR="1b" EXE="06" REG="00" HARDLINK="06" SYMLINK="06" MISSING="00" ORPHAN="09" FIFO="06" SOCK="0B" OTHER="06"
-    export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
 fi
 
 uvcachelist() {
