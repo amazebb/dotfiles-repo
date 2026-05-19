@@ -1,7 +1,1 @@
-require "configs"
-require "keymaps"
-require "autocmds"
-require "statusline"
-require "plugins"
-require "lsp"
-require "ai"
+vim.pack.add({"https://github.com/amazebb/nvim-config"})
