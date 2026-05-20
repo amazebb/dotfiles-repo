@@ -8,8 +8,8 @@
 	defaultObjectFormat = sha1
 [core]
 	excludesfile = ~/.gitignore_global
-	editor = ~/.local/bin/nvim
-	pager = bat
+	editor = nvim
+        pager = "command -v bat >/dev/null && bat --paging=always || less"
 [user]
 	name = bb
 	email = <26394523+broeknbytes@users.noreply.github.com
