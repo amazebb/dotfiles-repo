@@ -48,11 +48,6 @@ export SDL_FRAMEBUFFER_ACCELERATION=opengl
 # Homebrew
 if command -v brew &>/dev/null; then
     alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-    alias brewlist="{brew leaves -r |\
-        xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/brew /';\
-        brew list --cask |\
-        xargs brew desc 2>/dev/null | sed 's/:/\t/1;s/^/cask /';\
-        brew tap| sed 's/^/tap  /;s/$/\t/'} | column -t -s $'\t'"
 else
     printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
