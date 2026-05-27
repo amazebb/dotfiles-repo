@@ -159,3 +159,9 @@ r="$({
     echo "$resolved" | grep -v '/opt/homebrew'
 } | paste -sd ':' -)"
 export MANPATH="$r"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
