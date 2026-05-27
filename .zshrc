@@ -96,7 +96,7 @@ if command -v fzf &>/dev/null; then
     fzf-history-widget() {
         local selected
         selected=$(awk '!/:0;\\$/ ' "$HISTFILE" |
-            LC_ALL=C awk '!NF{if(cont){printf "\n";cont=0};next} /\\$/{gsub(/\\+$/,"");printf "%s ",$0;cont=1;next} {print;cont=0}' | tr ';' ' ' | cut -d: -f 2- | uniq -f 1 |
+            LC_ALL=C awk '!NF{if(cont){printf "\n";cont=0};next} /\\$/{gsub(/\\+$/,"");printf "%s ",$0;cont=1;next} {print;cont=0}' | LC_ALL=C sed 's/;/ /' | cut -d: -f 2- | uniq -f 1 |
             awk -F':0' '{printf("%s %s\n",strftime("%Y-%m-%d %H:%M", $1), substr($0,index($0,$2)))}' |
             fzf --tac --no-sort \
                 --preview 'printf "%s\n" {3..}' --preview-window down:3:hidden:wrap \
@@ -104,7 +104,7 @@ if command -v fzf &>/dev/null; then
                 --header='History (?:Toggle preview)' \
                 --query="${LBUFFER}")
         if [[ -n "$selected" ]]; then
-            LBUFFER=$(echo "$selected" | tr -s '[:space:]' ' ' | cut -d ' ' -f 3-)
+            LBUFFER=$(printf '%s' "$selected" | sed 's/^[0-9-]* [0-9:]* //')
         fi
         zle reset-prompt
     }
