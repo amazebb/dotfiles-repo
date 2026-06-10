@@ -67,3 +67,5 @@ uv.lock
 lazy-lock.json
 
 
+
+**/.claude/settings.local.json
