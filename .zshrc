@@ -45,13 +45,6 @@ export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 export SDL_FRAMEBUFFER_ACCELERATION=opengl
 
 ## Aliases
-# Homebrew
-if command -v brew &>/dev/null; then
-    alias brewup="brew update && brew upgrade && brew outdated --cask --greedy --verbose"
-else
-    printf "Install homebrew ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
 # Copies Apple Notes while retaining newline which would otherwise be copied
 # over as <2028>, (U+2028) is the Unicode Line Separator
 # To use copy selection in Apple Notes, then run "cpnotes" in the terminal
