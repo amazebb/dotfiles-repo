@@ -7,7 +7,7 @@
         pager = "command -v bat >/dev/null && bat --paging=always || less"
 [user]
 	name = bb
-	email = <26394523+broeknbytes@users.noreply.github.com
+	email = 26394523+broeknbytes@users.noreply.github.com
 [diff]
 	tool = opendiff
 [difftool]
