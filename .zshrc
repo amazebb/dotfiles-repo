@@ -43,6 +43,7 @@ export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 export SDL_FRAMEBUFFER_ACCELERATION=opengl
+export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 
 ## Aliases
 # Copies Apple Notes while retaining newline which would otherwise be copied
