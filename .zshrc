@@ -65,6 +65,8 @@ fi
 # Nvim
 if command -v nvim &>/dev/null; then
     alias nn='$HOME/.local/bin/nvim'
+    # Load ~/Code/GitHub/amazebb/nvim-config from disk (see ~/.config/nvim/init.lua)
+    alias nnd='NVIM_CONFIG_DEV=1 $HOME/.local/bin/nvim'
     export EDITOR="$HOME/.local/bin/nvim"
     export MANPAGER='nvim +Man!'
 else
