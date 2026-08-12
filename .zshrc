@@ -157,11 +157,11 @@ export MANPATH="$r"
 
 # >>> grok installer >>>
 export PATH="$HOME/.grok/bin:$PATH"
-fpath=(~/.grok/completions/zsh "$fpath")
+# shellcheck disable=SC2206
+fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
-# <<< grok installer <<<
+# <<< grok installer <<<## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 
-## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # Initialize SDKMAN for Java version management
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
