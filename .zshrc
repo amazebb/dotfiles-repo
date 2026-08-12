@@ -1,4 +1,4 @@
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC2139
 
 ## Setup the history
 HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
@@ -53,11 +53,16 @@ export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 
 # Eza
 if command -v eza &>/dev/null; then
-    alias l="eza -1lh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always"
-    # Show only dot files and folders, add -D for folders only, and -f for files only
-    alias ll="eza -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-    alias llp="eza -D -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
-    alias llf="eza -f -1alh -s=name --no-quotes --no-user --group-directories-first --git --git-repos-no-status --icons=always --color=always -I=\"[!.]*\""
+    eza_opts="-s=name --no-quotes --no-user --group-directories-first
+    --git --git-repos-no-status --icons=always --color=always"
+    alias l="eza -1lh ${eza_opts}"
+    # Show only hidden/dot files and folders
+    alias ll="eza -1alh ${eza_opts}"
+    # Show only hidden/dot folders
+    alias llp="eza -D -1alh ${eza_opts}"
+    # Show only hidden/dot files
+    alias llf="eza -f -1alh ${eza_opts}"
+    unset eza_opts
 else
     printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
 fi
@@ -135,16 +140,10 @@ git-dirty() {
 # Prompt
 [[ -s $HOME/.local/share/zsh/prompt/zsh-prompt ]] && source "$HOME/.local/share/zsh/prompt/zsh-prompt"
 
-# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# Initialize SDKMAN for Java version management
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 # macOS fix for manpath/makewhatis due to APFS by default being
 # case-insensitive. manpath auto-infers paths from $PATH, which produces
 # entries like gnubin/man, as well as gnubin/MAN. The below resolves symlinks,
 # deduplicates and moves homebrews versions upfront to keep makewhatis happy
-
 resolved=$(manpath | tr ':' '\n' |
     while read -r p; do
         r=$(realpath "$p" 2>/dev/null) && [ -d "$r" ] && echo "$r"
@@ -158,6 +157,11 @@ export MANPATH="$r"
 
 # >>> grok installer >>>
 export PATH="$HOME/.grok/bin:$PATH"
-fpath=(~/.grok/completions/zsh $fpath)
+fpath=(~/.grok/completions/zsh "$fpath")
 autoload -Uz compinit && compinit -C
 # <<< grok installer <<<
+
+## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# Initialize SDKMAN for Java version management
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
