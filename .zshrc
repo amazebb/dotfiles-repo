@@ -139,9 +139,9 @@ git-dirty() {
 
 fzf-gitlog() {
     # shellcheck disable=SC2016
-    dg log --color=always \
+    dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
-        fzf --ansi --style full \
+        fzf --ansi --style full --tmux center,90%,90% \
             --preview 'dotfiles show --color=always $(echo {} | cut -d" " -f2)'
 }
 
@@ -149,7 +149,7 @@ fzf-gitdiff() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
-        fzf --ansi --style full --multi \
+        fzf --ansi --style full --multi --tmux center,90%,90% \
             --preview '
             hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
             if (( ${#hashes[@]} == 2 )); then
