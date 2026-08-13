@@ -142,7 +142,7 @@ fzf-gitlog() {
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
         fzf --ansi --style full --height=~-1 --tmux center,90%,90% \
-            --list-label="Git Log" --input-label="Search Commit" \
+            --input-label="Search Commit" \
             --preview '
                 hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
                 [ -n "$hash" ] && dotfiles show --color=always "$hash"
