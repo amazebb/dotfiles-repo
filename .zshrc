@@ -117,6 +117,9 @@ fi
 # Fzf-man ^h binding for man pages
 [[ -s "$HOME/.local/bin/fzf-man" ]] && source "$HOME/.local/bin/fzf-man"
 
+# Source our zsh-prompt
+[[ -s $HOME/.local/share/zsh/prompt/zsh-prompt ]] && source "$HOME/.local/share/zsh/prompt/zsh-prompt"
+
 # Nnn
 if [[ -s $HOME/.local/bin/n3 ]]; then
     alias n='source $HOME/.local/bin/n3'
@@ -132,6 +135,34 @@ git-dirty() {
     fd -Htd '^\.git$' "${1:-.}" | sed 's/\.git\/$//' | while read -r dir; do
         [ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ] && echo "${dir#./}"
     done
+}
+
+fzf-gitlog() {
+    # shellcheck disable=SC2016
+    dg log --color=always \
+        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
+        fzf --ansi --style full \
+            --preview 'dotfiles show --color=always $(echo {} | cut -d" " -f2)'
+}
+
+fzf-gitdiff() {
+    # shellcheck disable=SC2016
+    dotfiles log --color=always \
+        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
+        fzf --ansi --style full --multi \
+            --preview '
+            hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
+            if (( ${#hashes[@]} == 2 )); then
+                dotfiles diff --color=always \
+                    --src-prefix="${hashes[1]}/" \
+                    --dst-prefix="${hashes[2]}/" \
+                    "${hashes[1]}" "${hashes[2]}"
+            elif (( ${#hashes[@]} == 1 )); then
+                dotfiles show --color=always "${hashes[1]}"
+            else
+                echo "Select 1 or 2 commits (Tab to multi-select)"
+            fi
+        '
 }
 
 # Dotfiles
