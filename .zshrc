@@ -53,8 +53,8 @@ export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 
 # Eza
 if command -v eza &>/dev/null; then
-    eza_opts="-s=name --no-quotes --no-user --group-directories-first
-    --git --git-repos-no-status --icons=always --color=always"
+    eza_opts="-s=name --no-quotes --no-user --group-directories-first \
+        --git --git-repos-no-status --icons=always --color=always"
     alias l="eza -1lh ${eza_opts}"
     # Show only hidden/dot files and folders
     alias ll="eza -1alh ${eza_opts}"
