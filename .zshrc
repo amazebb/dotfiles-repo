@@ -148,6 +148,13 @@ fzf-gitlog() {
             '
 }
 
+git-reflog() {
+    dotfiles for-each-ref "$@" \
+        --sort=-creatordate --sort=-HEAD \
+        --format=$'%(refname:short)\t(%(creatordate:relative))\t%(subject)' |
+        column -ts $'\t'
+}
+
 fzf-gitdiff() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
