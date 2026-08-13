@@ -140,9 +140,12 @@ git-dirty() {
 fzf-gitlog() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
-        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
-        fzf --ansi --style full --tmux center,90%,90% \
-            --preview 'dotfiles show --color=always $(echo {} | cut -d" " -f2)'
+        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
+        fzf --ansi --style full --height=-1 --tmux center,90%,90% --list-label="Git Log" \
+            --preview '
+                hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
+                [ -n "$hash" ] && dotfiles show --color=always "$hash"
+            '
 }
 
 fzf-gitdiff() {
