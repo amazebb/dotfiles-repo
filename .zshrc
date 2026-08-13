@@ -141,7 +141,8 @@ fzf-gitlog() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
-        fzf --ansi --style full --height=-1 --tmux center,90%,90% --list-label="Git Log" \
+        fzf --ansi --style full --height=~-1 --tmux center,90%,90% \
+            --list-label="Git Log" --input-label="Search Commit" \
             --preview '
                 hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
                 [ -n "$hash" ] && dotfiles show --color=always "$hash"
@@ -158,8 +159,9 @@ git-reflog() {
 fzf-gitdiff() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
-        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short |
-        fzf --ansi --style full --multi --tmux center,90%,90% \
+        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
+        fzf --ansi --style full --multi --height=~-1 --tmux center,90%,90% \
+            --input-label="Compare Diffs (Tab to select)" \
             --preview '
             hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
             if (( ${#hashes[@]} == 2 )); then
