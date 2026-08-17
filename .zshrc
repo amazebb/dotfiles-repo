@@ -125,6 +125,10 @@ if [[ -s $HOME/.local/bin/n3 ]]; then
     alias n='source $HOME/.local/bin/n3'
 fi
 
+if [ "$TERM_PROGRAM" = "ghostty" ]; then
+    alias ssh="ghostty +ssh --"
+fi
+
 uvcachelist() {
     find "$(uv cache dir)/archive-v0" -name "METADATA" -path "*.dist-info/*" |
         awk -F/ '{split($(NF-1),a,"-");gsub(/\.dist.*/,"",a[2]); print a[1], a[2]}' |
