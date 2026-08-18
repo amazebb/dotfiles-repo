@@ -1,5 +1,9 @@
 # shellcheck disable=SC2034,SC2139
 
+# Raise open files limit needed by Neovim as reported by checkhealth
+# LaunchDaemon created /Library/LaunchDaemons/limit.maxfiles.plist
+ulimit -n 8192
+
 ## Setup the history
 HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
 HISTSIZE=250000             # Set maximum number of commands stored in memory for current session
