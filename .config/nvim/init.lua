@@ -6,3 +6,5 @@ if vim.env.NVIM_CONFIG_DEV == "1" and vim.uv.fs_stat(dev) then
 else
   vim.pack.add({ "https://github.com/amazebb/nvim-config" })
 end
+
+require "init"

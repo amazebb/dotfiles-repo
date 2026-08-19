@@ -55,6 +55,11 @@ export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 # To use copy selection in Apple Notes, then run "cpnotes" in the terminal
 [[ $OSTYPE == *darwin* ]] && alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
 
+# Play MPV in Ghostty/Kitty terminal
+if command -v mpv &>/dev/null; then
+    alias mpvt='mpv --vo=kitty --profile=sw-fast --vo-kitty-use-shm=no --really-quiet'
+fi
+
 # Eza
 if command -v eza &>/dev/null; then
     eza_opts="-s=name --no-quotes --no-user --group-directories-first \
