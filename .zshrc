@@ -24,7 +24,7 @@ bindkey "^[[B" history-beginning-search-forward
 ## Prompt indentation right hand side for RPS1
 export ZLE_RPROMPT_INDENT=0
 
-# Configure PATH environment variable
+## Configure PATH environment variable
 # Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
 export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
@@ -34,16 +34,20 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
 
-## Environment variables
-# Tell MATLAB to use the macOS Accelerate framework
-export BLAS_VERSION=libmwAF_BLAS_ilp64.dylib
-export MATLAB_JAVA=$HOME/.sdkman/candidates/java/21.0.8-tem
+## JAVA
+# shellcheck disable=SC2155
+export JAVA_HOME=$(/usr/libexec/java_home -v 26 2>/dev/null)
+export PATH="$JAVA_HOME/bin:$PATH"
+# shellcheck disable=SC2155
+export MATLAB_JAVA=$(/usr/libexec/java_home -v 21 2>/dev/null)
+
 # MATLAB JRE Setup
 # 1. Update the MATLAB_JAVA version
 # 2. source ~/.zshrc
 # 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
 # After this step MATLAB can be started as a regular application
 
+## Environment variables
 export GITEA_WORK_DIR="$HOME/.gitea-data"
 export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 export SDL_FRAMEBUFFER_ACCELERATION=opengl
@@ -217,7 +221,3 @@ export PATH="$HOME/.grok/bin:$PATH"
 fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
 # <<< grok installer <<<## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-
-# Initialize SDKMAN for Java version management
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
