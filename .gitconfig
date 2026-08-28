@@ -4,7 +4,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = nvim
-        pager = "command -v bat >/dev/null && bat --paging=always || less"
+	pager = "dh=\"$(git --exec-path)/../../share/git-core/contrib/diff-highlight/diff-highlight\"; if command -v delta >/dev/null 2>&1; then delta; elif command -v bat >/dev/null 2>&1; then \"$dh\" | bat; else \"$dh\" | less -FRX; fi"
 [user]
 	name = bb
 	email = 26394523+broeknbytes@users.noreply.github.com
@@ -12,6 +12,7 @@
 	user = amazebb
 [diff]
 	tool = opendiff
+	colorMoved = default
 [difftool]
 	prompt = false
 [alias]
@@ -22,7 +23,17 @@
 	d = diff
 	pom = push origin master
 	s = status
+	dw = diff --word-diff-regex='\\w+|[^[:space:]]'
+	dc = diff --color-words=.
 [credential "https://github.com"]
 	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = !gh auth git-credential
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+[merge]
+	conflictStyle = zdiff3
