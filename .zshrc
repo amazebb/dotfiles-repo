@@ -154,18 +154,6 @@ git-dirty() {
     done
 }
 
-fzf-gitlog() {
-    # shellcheck disable=SC2016
-    dotfiles log --color=always \
-        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
-        fzf --ansi --style full --height=~-1 --tmux center,90%,90% \
-            --input-label="Search Commit" \
-            --preview '
-                hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
-                [ -n "$hash" ] && dotfiles show --color=always "$hash"
-            '
-}
-
 git-reflog() {
     dotfiles for-each-ref "$@" \
         --sort=-creatordate --sort=-HEAD \
@@ -173,14 +161,26 @@ git-reflog() {
         column -ts $'\t'
 }
 
+fzf-gitlog() {
+    # shellcheck disable=SC2016
+    dotfiles log --color=always \
+        --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
+        fzf --ansi --style full --height=~-1 --tmux center,90%,90% \
+            --input-label="Search Commit" --layout=reverse-list \
+            --preview '
+                hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
+                [ -n "$hash" ] && dotfiles show --color=always "$hash"
+            '
+}
+
 fzf-gitdiff() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
         fzf --ansi --style full --multi --height=~-1 --tmux center,90%,90% \
-            --input-label="Compare Diffs (Tab to select)" \
+            --input-label="Compare Diffs (Tab to select)" --layout=reverse-list \
             --preview '
-            hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
+            hashes=($(echo {+} | grep -oE "[a-f0-9]{8,}"))
             if (( ${#hashes[@]} == 2 )); then
                 dotfiles diff --color=always \
                     --src-prefix="${hashes[1]}/" \
