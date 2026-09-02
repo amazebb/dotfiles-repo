@@ -24,6 +24,22 @@ bindkey "^[[B" history-beginning-search-forward
 ## Prompt indentation right hand side for RPS1
 export ZLE_RPROMPT_INDENT=0
 
+## Environment variables
+# shellcheck disable=SC2155
+export JAVA_HOME=$(/usr/libexec/java_home -v 26 2>/dev/null)
+# shellcheck disable=SC2155
+export MATLAB_JAVA=$(/usr/libexec/java_home -v 21 2>/dev/null)
+# MATLAB JRE Setup
+# 1. Update the MATLAB_JAVA version
+# 2. source ~/.zshrc
+# 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
+# After this step MATLAB can be started as a regular application
+
+export GITEA_WORK_DIR="$HOME/.gitea-data"
+export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
+export SDL_FRAMEBUFFER_ACCELERATION=opengl
+export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
+
 ## Configure PATH environment variable
 # Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
 export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
@@ -33,25 +49,8 @@ export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
-
-## JAVA
-# shellcheck disable=SC2155
-export JAVA_HOME=$(/usr/libexec/java_home -v 26 2>/dev/null)
+export PATH='/Users/boris/.hutch/bin':"$PATH"
 export PATH="$JAVA_HOME/bin:$PATH"
-# shellcheck disable=SC2155
-export MATLAB_JAVA=$(/usr/libexec/java_home -v 21 2>/dev/null)
-
-# MATLAB JRE Setup
-# 1. Update the MATLAB_JAVA version
-# 2. source ~/.zshrc
-# 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
-# After this step MATLAB can be started as a regular application
-
-## Environment variables
-export GITEA_WORK_DIR="$HOME/.gitea-data"
-export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
-export SDL_FRAMEBUFFER_ACCELERATION=opengl
-export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 
 ## Aliases
 # Copies Apple Notes while retaining newline which would otherwise be copied
@@ -220,4 +219,3 @@ export PATH="$HOME/.grok/bin:$PATH"
 # shellcheck disable=SC2206
 fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
-# <<< grok installer <<<## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
