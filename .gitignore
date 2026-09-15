@@ -12,3 +12,6 @@
 !/.config/kitty/kitty.conf
 !/.config/kitty/*auto.conf
 
+!/.ssh
+/.ssh/*
+!/.ssh/config
