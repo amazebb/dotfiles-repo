@@ -36,7 +36,6 @@ export MATLAB_JAVA=$(/usr/libexec/java_home -v 21 2>/dev/null)
 # After this step MATLAB can be started as a regular application
 
 export GITEA_WORK_DIR="$HOME/.gitea-data"
-export CHPL_HOME=/opt/homebrew/Cellar/chapel/2.5.0_1
 export SDL_FRAMEBUFFER_ACCELERATION=opengl
 export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
 
@@ -50,7 +49,7 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH='/Users/boris/.hutch/bin':"$PATH"
-export PATH="$JAVA_HOME/bin:$PATH"
+[[ -n $JAVA_HOME ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
 ## Aliases
 # Copies Apple Notes while retaining newline which would otherwise be copied
@@ -160,7 +159,7 @@ git-reflog() {
         column -ts $'\t'
 }
 
-fl() {
+fzgl() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
@@ -172,14 +171,14 @@ fl() {
             '
 }
 
-fd() {
+fzgd() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
         fzf --ansi --style full --multi --height=~-1 --tmux center,90%,90% \
             --input-label="Compare Diffs (Tab to select)" --layout=reverse-list \
             --preview '
-            hashes=($(echo {+} | grep -oE "[a-f0-9]{8,}"))
+            hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
             if (( ${#hashes[@]} == 2 )); then
                 dotfiles diff --color=always \
                     --src-prefix="${hashes[1]}/" \
@@ -195,9 +194,6 @@ fd() {
 
 # Dotfiles
 ((${+functions[dotfiles]})) && alias dg=dotfiles
-
-# Prompt
-[[ -s $HOME/.local/share/zsh/prompt/zsh-prompt ]] && source "$HOME/.local/share/zsh/prompt/zsh-prompt"
 
 # macOS fix for manpath/makewhatis due to APFS by default being
 # case-insensitive. manpath auto-infers paths from $PATH, which produces
