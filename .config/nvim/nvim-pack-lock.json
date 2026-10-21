@@ -14,7 +14,7 @@
       "src": "https://github.com/kokusenz/deltaview.nvim"
     },
     "fzf-lua": {
-      "rev": "5beb1bf72b0810da6ccee50f6087c2f005aeb737",
+      "rev": "5dca84ef44f37b960a128a43d044ee348ff86fb4",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "nvim-config": {
