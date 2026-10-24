@@ -10,11 +10,11 @@
       "version": "1.0.0 - 2.0.0"
     },
     "deltaview.nvim": {
-      "rev": "3893d56a26e60b9907445f67d099c78fe9e90044",
+      "rev": "af96e08c32bd6219e098d0d3c654196e35cb3f8f",
       "src": "https://github.com/kokusenz/deltaview.nvim"
     },
     "fzf-lua": {
-      "rev": "5dca84ef44f37b960a128a43d044ee348ff86fb4",
+      "rev": "507dfc85551ff2d9293ec215f10f19395252aada",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "nvim-config": {
@@ -39,7 +39,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-treesitter": {
-      "rev": "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
+      "rev": "a2f694478be07f89c2d03cc17858a8745a400c4b",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     }
