@@ -36,7 +36,6 @@
 	navigate = true
 	line-numbers = true
 	hyperlinks = true
-	hunk-header-style = line-number
-	hunk-header-decoration-style = none
+	hunk-header-style = omit
 [merge]
 	conflictStyle = zdiff3
