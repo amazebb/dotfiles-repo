@@ -160,7 +160,7 @@ git-reflog() {
         column -ts $'\t'
 }
 
-fzgl() {
+zl() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
@@ -172,7 +172,7 @@ fzgl() {
             '
 }
 
-fzgd() {
+zd() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
