@@ -48,6 +48,7 @@ export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$HOME/.local/share/scripts/bin"
 export PATH='/Users/boris/.hutch/bin':"$PATH"
 [[ -n $JAVA_HOME ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
