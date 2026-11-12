@@ -133,8 +133,8 @@ fi
 [[ -s $HOME/.local/share/zsh/prompt/zsh-prompt ]] && source "$HOME/.local/share/zsh/prompt/zsh-prompt"
 
 # Nnn
-if [[ -s $HOME/.local/bin/n3 ]]; then
-    alias n='source $HOME/.local/bin/n3'
+if [[ -s $HOME/.local/share/scripts/bin/n3 ]]; then
+    alias n='source $HOME/.local/share/scripts/bin/n3'
 fi
 
 if [ "$TERM_PROGRAM" = "ghostty" ]; then
