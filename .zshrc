@@ -100,6 +100,12 @@ fi
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
 if command -v fzf &>/dev/null; then
+    # Look for every fzf: rounded boxes around list, input and preview (no outer frame),
+    # list from the top with the prompt at the bottom, like zl/zd
+    export FZF_DEFAULT_OPTS='--height=~-1 --layout=reverse-list --style=full:rounded --border=none --info=inline-right --cycle'
+    # zoxide hands fzf ONLY these flags (it replaces FZF_DEFAULT_OPTS), so repeat the
+    # look; keep its matching flags and add the preview on the right
+    export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS --exact --no-sort --keep-right --exit-0 --preview='eza -la --icons --color=always --group-directories-first {2..}' --preview-window=right,50%"
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
@@ -164,8 +170,8 @@ zl() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
-        fzf --ansi --style full --height=~-1 --tmux center,90%,90% \
-            --input-label="Search Commit" --layout=reverse-list \
+        fzf --ansi --style full --tmux center,90%,90% \
+            --input-label="Search Commit" \
             --preview '
                 hash=$(echo {} | grep -oE "[a-f0-9]{7,}" | head -1)
                 [ -n "$hash" ] && dotfiles show --color=always "$hash"
@@ -176,8 +182,8 @@ zd() {
     # shellcheck disable=SC2016
     dotfiles log --color=always \
         --pretty=format:"%C(bold green)%ad%C(reset) %C(auto)%h%d %s" --date=short --graph "$@" |
-        fzf --ansi --style full --multi --height=~-1 --tmux center,90%,90% \
-            --input-label="Compare Diffs (Tab to select)" --layout=reverse-list \
+        fzf --ansi --style full --multi --tmux center,90%,90% \
+            --input-label="Compare Diffs (Tab to select)" \
             --preview '
             hashes=($(echo {+} | grep -oE "[a-f0-9]{7,}"))
             if (( ${#hashes[@]} == 2 )); then
