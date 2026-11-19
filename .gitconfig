@@ -61,17 +61,17 @@
 ;     commit-format = tformat:%n%n▸ %h %C(blue)%an %C(blue)%ar%C(auto)%d%C(reset)%n%n    %C(green)%s%C(auto)
 ;     commit-format-full = tformat:%n%n▸ %h %C(blue)%an %C(blue)%ar%C(auto)%d%C(reset)%n%n%w(0,4,4)%C(green)%s%C(reset)%n%+b
 ;
-; [delta-tui]
+[delta-tui]
 ;     # Arguments of the git log and git show that the TUI runs itself
 ;     # (`l l`, `right` on a commit).
-;     log-args = --stat
-;     log-args = --date=relative
+     log-args = --stat
+     log-args = --date=relative
 ;     log-args = --pretty=commit-format
 ;     show-args = --pretty=commit-format-full
 ;     # Head each file with its `git diff --stat` row.
-;     file-header = stat
+     file-header = stat
 ;     # Open every patch with its files folded.
-;     start-folded = true
+     start-folded = true
 ;
 ; [delta-tui "general.views"]
 ;     # use H to bind features, views, and commands to hotkeys
