@@ -50,6 +50,11 @@ export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.local/share/scripts/bin"
 export PATH='/Users/boris/.hutch/bin':"$PATH"
+
+if [ -n "$REX_BIN_DIR" ]; then
+    export PATH="$REX_BIN_DIR:$PATH"
+fi
+
 [[ -n $JAVA_HOME ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
 ## Aliases
