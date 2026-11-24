@@ -37,8 +37,6 @@ if command -v eza &>/dev/null; then
     # Show only hidden/dot files
     alias llf="eza -f -1alh ${eza_opts}"
     unset eza_opts
-else
-    printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && apk add eza
 fi
 
 # Nvim
@@ -62,9 +60,8 @@ fi
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
 if command -v fzf &>/dev/null; then
-    # Look for every fzf: rounded boxes around list, input and preview (no outer frame),
-    # list from the top with the prompt at the bottom, like zl/zd
-    export FZF_DEFAULT_OPTS='--height=~-1 --layout=reverse-list --style=full:rounded --border=none --info=inline-right --cycle'
+    # Plain options that older fzf (Alpine/iSH) accepts
+    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --info=inline --cycle'
     # zoxide hands fzf ONLY these flags (it replaces FZF_DEFAULT_OPTS), so repeat the
     # look; keep its matching flags and add the preview on the right
     export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS --exact --no-sort --keep-right --exit-0 --preview='eza -la --icons --color=always --group-directories-first {2..}' --preview-window=right,50%"
