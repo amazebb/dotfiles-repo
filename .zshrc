@@ -1,9 +1,5 @@
 # shellcheck disable=SC2034,SC2139
 
-# Raise open files limit needed by Neovim as reported by checkhealth
-# LaunchDaemon created /Library/LaunchDaemons/limit.maxfiles.plist
-ulimit -n 8192
-
 ## Setup the history
 HISTFILE=$HOME/.zsh_history # Configure history storage and size parameters
 HISTSIZE=250000             # Set maximum number of commands stored in memory for current session
@@ -24,50 +20,11 @@ bindkey "^[[B" history-beginning-search-forward
 ## Prompt indentation right hand side for RPS1
 export ZLE_RPROMPT_INDENT=0
 
-## Environment variables
-# shellcheck disable=SC2155
-export JAVA_HOME=$(/usr/libexec/java_home -v 26 2>/dev/null)
-# shellcheck disable=SC2155
-export MATLAB_JAVA=$(/usr/libexec/java_home -v 21 2>/dev/null)
-# MATLAB JRE Setup
-# 1. Update the MATLAB_JAVA version
-# 2. source ~/.zshrc
-# 3. /Applications/MATLAB_R2024b.app/bin/matlab -batch "jenv(getenv('MATLAB_JAVA'))"
-# After this step MATLAB can be started as a regular application
-
-export GITEA_WORK_DIR="$HOME/.gitea-data"
-export SDL_FRAMEBUFFER_ACCELERATION=opengl
-export JULIA_PKG_DEVDIR="$HOME/Code/GitHub/amazebb/julia"
-
 ## Configure PATH environment variable
-# Add Homebrew, GNU make, gawk, coreutils, Node.js, local bin, and Julia to PATH
-export PATH="/opt/local/bin:/opt/homebrew/opt/make/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
-export PATH="/opt/homebrew/opt/curl/bin:$PATH"
-export PATH="$PATH:$HOME/.juliaup/bin:$HOME/.julia/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.local/share/scripts/bin"
-export PATH='/Users/boris/.hutch/bin':"$PATH"
-
-if [ -n "$REX_BIN_DIR" ]; then
-    export PATH="$REX_BIN_DIR:$PATH"
-fi
-
-[[ -n $JAVA_HOME ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
 ## Aliases
-# Copies Apple Notes while retaining newline which would otherwise be copied
-# over as <2028>, (U+2028) is the Unicode Line Separator
-# To use copy selection in Apple Notes, then run "cpnotes" in the terminal
-[[ $OSTYPE == *darwin* ]] && alias cpnotes='pbpaste | sed "s/\xe2\x80\xa8/\n/g" | pbcopy'
-
-# Play MPV in Ghostty/Kitty terminal
-if command -v mpv &>/dev/null; then
-    alias mpvt='mpv --vo=kitty --profile=sw-fast --vo-kitty-use-shm=no --really-quiet'
-fi
-
 # Eza
 if command -v eza &>/dev/null; then
     eza_opts="-s=name --no-quotes --no-user --group-directories-first \
@@ -81,25 +38,25 @@ if command -v eza &>/dev/null; then
     alias llf="eza -f -1alh ${eza_opts}"
     unset eza_opts
 else
-    printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install eza
+    printf "Install eza ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && apk add eza
 fi
 
 # Nvim
 if command -v nvim &>/dev/null; then
-    alias nn='$HOME/.local/bin/nvim'
+    alias nn=nvim
     # Load ~/Code/GitHub/amazebb/nvim-config from disk (see ~/.config/nvim/init.lua)
-    alias nnd='NVIM_CONFIG_DEV=1 $HOME/.local/bin/nvim'
-    export EDITOR="$HOME/.local/bin/nvim"
+    alias nnd='NVIM_CONFIG_DEV=1 nvim'
+    export EDITOR=nvim
     export MANPAGER='nvim +Man!'
 else
-    printf "Install nvim ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install neovim
+    printf "Install nvim ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && apk add neovim
 fi
 
 # Zoxide
 if command -v zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
 else
-    printf "Install zoxide ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install zoxide
+    printf "Install zoxide ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && apk add zoxide
 fi
 
 # Fzf key bindings and completion
@@ -114,7 +71,7 @@ if command -v fzf &>/dev/null; then
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
-    source <(fzf --zsh)
+    eval "$(fzf --zsh)"
     # Override CTRL-R to show timestamps (yyyymmdd HH:MM) and command duration
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
@@ -134,7 +91,7 @@ if command -v fzf &>/dev/null; then
     }
     zle -N fzf-history-widget
 else
-    printf "Install fzf ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && brew install fzf
+    printf "Install fzf ? (y/N) " && read -r && [[ $REPLY =~ ^[Yy]$ ]] && apk add fzf
 fi
 
 # Fzf-man ^h binding for man pages
@@ -146,10 +103,6 @@ fi
 # Nnn
 if [[ -s $HOME/.local/share/scripts/bin/n3 ]]; then
     alias n='source $HOME/.local/share/scripts/bin/n3'
-fi
-
-if [ "$TERM_PROGRAM" = "ghostty" ]; then
-    alias ssh="ghostty +ssh --"
 fi
 
 uvcachelist() {
@@ -207,23 +160,4 @@ zd() {
 # Dotfiles
 ((${+functions[dotfiles]})) && alias dg=dotfiles
 
-# macOS fix for manpath/makewhatis due to APFS by default being
-# case-insensitive. manpath auto-infers paths from $PATH, which produces
-# entries like gnubin/man, as well as gnubin/MAN. The below resolves symlinks,
-# deduplicates and moves homebrews versions upfront to keep makewhatis happy
-resolved=$(manpath | tr ':' '\n' |
-    while read -r p; do
-        r=$(realpath "$p" 2>/dev/null) && [ -d "$r" ] && echo "$r"
-    done)
-
-r="$({
-    echo "$resolved" | grep '/opt/homebrew'
-    echo "$resolved" | grep -v '/opt/homebrew'
-} | paste -sd ':' -)"
-export MANPATH="$r"
-
-# >>> grok installer >>>
-export PATH="$HOME/.grok/bin:$PATH"
-# shellcheck disable=SC2206
-fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C

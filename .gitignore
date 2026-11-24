@@ -2,10 +2,5 @@
 
 !/.config
 /.config/*
-!/.config/homebrew
 !/.config/nvim
 /.config/nvim/nvim-pack-lock.json
-!/.config/kitty
-/.config/kitty/*
-!/.config/kitty/kitty.conf
-!/.config/kitty/*auto.conf
