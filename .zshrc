@@ -68,7 +68,10 @@ if command -v fzf &>/dev/null; then
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
-    eval "$(fzf --zsh)"
+    # fzf --zsh needs 0.48+; Alpine's older fzf ships these scripts instead
+    for f in /usr/share/fzf/key-bindings.zsh /usr/share/fzf/completion.zsh; do
+        [[ -r $f ]] && source "$f"
+    done
     # Override CTRL-R to show timestamps (yyyymmdd HH:MM) and command duration
     # Bind ? key to toggle preview window for long commands
     fzf-history-widget() {
