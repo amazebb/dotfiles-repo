@@ -60,11 +60,8 @@ fi
 # Fzf key bindings and completion
 # shellcheck disable=SC1090
 if command -v fzf &>/dev/null; then
-    # Plain options that older fzf (Alpine/iSH) accepts
-    export FZF_DEFAULT_OPTS='--layout=reverse --border --info=inline --cycle'
-    # zoxide hands fzf ONLY these flags (it replaces FZF_DEFAULT_OPTS), so repeat the
-    # look; keep its matching flags and add the preview on the right
-    export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS --exact --no-sort --keep-right --exit-0 --preview='eza -la --icons --color=always --group-directories-first {2..}' --preview-window=right,50%"
+    # no FZF_DEFAULT_OPTS: iSH hangs with display flags; add back one at a time
+    export _ZO_FZF_OPTS='--exact --no-sort --keep-right --exit-0'
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
