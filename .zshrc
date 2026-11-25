@@ -62,6 +62,23 @@ fi
 if command -v fzf &>/dev/null; then
     # no FZF_DEFAULT_OPTS: iSH hangs with display flags; add back one at a time
     export _ZO_FZF_OPTS='--exact --no-sort --keep-right --exit-0'
+    # iSH: `cmd | fzf` stops fzf with "suspended (tty input)" because the pipeline's
+    # process group never owns the tty. `fzf < file` works, so spool piped stdin to a
+    # temp file first. Downside: fzf only starts after the upstream command finishes
+    # (no streaming), and the pipe is read fully into /tmp. Job control stays on.
+    fzf() {
+        if [[ -t 0 ]]; then
+            command fzf "$@"
+            return
+        fi
+        local tmp rc
+        tmp=$(mktemp) || return
+        cat >"$tmp"
+        command fzf "$@" <"$tmp"
+        rc=$?
+        rm -f "$tmp"
+        return $rc
+    }
     # CTRL-T - Paste the selected files and directories onto the command-line
     # CTRL-R - Paste the selected command from history onto the command-line (custom widget below)
     # ALT-C  - cd into the selected directory
